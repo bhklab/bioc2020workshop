@@ -6,6 +6,7 @@
 * Arvind Mer <arvind.mer@uhnresearch.ca>
 * Christopher Eeles <christopher.eeles@uhnresearch.ca>
 
+
 ## Workshop Description
 
 This workshop will focus on the synergies between analysis results from the PharmacoGx, Xeva and RadioGx packages and their usefulness for discovery of biomarkers of drug and/or radiation sensitivity in cancer cell lines (CCLs) and patent derived xenograft models (PDXs). We will discuss issues with data curation, consistency and reproducibility within the literature as well as illustrate the importance of unified analytical platforms, data and code sharing in bioinformatics and biomedical research. In this lab learners will be led through an analysis for each of the three packages on data provided by the download functions within them. The results of these analyses will then be explored to highlight how drug and radiation dose-response profiles in CCLs and PDXs can be used to discover potential synergistic biomarkers for drug-radiation and drug combination therapies. The resulting biomarkers will be discussed in the context of translational cancer research and clinical applications of genomic data. We will conclude with a discussion of how these biomarkers can be used to inform future in vitro and in vivo treatment screenings and ultimately provide useful insights for clinical trial design. 
@@ -60,16 +61,6 @@ For a 2-hr workshop:
 | Understanding Analysis Results and Synergies            | 10m |
 | Use Case Discussion: Translational Science             | 15m |
 
-For a 1-hr workshop: (We will require more user readings in this case)
-
-| Activity                                    | Time |
-|---------------------------------------------|------|
-| Introduction                                                | 5m  |
-| Data Structure and Common Functions Between Packages     | 5m |
-| Basic functionalities of PharmacoGx, Xeva and RadioGx         | 5m  |
-| Data Analysis Walkthrough                         | 15m  |
-| Understanding Analysis Results and Synergies            | m |
-| Use Case Discussion: Translational Science             | 15m |
 
 ## Workshop goals and objectives
 
@@ -94,9 +85,8 @@ For a 1-hr workshop: (We will require more user readings in this case)
 * Fit linear-quadratic models to radiotherapy experiments in cell lines
 * Fit Hill Slope models to dose-response experiments using small compound treatments in cell lines
 * Calculate the AAC, AUC, IC50, SF2, D10 metrics for response quantification in cell lines
-* Calculate the mRECIST, Slope, ABC, and other tumour growth curve summary metrics
+* Calculate the mRECIST, Slope, ABC, linear mix model and other tumour growth curve summary metrics
 * Visualize response of PDX experiments using an Oncoprint heatmap
 * Predict in vivo and in vitro univariate biomarkers using the PharmacoGx, Xeva and RadioGx packages
 * Compare signatures of response between chemotherapy compounds and radiotherapy
 * Compare univariate biomarkers between cell line and PDX experiments
-
