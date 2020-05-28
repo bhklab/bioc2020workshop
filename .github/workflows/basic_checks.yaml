@@ -46,7 +46,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_PASS }}
-          repository: bhklab/GxBioc2020Workshop
+          repository: bhklab/gxbioc2020workshop
           tag_with_ref: true
           tag_with_sha: true
           tags: latest
