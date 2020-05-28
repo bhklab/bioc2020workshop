@@ -16,3 +16,7 @@ VignetteBuilder:
 Suggests: knitr, rmarkdown
 Imports: PharmacoGx, RadioGx, SummarizedExperiment, ToxicoGx, ggplot2, Xeva
 Remotes: bhklab/ToxicoGx, bhklab/RadioGx
+URL:  https://bhklab.github.io/BiocWorkshop2020
+BugReports: https://github.com/bhklab/bioc2020workshop/issues/new/choose
+VignetteBuilder: knitr
+DockerImage: bhklab/GxBioc2020Workshop:latest
