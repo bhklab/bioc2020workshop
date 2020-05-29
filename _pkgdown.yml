@@ -1,0 +1,18 @@
+url: https://bhklab.github.io/bioc2020workshop
+
+template:
+  params:
+    bootswatch: flatly
+    ganalytics: UA-93043521-1
+
+home:
+  title: "Biomarker Discovery from HTS @ Bioc2020"
+  type: inverse
+
+
+navbar:
+  right:
+   - icon: fa-github
+     href: https://github.com/bhklab/bioc2020workshop
+     
+
