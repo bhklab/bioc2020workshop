@@ -9,11 +9,10 @@ Description: This workshop focuses on the synergies between analysis results
     lines (CCLs) and patent derived xenograft models (PDXs).
 Encoding: UTF-8
 LazyData: true
-License: CC BY 4.0  + file LICENSE
+License: CC BY 4.0 + file LICENSE
 RoxygenNote: 7.1.0
 Suggests: knitr, rmarkdown
 Imports: PharmacoGx, RadioGx, SummarizedExperiment, ToxicoGx, ggplot2, Xeva, pkgdown
-Remotes: bhklab/ToxicoGx, bhklab/RadioGx
 URL:  https://bhklab.github.io/BiocWorkshop2020
 BugReports: https://github.com/bhklab/bioc2020workshop/issues/new/choose
 VignetteBuilder: knitr
