@@ -10,7 +10,6 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-# Biomarker Discovery from High Throughput Screening Datasets
 
 ## Instructor(s) name(s) and contact information
 
@@ -128,14 +127,50 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### RadioSet
 
-![RadioSet class diagram](./RadioGxClassDiagram.png)
+The RadioSet has a structure similar to the PharmacoSet and also inherits 
+from the CoreSet class exported by CoreGx. The radiation slot is implemented in 
+RadioGx to hold relevant metadata about the type of radiation used in the 
+dose-response experiments for this dataset and is analagous to the drug slot
+in a PharmacoSet. The remainder of the slots mirror the PharmacoSet.
 
-* List available standardized pharmacogenomic and radiogenomic datasets and download them
+<!-- FIXME: Simplify this diagram -->
+![**Fig. N - RadioSet class diagram**](./RadioGxClassDiagram.png){ width=600px, height=600px }
+
+### Cleveland dataset
+
+RadioGx provides an interface similar to other BHKLab packages for accessing
+datasets we have curated.
+
+To get a list of available RadioSets, use:
+
+```{r cleveland}
+#RSets <- availableRSets()
+```
+
+As the field of Radio-genomics is relatively new, there is only one dataset 
+available. Let's download the 'Cleveland' RSet, which contains data from 
+<reference_to_data_source>. 
+
+```{r download_RSet}
+#Cleveland <- downloadRSet('Cleveland', saveDir='.')
+```
+
+### Accessing Data
+
+
 * Access the molecular features, dose-response and metadata contained within the data structures defined in the packages
+
+### Dose-Response Curves
+
 * Create drug-dose and radiation-dose response plots for cell line experiments
+
+### Fitting the Linear Quadratic (LQ) Model
 * Fit linear-quadratic models to radiotherapy experiments in cell lines
+
+### Calculating Dose-Response Metrics
+
 * Calculate the AAC, AUC, IC50, SF2, D10 metrics for response quantification in cell lines
-* Predict in vivo and in vitro univariate biomarkers using the PharmacoGx, Xeva and RadioGx packages
+
 
 
 ## Data Analysis Walkthrough
