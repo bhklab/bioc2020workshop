@@ -1,13 +1,16 @@
 ---
-title: "Biomarker discovery from high throughput screening datasets"
-author: Petr Smirnov^[psmirnov2000@gmail.com], Arvind Mer, Chris Eeles
+title: "Biomarker Discovery from High Throughput Screening Datasets"
+author: 
+  Petr Smirnov^[psmirnov2000@gmail.com], 
+  Arvind Mer, 
+  Christopher Eeles^[christopher.eeles@uhnresearch.ca]
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Biomarker discovery from high throughput screening datasets}
+  %\VignetteIndexEntry{Biomarker Discovery from High Throughput Screening Datasets}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-# Biomarker discovery from high throughput screening datasets
+# Biomarker Discovery from High Throughput Screening Datasets
 
 ## Instructor(s) name(s) and contact information
 
