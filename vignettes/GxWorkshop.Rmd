@@ -108,6 +108,44 @@ For a 2-hr workshop:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Introduction
+
+
+## Data Structure and Common Functions Between Packages
+
+
+
+## Basic Functionalities of PharmacoGx
+
+## Basiic Functionalities of Xeva
+
+## Basic Functionalities of RadioGx
+
+
+## Data Analysis Walkthrough
+
+
+## Understanding Analysis Results and Synergies
+
+## Use Case Discussion: Translational Science
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------
+
+
 ## How to add figures
 
 
