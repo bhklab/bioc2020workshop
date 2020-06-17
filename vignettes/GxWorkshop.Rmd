@@ -132,8 +132,8 @@ has many similarities between them. First and foremost, all three pacakges were 
 ## Basic Functionalities of PharmacoGx
 
 `r BiocStyle::Biocpkg("PharmacoGx")` was developed to serve as a platform for
-integrating analysis across different pharmacogenomic datasets. The main focus of the `r
-BiocStyle::Biocpkg("PharmacoGx")` package is to provide access to
+integrating analysis across different pharmacogenomic datasets. The main focus of the
+`r BiocStyle::Biocpkg("PharmacoGx")` package is to provide access to
 pharmacogenomics datasets that have been preprocessed with a uniform pipeline,
 and extensively curated to ensure maximum overlap and consistency. The package is designed around
 on a level of abstraction from the raw experimental data, and
@@ -150,23 +150,25 @@ this tutorial.
 
 ### Installing RadioGx
 
-To install the RadioGx package, run:
+To install the `r BiocStyle::Biocpkg('RadioGx')` package, run:
 
 ```{r install_radiogx, eval=FALSE, message=FALSE}
 devtools::install_github('bhklab/RadioGx')
 # BiocManager::install('RadioGx', version='devel') # Waiting on issue with Bioconductor credentials to be resolved so I can push updates
 ```
+
 ```{r load_package, message=FALSE}
 library(RadioGx)
 ```
 
 ### RadioSet
 
-The RadioSet has a structure similar to the PharmacoSet and also inherits 
-from the CoreSet class exported by CoreGx. The radiation slot is implemented in 
-RadioGx to hold relevant metadata about the type of radiation used in the 
-dose-response experiments for this dataset, and is analogous to the drug slot
-in a PharmacoSet. The remainder of the slots mirror the PharmacoSet.
+The RadioSet has a structure similar to the `PharmacoSet` and also inherits
+from the CoreSet class exported by `r BiocStyle::Biocpkg('CoreGx')`. The radiation
+slot is implemented in `r BiocStyle::Biocpkg('RadioGx')`  to hold relevant metadata
+about the type(s) of radiation used in the dose-response experiment,
+and is analogous to the drug slot in a `PharmacoSet`. The remainder of the slots
+mirror the `PharmacoSet`.
 
 ```{r echo=FALSE, out.width='100%', fig.align='center', fig.cap = "**Fig. N: RadioSet class diagram**"}
 knitr::include_graphics('./RadioGxClassDiagram.png')
@@ -174,10 +176,10 @@ knitr::include_graphics('./RadioGxClassDiagram.png')
 
 ### Downloading an RSet
 
-RadioGx provides an interface similar to PharmacoGx and Xeva for downloading
-data sets we have curated.
+`r BiocStyle::Biocpkg('RadioGx')` provides an interface similar to `r BiocStyle::Biocpkg("PharmacoGx")`
+and `r BiocStyle::Biocpkg('Xeva')` for downloading our curated versions of published datasets.
 
-To get a list of available RadioSets, use:
+To get a list of available `RadioSet`s, use:
 
 ```{r available_rsets}
 RSets <- availableRSets()
@@ -187,12 +189,11 @@ RSets <- availableRSets()
 knitr::kable(RSets[, c("RadioSet_name", "Date_updated", "DOI")])
 ```
 
-As the RadioGx package was only recently released, there is currently only one dataset
-available. Let's download the 'Cleveland' RSet, which contains a highly curated version of
-the data from Yang *et al.*, 2016.
+As the `r BiocStyle::Biocpkg('RadioGx')` package was only recently released, there is
+currently only one dataset available. Let's download the 'Cleveland' RSet, which contains
+a highly curated version of the data from Yang *et al.*, 2016.
 
 ```{r download_rset}
-## FIXME:: Add verbose=FALSE to availableRSets() call within downloadRSet
 Cleveland <- downloadRSet('Cleveland', saveDir='.')
 ```
 
@@ -200,11 +201,10 @@ Cleveland <- downloadRSet('Cleveland', saveDir='.')
 Cleveland
 ```
 
-<!-- FIXME: Confirm the difference between rna and rnaseq data? -->
 Similar to PharmacoGx and Xeva, a summary of the contents of the RadioSet is printed
 when calling a RadioSet in the console. We can see that the Cleveland RSet contains
 sensitivity information for 540 cell-lines treated with a single type of radiation.
-The RSet also contains rna-microarray, rna-seq and cnv molecular data for a subset of available
+The RSet also contains rna(microarray), rna-seq and cnv molecular data for a subset of available
 cell-lines.
 
 ### Accessing Data
@@ -229,7 +229,7 @@ radInf <- radiationInfo(Cleveland)
 ```{r print_radinf}
 knitr::kable(head(radInf))
 ```
-Currently, only one type of radiation has been used in the RSet. However, we hope to add new RSets covering a wider range of
+Currently, only one type of radiation has been used in an RSet. However, we hope to add new RSets covering a wider range of
 sensitivity and perturbation experiments in the near future. The following method is also available to retrieve the radiation
 types as a `character` vector instead of a `data.frame`.
 
@@ -237,20 +237,50 @@ types as a `character` vector instead of a `data.frame`.
 radTypes <- radiationTypes(Cleveland)
 radTypes
 ```
-
 2. Accessing molecular data
 
 Molecular data in an RSet is contained in the `molecularProfiles` slot and can be accessed the same way it is for a PSet.
 
-<!-- TODO: Remove this if it is redundant -->
-```{r molecular_data_accessors}
-# Get the list
+```{r molecular_data_slot_accessors}
+# Get the list (equivalent to @molecularProfiles, except that it is robut to changes in RSet structure
+str(molecularProfilesSlot(Cleveland), max.level=2)
 
 # Get the names from the list
+mDataNames(Cleveland)
+```
 
-# Get a specific SummarizedExperiment
+All molecular data in an RSet (any class inheriting from CoreSet, actually) is contained in a `SummarizedExperiment`
+object. While `r BiocStyle::Biocpkg('SummarizedExperiment')` comes with it's own set of accessors, we recommend using
+available `r BiocStyle::Biocpkg('RadioGx')` accessor methods as it allows your scripts to be robust to future changes
+in the structure of a `RadioSet` object.
 
-#
+```{r sample_meta_data}
+# Get sample metadata
+phenoInf <- phenoInfo(Cleveland, 'cnv')
+```
+
+```{r print_sample_meta_data}
+knitr::kable(head(phenoInf))
+```
+
+
+```{r feature_meta_data}
+# Get feature metadata
+featInfo <- featureInfo(Cleveland, 'rna')
+```
+
+```{r print_feature_meta_data}
+knitr::kable(head(featInfo))
+```
+
+
+```{r molecular_data}
+# Access the moleclar feature data
+mProf <- molecularProfiles(Cleveland, 'rnaseq')
+```
+
+```{r print_molecular_profile_data}
+knitr::kable(head(mProf))
 ```
 
 
@@ -384,6 +414,25 @@ doseResponseCurve(
   rSets=list(clevelandSmall),
   cellline=cellInfo(clevelandSmall)$cellid[3]
 )
+```
+
+### Summarizing Sensitivity
+
+```{r}
+
+```
+
+### Summarizing Molecular Data
+
+```{r}
+
+```
+
+
+### Gene Signatures for Biomarker Discovery
+
+```{r}
+
 ```
 
 
