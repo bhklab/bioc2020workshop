@@ -25,6 +25,7 @@ This workshop will focus on the synergies between analysis results from the Phar
 ### Pre-requisites
 
 List any workshop prerequisites:
+
 * Basic knowledge of R syntax
 * Knowledge of or interest in pharmacogenomics and radio-genomics
 * Familiarity with base bioconductor objects, including the SummarizedExperiment Class
@@ -34,7 +35,7 @@ List any workshop prerequisites:
 List relevant background reading for the workshop, including any
 theoretical background you expect students to have.
 
-*  Smirnov, P. et al. PharmacoGx: An R package for analysis of large pharmacogenomic datasets. Bioinformatics 32, 1244–1246 (2016).
+* Smirnov, P. et al. PharmacoGx: An R package for analysis of large pharmacogenomic datasets. Bioinformatics 32, 1244–1246 (2016).
 * Manem, V. SK. et al. Modeling Cellular Response in Large-Scale Radiogenomic Databases to Advance Precision Radiotherapy. Cancer Research (2019) doi:10.1158/0008-5472.CAN-19-0179.
 * Mer, A. S. et al. Integrative pharmacogenomics analysis of patient-derived xenografts. Cancer Res canres.0349.2019 (2019) doi:10.1158/0008-5472.CAN-19-0349.
 
@@ -50,9 +51,10 @@ The workshop will be presented as a set of analysis steps to be replicated by th
 ### _R_ / _Bioconductor_ packages used
 
 Bioconductor:
+
 * https://bioconductor.org/packages/release/bioc/html/PharmacoGx.html
-* http://bioconductor.org/packages/release/bioc/html/Xeva.html 
-* https://cran.r-project.org/web/packages/RadioGx/index.html 
+* http://bioconductor.org/packages/release/bioc/html/Xeva.html
+* https://cran.r-project.org/web/packages/RadioGx/index.html
   * RadioGx is currental available in the devel version of Bioconductor
 * https://cran.r-project.org/web/packages/CoreGx/index.html
   * CoreGx is currently being prepared for inclusion in Bioc 3.11 release in April/May; it abstracts shared functionality between the expanding set of ...Gx packages our lab has developed and will be a dependency
@@ -146,62 +148,187 @@ this tutorial.
 
 ## Basic Functionalities of RadioGx
 
+### Installing RadioGx
+
+To install the RadioGx package, run:
+
+```{r install_radiogx, eval=FALSE}
+devtools::install_github('bhklab/RadioGx')
+# BiocManager::install('RadioGx', version='devel') # Waiting on issue with Bioconductor credentials to be resolved so I can push updates
+```
+```{r load_package}
+library(RadioGx)
+```
+
 ### RadioSet
 
 The RadioSet has a structure similar to the PharmacoSet and also inherits 
 from the CoreSet class exported by CoreGx. The radiation slot is implemented in 
 RadioGx to hold relevant metadata about the type of radiation used in the 
-dose-response experiments for this dataset and is analagous to the drug slot
+dose-response experiments for this dataset, and is analogous to the drug slot
 in a PharmacoSet. The remainder of the slots mirror the PharmacoSet.
 
 <!-- FIXME: Simplify this diagram -->
 ![**Fig. N - RadioSet class diagram**](./RadioGxClassDiagram.png){ width=600px, height=600px }
 
-### Cleveland dataset
+### Cleveland Data Set
 
-RadioGx provides an interface similar to other BHKLab packages for accessing
-datasets we have curated.
+RadioGx provides an interface similar to PharmacoGx and Xeva for downloading
+data sets we have curated.
 
 To get a list of available RadioSets, use:
 
-```{r cleveland}
-#RSets <- availableRSets()
+```{r available_rsets}
+RSets <- availableRSets()
 ```
 
-As the field of Radio-genomics is relatively new, there is only one dataset 
-available. Let's download the 'Cleveland' RSet, which contains data from 
-<reference_to_data_source>. 
+```{r available_radiosets_table}
+print(colnames(RSets))
+knitr::kable(RSets[, c("RadioSet_name", "Date_updated", "DOI")])
+```
+As the field of Radio-genomics is relatively new, there is currently only one dataset
+available. Let's download the 'Cleveland' RSet, which contains a highly curated version of
+the data from Yang *et al.*, 2016.
 
-```{r download_RSet}
-#Cleveland <- downloadRSet('Cleveland', saveDir='.')
+```{r download_rset}
+## FIXME:: Add verbose=FALSE to availableRSets() call within downloadRSet
+Cleveland <- downloadRSet('Cleveland', saveDir='.')
 ```
 
-
-
-
-## Basic Functionalities of Xeva
-
-
+```{r printing_a_radioset}
+Cleveland
+```
+Similar to PharmacoGx and Xeva, a summary of the contents of the RadioSet is printed
+RadioSet is printed as the return when calling a RadioSet in the console. We can see
+that the Cleveland RSet contains sensitivity information for 540 cell-lines treated
+with a single type of radiation.
 
 ### Accessing Data
 
-
 * Access the molecular features, dose-response and metadata contained within the data structures defined in the packages
 
-#### 
 
-
-### Dose-Response Curves
-
-* Create drug-dose and radiation-dose response plots for cell line experiments
 
 ### Fitting the Linear Quadratic (LQ) Model
-* Fit linear-quadratic models to radiotherapy experiments in cell lines
+
+RadioGx provides a number of functions for analyzing dose response experiments.
+To use these functions, we must first fit a statistical model to the dose
+response data. This package exports a function for fitting linear-quadratic
+models to dose response data. The function can be used with data contained in
+a RadioSet or with raw dose-response data.
+
+```{r model_fit}
+# Extract raw sensitvity data from the RadioSet
+sensRaw <- sensitivityRaw(Cleveland)
+paste('Third dimension:', paste0(dimnames(sensRaw)[[3]], collapse=', '))
+```
+```{r structure_sensitivity_raw}
+str(sensRaw)
+```
+The data returned by `sensitivityRaw(RSet)` is a three dimensional
+array, but it can also be thought of as a set of experiment by treatment
+matrices. We can see by the `dimnames` of the third dimensions that
+the first matrix holds the radiation dose (in Gy) for each experiment,
+while the second matrix holds the viability measurements for the cell-line
+after each dose in the experimental series.
+
+```{r cellline_names}
+# Find a cancer cell-line of interest
+head(sensitivityInfo(Cleveland)$cellid)
+```
+
+```{r selecting_cancer_cell_line}
+cancerCellLine <- sensitivityInfo(Cleveland)$cellid[1]
+print(cancerCellLine)
+```
+
+```{r extracting_dose_response_data}
+# Get the radiation doses and associated survival data from clevelandSmall
+radiationDoses <- sensRaw[1, , 'Dose']
+survivalFractions <- sensRaw[1, , 'Viability']
+```
+
+```{r fitting_lq_model}
+LQmodel <- linearQuadraticModel(D=radiationDoses,
+                                SF=survivalFractions)
+LQmodel
+```
+
+Above we see that LQmodel contains the alpha and beta coefficients for the dose
+response curve fit to the dose and viability data for the IMR-32 cancer cell-line.
+Based on the $R^2$ attribute we can see that the model fit for this data is
+good, with over 95% of observed variance explained by the model.
+
 
 ### Calculating Dose-Response Metrics
 
-* Calculate the AAC, AUC, IC50, SF2, D10 metrics for response quantification in cell lines
+RadioGx provides a number of functions for calculating common dose response
+metrics such as survival fraction (SF), area under the curve (AUC) and dose at
+which only 10% of cancer cells survive (D10).
 
+Some of these functions require the alpha and beta coefficients, as calculated
+above using the `linearQuadraticModel` function.
+
+```{r metrics_computed_from_fit_parameters}
+survFracAfter2Units <- computeSF2(pars=LQmodel)
+print(survFracAfter2Units)
+
+dose10PercentSurv <- computeD10(pars=LQmodel)
+print(dose10PercentSurv)
+```
+We see from the above code cell that after two units of radiation, approximately
+`r (100 * survFracAfter2Units)` of cancer cells remain relative to the initial population.
+Conversely, using `computeD10` we see that on average `r dose10PercentSurv` units of radiation
+need to be administered to result in 10% cell-line survival (i.e., 90% of cancer cells
+are killed).
+
+Other dose-response metrics can be computed directly using the radiation dose
+and cancer cell viability data.
+
+```{r metrics_computed_from_dose_response_data}
+areaUnderDoseRespCurve <- computeAUC(D=radiationDoses, pars=LQmodel, lower=0,
+                                     upper=1)
+print(areaUnderDoseRespCurve)
+
+survFrac <- 1 - areaUnderDoseRespCurve
+print(survFrac)
+```
+
+In the above code block we compute the AUC for a dose-response curve between a
+dose of 0 to 1 Gy. This area can be interpreted as the proportion of cells
+killed during the administration of 1 Gy of radiation, therefore the survival
+fraction is equal to 1 - AUC. We see that 1 Gy of radiation killed ~70% of
+cancer cell-line colonies, thus our survival fraction is ~30% or 0.3.
+
+### Dose-Response Curves
+
+The `doseResponseCurve` function can be used to generate plots of survival
+fraction vs dose for radiation sensitivity experiments. In this example
+we provide raw data values to create the plot. When the `plot.type` is set to
+"Both", a linear-quadratic model will also be fit to the supplied dose-response
+values.
+
+```{r plotting_rad_dose_resp}
+doseResponseCurve(
+  Ds=list("Experiment 1" = c(0, 2, 4, 6)),
+  SFs=list("Experiment 1" = c(1,.6,.4,.2)),
+  plot.type="Both"
+  )
+```
+
+Additionally, `doseResponseCurve` can be used to create dose response curves
+directly from a curated RadioSet object. When utilizing this feature, a
+cell-line must be selected from the RadioSet. This can be done by name
+if you know which cell-line you are looking for. If you don't know which
+cell-line you want to visualize, the available
+cell-lines can be explored using the `cellInfo` function.
+
+```{r plotting_rad_dose_resp_rSet}
+doseResponseCurve(
+  rSets=list(clevelandSmall),
+  cellline=cellInfo(clevelandSmall)$cellid[3]
+)
+```
 
 
 ## Data Analysis Walkthrough
