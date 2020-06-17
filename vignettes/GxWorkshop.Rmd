@@ -108,19 +108,40 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Introduction
+This tutorial, titled Biomarker Discovery from High Throughput Screening Datasets, focuses on a suite of packages designed to 
+simplify analysis correlating measures of treatment response measured on model systems with molecular profiles of those systems.
+These packages primarly focus on modeling response to cancer treatments in cancer models, but the concepts presented can be 
+applied to other disease types, given availability of data for the area of interest. 
 
+The first two of the packages, `r BiocStyle::Biocpkg("PharmacoGx")` and `r BiocStyle::Biocpkg("RadioGx")` focus on screens done 
+using cell lines as a model system. PharmacoGx focuses on modeling and predicting the response of cell lines treated with small 
+molecule therapies. RadioGx swaps the small molecule treatment for irradiation of cell lines. The third package, 
+`r BiocStyle::Biocpkg("Xeva")`, looks at treatment response for _in vivo_ systems, primarily Patient Derived Xenographs of cancer
+tumours growing in immune compromised mice. 
 
 
 ## Data Structure and Common Functions Between Packages
+
+While the experiments analyzed by the three packages are different, the workflow that these packages are designed to accommodate
+has many similarities between them. First and foremost, all three pacakges were developed to provide 
 
 
 
 ## Basic Functionalities of PharmacoGx
 
-
-
-## Basic Functionalities of Xeva
-
+`r BiocStyle::Biocpkg("PharmacoGx")` was developed to serve as a platform for
+integrating analysis across different pharmacogenomic datasets. The main focus of the `r
+BiocStyle::Biocpkg("PharmacoGx")` package is to provide access to
+pharmacogenomics datasets that have been preprocessed with a uniform pipeline,
+and extensively curated to ensure maximum overlap and consistency. The package is designed around
+on a level of abstraction from the raw experimental data, and
+allows bioinformaticians and biologists to work with data at the level of genes,
+drugs and cell lines. This provides a more intuitive interface and, in
+combination with unified curation, simplifies analyses between multiple
+datasets. The purpose of this section is to familiarize the reader with the basic design of a
+high throughput drug screen, introduce the PSet, an object which stores all the data
+related to a pharmacogenomics study, and introduces the datasets which we will be using in 
+this tutorial. 
 
 
 ## Basic Functionalities of RadioGx
@@ -155,10 +176,20 @@ available. Let's download the 'Cleveland' RSet, which contains data from
 #Cleveland <- downloadRSet('Cleveland', saveDir='.')
 ```
 
+
+
+
+## Basic Functionalities of Xeva
+
+
+
 ### Accessing Data
 
 
 * Access the molecular features, dose-response and metadata contained within the data structures defined in the packages
+
+#### 
+
 
 ### Dose-Response Curves
 
