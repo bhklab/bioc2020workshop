@@ -125,6 +125,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Basic Functionalities of RadioGx
 
+### Installing RadioGx
+
+To install the RadioGx package, run:
+
+```{r install_radiogx, eval=FALSE}
+devtools::install_github('bhklab/RadioGx')
+# BiocManager::install('RadioGx', version='devel') # Waiting on issue with Bioconductor credentials to be resolved so I can push updates
+```
+```{r load_package}
+library(RadioGx)
+```
+
 ### RadioSet
 
 The RadioSet has a structure similar to the PharmacoSet and also inherits 
@@ -143,33 +155,104 @@ datasets we have curated.
 
 To get a list of available RadioSets, use:
 
-```{r cleveland}
-#RSets <- availableRSets()
+```{r available_rsets}
+RSets <- availableRSets()
+RSets
 ```
 
 As the field of Radio-genomics is relatively new, there is only one dataset 
-available. Let's download the 'Cleveland' RSet, which contains data from 
-<reference_to_data_source>. 
+available. Let's download the 'Cleveland' RSet, which contains a highly curated version of
+the data from Yang *et al.*, 2016.
 
-```{r download_RSet}
-#Cleveland <- downloadRSet('Cleveland', saveDir='.')
+```{r download_rset}
+## FIXME:: Add verbose=FALSE to availableRSets() call within downloadRSet
+Cleveland <- downloadRSet('Cleveland', saveDir='.')
+Cleveland
 ```
+
+Similar to PharmacoGx and Xeva, a summary of the contents of the RadioSet is printed when calling a RadioSet.
 
 ### Accessing Data
 
-
 * Access the molecular features, dose-response and metadata contained within the data structures defined in the packages
 
-### Dose-Response Curves
+```{r molecular_features}
 
-* Create drug-dose and radiation-dose response plots for cell line experiments
+```
+
+
+```{r molecular_features}
+
+```
+
+
+```{r molecular_features}
+
+```
+
 
 ### Fitting the Linear Quadratic (LQ) Model
-* Fit linear-quadratic models to radiotherapy experiments in cell lines
+
+RadioGx provides a number of functions for analyzing dose response experiments.
+To use these functions, we must first fit a statistical model to the dose
+response data. This package provides a function for fitting linear-quadratic
+models to dose response data. The functions can be used with data contained in
+a RadioSet or with raw data.
+
+```{r model_fit}
+# Extract raw sensitvity data from the RadioSet
+sensRaw <- sensitivityRaw(Cleveland)
+
+# Find a cancer cell-line of interest
+cancerCellLine <- sensitivityInfo(Cleveland)$cellid[1]
+print(cancerCellLine)
+
+# Get the radiation doses and associated survival data from clevelandSmall
+radiationDoses <- sensRaw[1, , 'Dose']
+survivalFractions <- sensRaw[1, , 'Viability']
+
+LQmodel <- linearQuadraticModel(D=radiationDoses,
+                                SF=survivalFractions)
+LQmodel
+```
+Above we see that LQmodel contains the alpha and beta coefficients for the dose
+response curve fit to the dose and viability data for the IMR-32 cancer cell-line.
+Based on the $R^2$ attribute we can see that the model fit for this data is
+good, with over 95% of observed variance explained by the model.
+
 
 ### Calculating Dose-Response Metrics
 
-* Calculate the AAC, AUC, IC50, SF2, D10 metrics for response quantification in cell lines
+```{r AUC}
+
+```
+
+```{r SF2}
+
+```
+
+```{r D10}
+
+```
+
+### Dose-Response Curves
+
+
+```{r molecular_features}
+
+```
+
+
+```{r molecular_features}
+
+```
+
+
+* Create drug-dose and radiation-dose response plots for cell line experiments
+
+
+
+
 
 
 
