@@ -55,9 +55,9 @@ Bioconductor:
 * https://bioconductor.org/packages/release/bioc/html/PharmacoGx.html
 * http://bioconductor.org/packages/release/bioc/html/Xeva.html
 * https://cran.r-project.org/web/packages/RadioGx/index.html
-  * RadioGx is currental available in the devel version of Bioconductor
+  * RadioGx is currently available in the devel version of Bioconductor
 * https://cran.r-project.org/web/packages/CoreGx/index.html
-  * CoreGx is currently being prepared for inclusion in Bioc 3.11 release in April/May; it abstracts shared functionality between the expanding set of ...Gx packages our lab has developed and will be a dependency
+  * CoreGx is currently available in the 3.11 release of Bioconductor
 
 ## Time outline
 
@@ -379,70 +379,153 @@ print(p)
 
 
 
-
-
 ## Basic Functionalities of RadioGx
 
 ### Installing RadioGx
 
-To install the RadioGx package, run:
+To install the `r BiocStyle::Biocpkg('RadioGx')` package, run:
 
-```{r install_radiogx, eval=FALSE}
+```{r install_radiogx, eval=FALSE, message=FALSE}
 devtools::install_github('bhklab/RadioGx')
 # BiocManager::install('RadioGx', version='devel') # Waiting on issue with Bioconductor credentials to be resolved so I can push updates
 ```
-```{r load_package}
+
+```{r load_package, message=FALSE}
 library(RadioGx)
 ```
 
 ### RadioSet
 
-The RadioSet has a structure similar to the PharmacoSet and also inherits 
-from the CoreSet class exported by CoreGx. The radiation slot is implemented in 
-RadioGx to hold relevant metadata about the type of radiation used in the 
-dose-response experiments for this dataset, and is analogous to the drug slot
-in a PharmacoSet. The remainder of the slots mirror the PharmacoSet.
+The RadioSet has a structure similar to the `PharmacoSet` and also inherits
+from the CoreSet class exported by `r BiocStyle::Biocpkg('CoreGx')`. The radiation
+slot is implemented in `r BiocStyle::Biocpkg('RadioGx')`  to hold relevant metadata
+about the type(s) of radiation used in the dose-response experiment,
+and is analogous to the drug slot in a `PharmacoSet`. The remainder of the slots
+mirror the `PharmacoSet`.
 
-<!-- FIXME: Simplify this diagram -->
-![**Fig. N - RadioSet class diagram**](./RadioGxClassDiagram.png){ width=600px, height=600px }
+```{r echo=FALSE, out.width='100%', fig.align='center', fig.cap = "**Fig. N: RadioSet class diagram**"}
+knitr::include_graphics('./RadioGxClassDiagram.png')
+```
 
-### Cleveland Data Set
+### Downloading an RSet
 
-RadioGx provides an interface similar to PharmacoGx and Xeva for downloading
-data sets we have curated.
+`r BiocStyle::Biocpkg('RadioGx')` provides an interface similar to `r BiocStyle::Biocpkg("PharmacoGx")`
+and `r BiocStyle::Biocpkg('Xeva')` for downloading our curated versions of published datasets.
 
-To get a list of available RadioSets, use:
+To get a list of available `RadioSet`s, use:
 
 ```{r available_rsets}
 RSets <- availableRSets()
 ```
 
-```{r available_radiosets_table}
-print(colnames(RSets))
+```{r available_radiosets_table, echo=FALSE}
 knitr::kable(RSets[, c("RadioSet_name", "Date_updated", "DOI")])
 ```
-As the field of Radio-genomics is relatively new, there is currently only one dataset
-available. Let's download the 'Cleveland' RSet, which contains a highly curated version of
-the data from Yang *et al.*, 2016.
+
+As the `r BiocStyle::Biocpkg('RadioGx')` package was only recently released, there is
+currently only one dataset available. Let's download the 'Cleveland' RSet, which contains
+a highly curated version of the data from Yang *et al.*, 2016.
 
 ```{r download_rset}
-## FIXME:: Add verbose=FALSE to availableRSets() call within downloadRSet
 Cleveland <- downloadRSet('Cleveland', saveDir='.')
 ```
 
-```{r printing_a_radioset}
+```{r printing_a_radioset, hide=TRUE}
 Cleveland
 ```
+
 Similar to PharmacoGx and Xeva, a summary of the contents of the RadioSet is printed
-RadioSet is printed as the return when calling a RadioSet in the console. We can see
-that the Cleveland RSet contains sensitivity information for 540 cell-lines treated
-with a single type of radiation.
+when calling a RadioSet in the console. We can see that the Cleveland RSet contains
+sensitivity information for 540 cell-lines treated with a single type of radiation.
+The RSet also contains rna(microarray), rna-seq and cnv molecular data for a subset of available
+cell-lines.
 
 ### Accessing Data
 
-* Access the molecular features, dose-response and metadata contained within the data structures defined in the packages
+RadioGx stores three major categories of data: metadata/annotations, molecular data and radiation response data.
+These are demarcated in *Fig N* using green, blue and red, respectively. Accessor methods are available
+to retrieve all three kinds of data from an RSet; the accessor methods for each component are listed
+in the bottom most cell of each object in the RadioGx class diagram. We will discuss a subset of these methods
+now.
+
+1. Accessing metadata
+
+Metadata in an RSet is stored in the same slots as in a PharmacoSet, and can be accessed using the same
+generic accessor functions as in PharmacoGx. A unique slot, `radiation` has additional accessor methods
+to retrieve the radiation types used in a given sensitivity experiment.
+
+```{r radiation_info_accessor}
+# Get the radiation info data.frame from an RSet
+radInf <- radiationInfo(Cleveland)
+```
+
+```{r print_radinf}
+knitr::kable(head(radInf))
+```
+Currently, only one type of radiation has been used in an RSet. However, we hope to add new RSets covering a wider range of
+sensitivity and perturbation experiments in the near future. The following method is also available to retrieve the radiation
+types as a `character` vector instead of a `data.frame`.
+
+```{r radiation_types_accessor}
+radTypes <- radiationTypes(Cleveland)
+radTypes
+```
+2. Accessing molecular data
+
+Molecular data in an RSet is contained in the `molecularProfiles` slot and can be accessed the same way it is for a PSet.
+
+```{r molecular_data_slot_accessors}
+# Get the list (equivalent to @molecularProfiles, except that it is robut to changes in RSet structure
+str(molecularProfilesSlot(Cleveland), max.level=2)
+
+# Get the names from the list
+mDataNames(Cleveland)
+```
+
+All molecular data in an RSet (any class inheriting from CoreSet, actually) is contained in a `SummarizedExperiment`
+object. While `r BiocStyle::Biocpkg('SummarizedExperiment')` comes with it's own set of accessors, we recommend using
+available `r BiocStyle::Biocpkg('RadioGx')` accessor methods as it allows your scripts to be robust to future changes
+in the structure of a `RadioSet` object.
+
+```{r sample_meta_data}
+# Get sample metadata
+phenoInf <- phenoInfo(Cleveland, 'cnv')
+```
+
+```{r print_sample_meta_data}
+knitr::kable(head(phenoInf))
+```
 
 
+```{r feature_meta_data}
+# Get feature metadata
+featInfo <- featureInfo(Cleveland, 'rna')
+```
+
+```{r print_feature_meta_data}
+knitr::kable(head(featInfo))
+```
+
+
+```{r molecular_data}
+# Access the moleclar feature data
+mProf <- molecularProfiles(Cleveland, 'rnaseq')
+```
+
+```{r print_molecular_profile_data}
+knitr::kable(head(mProf))
+```
+
+
+3. Accessing response data
+
+Data from radiation sensitivity and/or perturbation experiments is also retrieved the same way it is for a PSet. Currently,
+only sensitivity experiments have been included in a RadioSet.
+
+```{r response_data_accessors}
+# Get sensitivity slot
+
+```
 
 ### Fitting the Linear Quadratic (LQ) Model
 
@@ -460,6 +543,7 @@ paste('Third dimension:', paste0(dimnames(sensRaw)[[3]], collapse=', '))
 ```{r structure_sensitivity_raw}
 str(sensRaw)
 ```
+
 The data returned by `sensitivityRaw(RSet)` is a three dimensional
 array, but it can also be thought of as a set of experiment by treatment
 matrices. We can see by the `dimnames` of the third dimensions that
@@ -494,7 +578,6 @@ response curve fit to the dose and viability data for the IMR-32 cancer cell-lin
 Based on the $R^2$ attribute we can see that the model fit for this data is
 good, with over 95% of observed variance explained by the model.
 
-
 ### Calculating Dose-Response Metrics
 
 RadioGx provides a number of functions for calculating common dose response
@@ -517,7 +600,7 @@ Conversely, using `computeD10` we see that on average `r dose10PercentSurv` unit
 need to be administered to result in 10% cell-line survival (i.e., 90% of cancer cells
 are killed).
 
-Other dose-response metrics can be computed directly using the radiation dose
+Other dose-response metrics can be computed directly using radiation dose
 and cancer cell viability data.
 
 ```{r metrics_computed_from_dose_response_data}
@@ -532,8 +615,9 @@ print(survFrac)
 In the above code block we compute the AUC for a dose-response curve between a
 dose of 0 to 1 Gy. This area can be interpreted as the proportion of cells
 killed during the administration of 1 Gy of radiation, therefore the survival
-fraction is equal to 1 - AUC. We see that 1 Gy of radiation killed ~70% of
-cancer cell-line colonies, thus our survival fraction is ~30% or 0.3.
+fraction is equal to 1 - AUC. We see that 1 Gy of radiation killed
+`r (100 * areaUnderDoseRespCurve)` of cancer cell-line colonies, thus our
+surviving fraction is `r (100 * survFrac)` or `surFrac`.
 
 ### Dose-Response Curves
 
@@ -563,6 +647,25 @@ doseResponseCurve(
   rSets=list(clevelandSmall),
   cellline=cellInfo(clevelandSmall)$cellid[3]
 )
+```
+
+### Summarizing Sensitivity
+
+```{r}
+
+```
+
+### Summarizing Molecular Data
+
+```{r}
+
+```
+
+
+### Gene Signatures for Biomarker Discovery
+
+```{r}
+
 ```
 
 
