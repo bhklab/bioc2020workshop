@@ -1,28 +1,35 @@
 ---
 title: "Biomarker Discovery from High Throughput Screening Datasets"
 author: 
-  Petr Smirnov^[psmirnov2000@gmail.com], 
-  Arvind Mer, 
-  Christopher Eeles^[christopher.eeles@uhnresearch.ca]
-output: rmarkdown::html_vignette
+  - name: Petr Smirnov
+    email: psmirnov2000@gmail.com
+    affiliation: ['Princess Margaret Cancer Centre', 'University of Toronto']
+  - name: Arvind Mer
+    email: arvind.mer@uhnresearch.ca
+    affiliation: Princess Margaret Cancer Centre
+  - name: Christopher Eeles
+    email: christopher.eeles@uhnresearch.ca
+    affiliation: Princess Margaret Cancer Centre
+output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{Biomarker Discovery from High Throughput Screening Datasets}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-## Instructor(s) name(s) and contact information
+# Workshop Overview {-}
+
+## Instructor(s) name(s) and contact information {-}
 
 * Petr Smirnov <petr.smirnov@uhnresearch.ca>
 * Arvind Mer <arvind.mer@uhnresearch.ca>
 * Christopher Eeles <christopher.eeles@uhnresearch.ca>
 
+## Workshop Description {-}
 
-## Workshop Description
+This workshop will focus on the synergies between analysis results from the `PharmacoGx`, `Xeva` and `RadioGx` packages and their usefulness for discovery of biomarkers of drug and/or radiation sensitivity in cancer cell lines (CCLs) and patent derived xenograft models (PDXs). We will discuss issues with data curation, consistency and reproducibility within the literature as well as illustrate the importance of unified analytical platforms, data and code sharing in bioinformatics and biomedical research. In this lab learners will be led through an analysis for each of the three packages on data provided by the download functions within them. The results of these analyses will then be explored to highlight how drug and radiation dose-response profiles in CCLs and PDXs can be used to discover potential synergistic biomarkers for drug-radiation and drug combination therapies. The resulting biomarkers will be discussed in the context of translational cancer research and clinical applications of genomic data. We will conclude with a discussion of how these biomarkers can be used to inform future in vitro and in vivo treatment screenings and ultimately provide useful insights for clinical trial design.
 
-This workshop will focus on the synergies between analysis results from the PharmacoGx, Xeva and RadioGx packages and their usefulness for discovery of biomarkers of drug and/or radiation sensitivity in cancer cell lines (CCLs) and patent derived xenograft models (PDXs). We will discuss issues with data curation, consistency and reproducibility within the literature as well as illustrate the importance of unified analytical platforms, data and code sharing in bioinformatics and biomedical research. In this lab learners will be led through an analysis for each of the three packages on data provided by the download functions within them. The results of these analyses will then be explored to highlight how drug and radiation dose-response profiles in CCLs and PDXs can be used to discover potential synergistic biomarkers for drug-radiation and drug combination therapies. The resulting biomarkers will be discussed in the context of translational cancer research and clinical applications of genomic data. We will conclude with a discussion of how these biomarkers can be used to inform future in vitro and in vivo treatment screenings and ultimately provide useful insights for clinical trial design. 
-
-### Pre-requisites
+### Pre-requisites {-}
 
 List any workshop prerequisites:
 
@@ -41,14 +48,13 @@ theoretical background you expect students to have.
 
 
 
-
-### Workshop Participation
+### Workshop Participation {-}
 
 Participants expected to have the following required packages installed on their machines to be able to run the commands along with the instructors.
-PharmacoGx,  Xeva, RadioGx, CoreGx and Biobase from Bioconductor
+`PharmacoGx`,  `Xeva`, `RadioGx`, `CoreGx` and `Biobase` from Bioconductor
 The workshop will be presented as a set of analysis steps to be replicated by the learners, with instructors available to explain the why and how of applying these functions to the given datasets. Learners will write analysis scripts as well as use interactive commands to explore the generated data structures and results. Learners will then brainstorm potential applications of the analysis results in their field as well as comment on use case examples presented by the instructors on research in our lab.
 
-### _R_ / _Bioconductor_ packages used
+### _R_ / _Bioconductor_ packages used {-}
 
 Bioconductor:
 
@@ -59,7 +65,7 @@ Bioconductor:
 * https://cran.r-project.org/web/packages/CoreGx/index.html
   * CoreGx is currently available in the 3.11 release of Bioconductor
 
-## Time outline
+## Time outline {-}
 
 For a 2-hr workshop:
 
@@ -75,9 +81,9 @@ For a 2-hr workshop:
 | Use Case Discussion: Translational Science             | 15m |
 
 
-## Workshop goals and objectives
+## Workshop goals and objectives {-}
 
-### Learning goals
+### Learning goals {-}
 
 * Describe pharmacogenomic datasets and radiogenomic datasets and usefulness in cancer research
 * Learn how to extract information from these datasets and to intersect them over their common measured features, experiments, model systems 
@@ -89,7 +95,7 @@ For a 2-hr workshop:
 * Understand how to choose the appropriate sensitivity quantification metric for your task 
 * Understand how to identify potential genomic signatures of drug and radiation response and explore how synergies between these signatures can inform clinical trial design
 
-### Learning objectives
+### Learning objectives {-}
 
 * List available standardized pharmacogenomic and radiogenomic datasets and download them
 * Access the molecular features, dose-response and metadata contained within the data structures defined in the packages
@@ -109,7 +115,7 @@ For a 2-hr workshop:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Introduction
+# Introduction
 This tutorial, titled Biomarker Discovery from High Throughput Screening Datasets, focuses on a suite of packages designed to 
 simplify analysis correlating measures of treatment response measured on model systems with molecular profiles of those systems.
 These packages primarly focus on modeling response to cancer treatments in cancer models, but the concepts presented can be 
@@ -122,14 +128,13 @@ molecule therapies. RadioGx swaps the small molecule treatment for irradiation o
 tumours growing in immune compromised mice. 
 
 
-## Data Structure and Common Functions Between Packages
+# Data Structure and Common Functions Between Packages
 
 While the experiments analyzed by the three packages are different, the workflow that these packages are designed to accommodate
 has many similarities between them. First and foremost, all three pacakges were developed to provide 
 
 
-
-## Basic Functionalities of PharmacoGx
+# Basic Functionalities of PharmacoGx
 
 `r BiocStyle::Biocpkg("PharmacoGx")` was developed to serve as a platform for
 integrating analysis across different pharmacogenomic datasets. The main focus of the
@@ -146,9 +151,9 @@ related to a pharmacogenomics study, and introduces the datasets which we will b
 this tutorial. 
 
 
-## Basic Functionalities of RadioGx
+# Basic Functionalities of RadioGx
 
-### Installing RadioGx
+## Installing RadioGx
 
 To install the `r BiocStyle::Biocpkg('RadioGx')` package, run:
 
@@ -161,7 +166,7 @@ devtools::install_github('bhklab/RadioGx')
 library(RadioGx)
 ```
 
-### RadioSet
+## RadioSet
 
 The RadioSet has a structure similar to the `PharmacoSet` and also inherits
 from the CoreSet class exported by `r BiocStyle::Biocpkg('CoreGx')`. The radiation
@@ -170,11 +175,11 @@ about the type(s) of radiation used in the dose-response experiment,
 and is analogous to the drug slot in a `PharmacoSet`. The remainder of the slots
 mirror the `PharmacoSet`.
 
-```{r echo=FALSE, out.width='100%', fig.align='center', fig.cap = "**Fig. N: RadioSet class diagram**"}
+```{r echo=FALSE, out.width='100%', fig.align='center', fig.cap = "**RadioSet class diagram**"}
 knitr::include_graphics('./RadioGxClassDiagram.png')
 ```
 
-### Downloading an RSet
+## Downloading an RSet
 
 `r BiocStyle::Biocpkg('RadioGx')` provides an interface similar to `r BiocStyle::Biocpkg("PharmacoGx")`
 and `r BiocStyle::Biocpkg('Xeva')` for downloading our curated versions of published datasets.
@@ -207,7 +212,7 @@ sensitivity information for 540 cell-lines treated with a single type of radiati
 The RSet also contains rna(microarray), rna-seq and cnv molecular data for a subset of available
 cell-lines.
 
-### Accessing Data
+## Accessing Data
 
 RadioGx stores three major categories of data: metadata/annotations, molecular data and radiation response data.
 These are demarcated in *Fig N* using green, blue and red, respectively. Accessor methods are available
@@ -215,7 +220,7 @@ to retrieve all three kinds of data from an RSet; the accessor methods for each 
 in the bottom most cell of each object in the RadioGx class diagram. We will discuss a subset of these methods
 now.
 
-1. Accessing metadata
+### Accessing metadata
 
 Metadata in an RSet is stored in the same slots as in a PharmacoSet, and can be accessed using the same
 generic accessor functions as in PharmacoGx. A unique slot, `radiation` has additional accessor methods
@@ -229,6 +234,7 @@ radInf <- radiationInfo(Cleveland)
 ```{r print_radinf}
 knitr::kable(head(radInf))
 ```
+
 Currently, only one type of radiation has been used in an RSet. However, we hope to add new RSets covering a wider range of
 sensitivity and perturbation experiments in the near future. The following method is also available to retrieve the radiation
 types as a `character` vector instead of a `data.frame`.
@@ -237,7 +243,7 @@ types as a `character` vector instead of a `data.frame`.
 radTypes <- radiationTypes(Cleveland)
 radTypes
 ```
-2. Accessing molecular data
+### Accessing molecular data
 
 Molecular data in an RSet is contained in the `molecularProfiles` slot and can be accessed the same way it is for a PSet.
 
@@ -259,18 +265,19 @@ in the structure of a `RadioSet` object.
 phenoInf <- phenoInfo(Cleveland, 'cnv')
 ```
 
-```{r print_sample_meta_data}
-knitr::kable(head(phenoInf))
-```
 
+```{r print_sample_meta_data}
+knitr::kable(phenoInf[1:5, 1:5])
+```
 
 ```{r feature_meta_data}
 # Get feature metadata
 featInfo <- featureInfo(Cleveland, 'rna')
 ```
 
+
 ```{r print_feature_meta_data}
-knitr::kable(head(featInfo))
+knitr::kable(featInfo[1:5, 1:5])
 ```
 
 
@@ -279,12 +286,14 @@ knitr::kable(head(featInfo))
 mProf <- molecularProfiles(Cleveland, 'rnaseq')
 ```
 
+
+
 ```{r print_molecular_profile_data}
-knitr::kable(head(mProf))
+knitr::kable(mProf[1:5, 1:5])
 ```
 
 
-3. Accessing response data
+### Accessing response data
 
 Data from radiation sensitivity and/or perturbation experiments is also retrieved the same way it is for a PSet. Currently,
 only sensitivity experiments have been included in a RadioSet.
@@ -294,7 +303,7 @@ only sensitivity experiments have been included in a RadioSet.
 
 ```
 
-### Fitting the Linear Quadratic (LQ) Model
+## Fitting Linear Quadratic (LQ) Models
 
 RadioGx provides a number of functions for analyzing dose response experiments.
 To use these functions, we must first fit a statistical model to the dose
@@ -345,7 +354,7 @@ response curve fit to the dose and viability data for the IMR-32 cancer cell-lin
 Based on the $R^2$ attribute we can see that the model fit for this data is
 good, with over 95% of observed variance explained by the model.
 
-### Calculating Dose-Response Metrics
+## Calculating Dose-Response Metrics
 
 RadioGx provides a number of functions for calculating common dose response
 metrics such as survival fraction (SF), area under the curve (AUC) and dose at
@@ -436,57 +445,11 @@ doseResponseCurve(
 ```
 
 
-## Data Analysis Walkthrough
+# Data Analysis Walkthrough
 
 
-## Understanding Analysis Results and Synergies
-
-
-
-## Use Case Discussion: Translational Science
+# Understanding Analysis Results and Synergies
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
---------
-
-
-## How to add figures
-
-
-## How to add citations
-
-Cite like that: [@paper1]
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+# Use Case Discussion: Translational Science
