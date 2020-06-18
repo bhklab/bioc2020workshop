@@ -107,6 +107,9 @@ For a 2-hr workshop:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(GxBioc2020Workshop)
+library(PharmacoGx)
+library(CoreGx)
 ```
 
 ## Introduction
@@ -124,26 +127,258 @@ tumours growing in immune compromised mice.
 
 ## Data Structure and Common Functions Between Packages
 
-While the experiments analyzed by the three packages are different, the workflow that these packages are designed to accommodate
-has many similarities between them. First and foremost, all three pacakges were developed to provide 
+While the experiments analyzed by the three packages are different, the workflow
+that these packages are designed to accommodate has many similarities between
+them. First and foremost, all three packages were developed to provide data structures to package together
+the screening and molecular data, as well as all related metadata, for complete studies. 
 
 
 
 ## Basic Functionalities of PharmacoGx
 
 `r BiocStyle::Biocpkg("PharmacoGx")` was developed to serve as a platform for
-integrating analysis across different pharmacogenomic datasets. The main focus of the `r
-BiocStyle::Biocpkg("PharmacoGx")` package is to provide access to
-pharmacogenomics datasets that have been preprocessed with a uniform pipeline,
-and extensively curated to ensure maximum overlap and consistency. The package is designed around
-on a level of abstraction from the raw experimental data, and
-allows bioinformaticians and biologists to work with data at the level of genes,
-drugs and cell lines. This provides a more intuitive interface and, in
-combination with unified curation, simplifies analyses between multiple
-datasets. The purpose of this section is to familiarize the reader with the basic design of a
-high throughput drug screen, introduce the PSet, an object which stores all the data
-related to a pharmacogenomics study, and introduces the datasets which we will be using in 
-this tutorial. 
+integrating analysis across different pharmacogenomic datasets. The main focus
+of the PharmacoGx package is to provide access to pharmacogenomics datasets that
+have been preprocessed with a uniform pipeline, and extensively curated to
+ensure maximum overlap and consistency. The package is designed around on a
+level of abstraction from the raw experimental data, and allows
+bioinformaticians and biologists to work with data at the level of genes, drugs
+and cell lines. This provides a more intuitive interface and, in combination
+with unified curation, simplifies analyses between multiple datasets. The
+purpose of this section is to familiarize the reader with the basic design of a
+high throughput drug screen, introduce the PSet, an object which stores all the
+data related to a pharmacogenomics study, and introduces the datasets which we
+will be using in  this tutorial. 
+
+
+PharmacoGx was made to unify the preprocessing and annotation between public 
+Pharmacogenomics studies, so that the analyst can spend less time in data
+sanitization, and skip straight to the analysis. As such, PharmacoSets for 
+major datasets are available for download from our servers. These PSets all went
+through a unified Preprocessing, QC, Normalization and Annotation  Pipeline.
+
+![](CreatePSet.png)
+
+
+### PharmacoSet Structure
+
+PharmacoGx and RadioGx share many simularities, both in the design of experiments between the two packages, 
+and subsequently in the 
+
+The basic structure of a PharmacoSet is as follows:
+
+![](PSetStruct.png)
+
+
+### Downloading PharmacoSet objects
+Let us download the PSets used for this tutorial into our local working environment. 
+A table of available PharmacoSet objects can be obtained by using the *availablePSets*
+function. 
+```{r avail_psets, eval=FALSE}
+  library(PharmacoGx)
+  availablePSets()
+```
+
+If you look through the table produced by availablePSets, you will notice that 
+each PSet object is downloaded from Zenodo - an Open Science project supported by
+the European Commision and CERN. Each PSet is assigned a DOI, which can be used
+to uniquely identify the data used in your analysis and retrieve it in the future 
+for research reproducibility.  
+
+Any of the PharmacoSets in the table can then be downloaded by calling
+*downloadPSet*, which saves the datasets into a directory of the users choice,
+and returns the data into the R session. Lets try downloading the GDSC and CCLE
+PSets. The following code is included as an example, but not run, as the objects
+were preloaded onto the VM for the workshop. 
+```{r download_psets, eval=FALSE}
+  GDSC <- downloadPSet("GDSC_2020(v1-8.2)", saveDir=file.path(".", "PSets"))
+  CCLE <- downloadPSet("CCLE_2015", saveDir=file.path(".", "PSets"))
+```
+
+To load the datasets used in this workshop, we run the following code:
+```{r load_psets, eval=TRUE}
+data(GDSC)
+data(CCLE)
+```
+
+
+### Working with PSets
+
+For most of your work with PSet objects, we recommend you use the accessor
+functions implemented in the package to access the data stored in the object.
+For example, here we can use the *cellInfo* function to pull out the tissue of
+origin for each cell line in the CCLE dataset. The *tissueid* column is standard
+for PSets, and should be present in all objects.
+
+```{r piechart, fig.cap="Tissue of origin of cell lines in CCLE study"}
+mycol <- c("#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462",
+           "#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f",
+           "#a6cee3","#1f78b4","#b2df8a","#33a02c","#fb9a99","#e31a1c",
+           "#fdbf6f","#ff7f00","#cab2d6","#6a3d9a","#ffff99","#b15928")
+pie(table(CCLE@cell[,"tissueid"]), 
+    col=mycol, 
+    main="Tissue types", 
+    radius=1, 
+    cex=0.8)
+```
+
+While we will introduce some of the functions for working with PSets in this
+tutorial, the documentation of the PharmacoSet object contains descriptions of
+the available functions to interface with PSet objects:
+
+```{r docs, eval=FALSE}
+?`PharmacoSet-class`
+```
+
+PSets can be subsetted by refering directly to the drugs and cell lines you want
+to keep in the dataset. For example, we can subset the GDSC PSet in the following 
+ways:
+
+```{r subsets, eval=TRUE}
+print(GDSC)
+print(drugNames(GDSC)[1])
+print(subsetTo(GDSC, drugs="Erlotinib"))
+print(GDSC["YT","Erlotinib"])
+
+```
+
+As an exercise, lets manually compute the number of overlaping cell lines and
+drugs between CCLE and GDSC. Try it yourself! 
+
+If you noticed as you completed the previous exercise, cell line and drug names 
+are standardized between PSets downloaded using the *downloadPSet* function. 
+
+PharmacoGx also implements a convenience function to intersect PSets:
+
+```{r intersect, echo=TRUE, eval=FALSE}
+
+common <- intersectPSet(list(CCLE, GDSC), intersectOn=c("drugs", "cell.lines"))
+print(common)
+
+```
+
+### Fitting Drug Dose Response Curves
+
+One of the core tasks implemented in PharmacoGx is the fitting of Hill Curve
+Models to dose-response data. In PharmacoGx, we use the 3 Parameter Hill Slope
+function as our model of drug response in cancer cell lines:
+![](hillslope.png)
+To fit a Hill Slope model to you data, you can use the *logLogisticRegression*
+function, as below:
+
+```{r loglogistic}
+
+concentrations <- 1/2^seq(0,8) * 1
+viabilities <-  c(0, 33.3, 60, 77.8, 88.2, 93.9, 96.9, 98.4, 99.2)
+
+pars <- logLogisticRegression(conc = concentrations, viability = viabilities)
+print(pars)
+```
+
+
+
+### Plotting Drug Dose Response Data
+
+Drug-Dose response data included in the PharmacoSet objects can be conviniently
+plotted using the *drugDoseResponseCurve* function. Given a list of
+PharmacoSets, a drug name and a cell name, it will plot the drug dose response
+curves for the given cell-drug combination in each dataset, allowing direct
+comparisons of data between datasets.
+
+```{r curves}
+cells <- c("OCI-AML2","A253","NCI-H1648")
+par(mfrow=c(1, 3), pty = "s")
+drugDoseResponseCurve(drug="lapatinib", cellline=cells[1], 
+                      pSets=list(CCLE, GDSC), plot.type="Fitted", 
+                      legends.label="auc_published")
+drugDoseResponseCurve(drug="lapatinib", cellline=cells[2], 
+                      pSets=list(CCLE, GDSC), plot.type="Fitted", 
+                      legends.label="auc_published")
+drugDoseResponseCurve(drug="lapatinib", cellline=cells[3], 
+                      pSets=list(CCLE, GDSC), plot.type="Fitted", 
+                      legends.label="auc_published")
+```
+
+The function *drugDoseResponseCurve* can also be used to plot your own drug dose response curves, as follows:
+
+```{r ddrc_own}
+
+concentrations <- 1/2^seq(0,8) * 1
+viabilities <-  c(0, 33.3, 60, 77.8, 88.2, 93.9, 96.9, 98.4, 99.2)
+
+drugDoseResponseCurve(concentrations = list("Exp 1" = concentrations), viabilities = list("Exp 1" = viabilities))
+
+```
+
+
+### Computing Summary Measures for DDRCs
+
+Often with in vitro Pharmacogenomics data, we want to compare the drug sensitivity of a cell line 
+to some omic feature. For this, we want to summarize the drug dose response curve into a single 
+number representing the sensitivity of the cell line. The IC50 and Area Above the curve are two
+convenient metrics for quuantifying the observed drug sensitivity. If you noticed above, 
+the *drugDoseResponseCurve* function computes them by default. In PharmacoGx, they can be 
+computed manually as follows:
+
+```{r sens_own}
+
+concentrations <- rev(1/2^seq(0,8) * 1)
+viabilities <-  c(99.2, 98.4, 96.9, 93.9, 88.2, 77.8, 60, 33.3, 0)
+
+print(computeAUC(concentration = concentrations, viability = viabilities))
+print(computeIC50(concentration = concentrations, viability = viabilities))
+
+```
+
+In *PharmacoGx*, we call these measures sensitivity measures. PSets come with
+these measures precomputed, and accessible using the *sensitivityProfiles*
+function:
+
+```{r sensProf}
+head(sensitivityProfiles(CCLE))
+```
+
+
+### Summary Functions
+
+Pharmacogenomics studies often contain many examples of either replicated or
+missing data. One of the most common tasks in preparing data for statistical or
+machine learning analysis is aligning your features and labels. To accelerate
+using Pharmacogenomics data for analysis, *PharmacoGx* contains two functions
+which create deduplicated matrices with missing data filled by NAs:
+*summarizeSensitivityProfiles* and *summarizeMolecularProfiles*. They create
+matrices which are drugs x cell lines and molecular features x cell lines, with
+any cell lines profiled for only sensitivity or molecular features padded with
+NA values. For the molecular profiles, the data is returned in a `r
+BiocStyle::Biocpkg("Biobase")` *ExpressionSet* object, while drug sensitivity
+data is returned as a matrix.
+
+```{r summary}
+dim(PharmacoGx::summarizeMolecularProfiles(CCLE, "rna"))
+dim(PharmacoGx::summarizeSensitivityProfiles(CCLE))
+```
+
+
+Below, we use the summarizeMolecularProfiles function and ggplot to investigate the distributions of 
+AUC values within CCLE.
+
+```{r ccleaac, fig.cap="Cells response to drugs in CCLE"}
+library(ggplot2, verbose=FALSE)
+library(reshape2, verbose=FALSE)
+CCLE.aac <- PharmacoGx::summarizeSensitivityProfiles(CCLE, sensitivity.measure = "aac_recomputed")
+melted_data <- melt(CCLE.aac)
+NA_rows <- unique(which(is.na(melted_data), arr.ind=T)[,1])
+melted_data <- melted_data[-NA_rows,]
+p <- ggplot(melted_data, aes(x=Var1,y=value)) +
+  geom_boxplot(fill="gray") +
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  xlab("Drugs") +
+  ylab("AAC")
+print(p)
+```
+
+
+
 
 
 ## Basic Functionalities of RadioGx
