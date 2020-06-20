@@ -3,13 +3,15 @@ title: "Biomarker Discovery from High Throughput Screening Datasets"
 author: 
   - name: Petr Smirnov
     email: psmirnov2000@gmail.com
-    affiliation: ['Princess Margaret Cancer Centre', 'University of Toronto']
+    affiliation:
+    - &pm Princess Margaret Cancer Centre
+    - University of Toronto
   - name: Arvind Mer
     email: arvind.mer@uhnresearch.ca
-    affiliation: Princess Margaret Cancer Centre
+    affiliation: *pm
   - name: Christopher Eeles
     email: christopher.eeles@uhnresearch.ca
-    affiliation: Princess Margaret Cancer Centre
+    affiliation: *pm
 output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{Biomarker Discovery from High Throughput Screening Datasets}
@@ -17,6 +19,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<!-- Remove {-} from header to show numbering -->
 # Workshop Overview {-}
 
 ## Instructor(s) name(s) and contact information {-}
@@ -402,13 +405,13 @@ library(RadioGx)
 ## RadioSet
 
 The RadioSet has a structure similar to the `PharmacoSet` and also inherits
-from the CoreSet class exported by `r BiocStyle::Biocpkg('CoreGx')`. The radiation
+from the CoreSet^[exported by `r BiocStyle::Biocpkg('CoreGx')`] class . The radiation
 slot is implemented in `r BiocStyle::Biocpkg('RadioGx')`  to hold relevant metadata
 about the type(s) of radiation used in the dose-response experiment,
 and is analogous to the drug slot in a `PharmacoSet`. The remainder of the slots
 mirror the `PharmacoSet`.
 
-```{r echo=FALSE, out.width='100%', fig.align='center', fig.cap = "**RadioSet class diagram**"}
+```{r radioset, echo=FALSE, fig.wide=TRUE, fig.cap = "**RadioSet class diagram**. Objects comprising a `RadioSet` are enclosed in boxes. First box indicates type and name of each object. Second box indicates the structure of an object or class. Third box shows accessor methods from `RadioGx` for that specific object. '=>' represents return and specifies what is returned from that item or method."}
 knitr::include_graphics('./RadioGxClassDiagram.png')
 ```
 
@@ -419,7 +422,7 @@ and `r BiocStyle::Biocpkg('Xeva')` for downloading our curated versions of publi
 
 To get a list of available `RadioSet`s, use:
 
-```{r available_rsets}
+```{r available_rsets, message=FALSE}
 RSets <- availableRSets()
 ```
 
@@ -442,33 +445,33 @@ Cleveland
 Similar to PharmacoGx and Xeva, a summary of the contents of the RadioSet is printed
 when calling a RadioSet in the console. We can see that the Cleveland RSet contains
 sensitivity information for 540 cell-lines treated with a single type of radiation.
-The RSet also contains rna(microarray), rna-seq and cnv molecular data for a subset of available
+The RSet also contains rna^[microarray], rna-seq and cnv molecular data for a subset of available
 cell-lines.
 
 ## Accessing Data
 
 RadioGx stores three major categories of data: metadata/annotations, molecular data and radiation response data.
-These are demarcated in *Fig N* using green, blue and red, respectively. Accessor methods are available
+These are demarcated in **Fig.** \@ref(fig:radioset) using green, blue and red, respectively. Accessor methods are available
 to retrieve all three kinds of data from an RSet; the accessor methods for each component are listed
 in the bottom most cell of each object in the RadioGx class diagram. We will discuss a subset of these methods
 now.
 
 ### Accessing metadata
 
-Metadata in an RSet is stored in the same slots as in a PharmacoSet, and can be accessed using the same
-generic accessor functions as in PharmacoGx. A unique slot, `radiation` has additional accessor methods
-to retrieve the radiation types used in a given sensitivity experiment.
+Metadata in an RSet is stored in the same slots as in a `PharmacoSet`, and can be accessed using the same
+generic accessor functions as in `r BiocStyle::Biocpkg('PharmacoGx')`. A unique slot, `radiation` has additional
+accessor methods to retrieve the radiation types used in a given sensitivity experiment.
 
 ```{r radiation_info_accessor}
 # Get the radiation info data.frame from an RSet
 radInf <- radiationInfo(Cleveland)
 ```
 
-```{r print_radinf}
-knitr::kable(head(radInf))
+```{r print_radinf, fig.wide = TRUE}
+knitr::kable(radInf)
 ```
 
-Currently, only one type of radiation has been used in an RSet. However, we hope to add new RSets covering a wider range of
+Currently, only one type of radiation has been used in an `RSet`. However, we hope to add new `RSet`s covering a wider range of radiation
 sensitivity and perturbation experiments in the near future. The following method is also available to retrieve the radiation
 types as a `character` vector instead of a `data.frame`.
 
@@ -478,10 +481,10 @@ radTypes
 ```
 ### Accessing molecular data
 
-Molecular data in an RSet is contained in the `molecularProfiles` slot and can be accessed the same way it is for a PSet.
+Molecular data in an `RSet` is contained in the `molecularProfiles` slot and can be accessed the same way it is for a `PSet`.
 
 ```{r molecular_data_slot_accessors}
-# Get the list (equivalent to @molecularProfiles, except that it is robut to changes in RSet structure
+# Get the list (equivalent to @molecularProfiles, except that it is robust to changes in RSet structure
 str(molecularProfilesSlot(Cleveland), max.level=2)
 
 # Get the names from the list
@@ -498,9 +501,10 @@ in the structure of a `RadioSet` object.
 phenoInf <- phenoInfo(Cleveland, 'cnv')
 ```
 
+To keep the document formatted nicely, the following tables have been subset to the first three rows and columns.
 
-```{r print_sample_meta_data}
-knitr::kable(phenoInf[1:5, 1:5])
+```{r print_sample_meta_data, echo=FALSE, fig.small=TRUE}
+knitr::kable(phenoInf[1:3, 1:3], row.names=FALSE)
 ```
 
 ```{r feature_meta_data}
@@ -508,32 +512,42 @@ knitr::kable(phenoInf[1:5, 1:5])
 featInfo <- featureInfo(Cleveland, 'rna')
 ```
 
-
-```{r print_feature_meta_data}
-knitr::kable(featInfo[1:5, 1:5])
+```{r print_feature_meta_data, echo=FALSE, align="center"}
+knitr::kable(featInfo[1:3, 1:3], row.names=FALSE)
 ```
 
-
-```{r molecular_data}
+```{r molecular_data, fig.wide=TRUE}
 # Access the moleclar feature data
 mProf <- molecularProfiles(Cleveland, 'rnaseq')
 ```
 
-
-
-```{r print_molecular_profile_data}
-knitr::kable(mProf[1:5, 1:5])
+```{r print_molecular_profile_data, echo=FALSE}
+knitr::kable(mProf[1:3, 1:3])
 ```
-
 
 ### Accessing response data
 
 Data from radiation sensitivity and/or perturbation experiments is also retrieved the same way it is for a PSet. Currently,
-only sensitivity experiments have been included in a RadioSet.
+only sensitivity experiments have been included in a `RadioSet`.
 
 ```{r response_data_accessors}
 # Get sensitivity slot
+sens <- sensitivitySlot(Cleveland)
+```
 
+```{r }
+# Get sensitivity raw data
+sensRaw <- sensitivityRaw(Cleveland)
+```
+
+```{r }
+# Get sensitivity profiles
+sensProf <- sensitivityProfiles(Cleveland)
+```
+
+``{r }
+# Get sensitivity info
+sensInfo <- sensitivityInfo(Cleveland)
 ```
 
 ## Fitting Linear Quadratic (LQ) Models
@@ -547,8 +561,8 @@ a RadioSet or with raw dose-response data.
 ```{r model_fit}
 # Extract raw sensitvity data from the RadioSet
 sensRaw <- sensitivityRaw(Cleveland)
-paste('Third dimension:', paste0(dimnames(sensRaw)[[3]], collapse=', '))
 ```
+
 ```{r structure_sensitivity_raw}
 str(sensRaw)
 ```
@@ -585,12 +599,13 @@ LQmodel
 Above we see that LQmodel contains the alpha and beta coefficients for the dose
 response curve fit to the dose and viability data for the IMR-32 cancer cell-line.
 Based on the $R^2$ attribute we can see that the model fit for this data is
-good, with over 95% of observed variance explained by the model.
+good, with `r round(attributes(LQmodel)$Rsquare,3 ) * 100`% of observed variance
+explained by the model.
 
 ## Calculating Dose-Response Metrics
 
 RadioGx provides a number of functions for calculating common dose response
-metrics such as survival fraction (SF), area under the curve (AUC) and dose at
+metrics such as surviving fraction (SF), area under the curve (AUC) and dose at
 which only 10% of cancer cells survive (D10).
 
 Some of these functions require the alpha and beta coefficients, as calculated
@@ -603,9 +618,9 @@ print(survFracAfter2Units)
 dose10PercentSurv <- computeD10(pars=LQmodel)
 print(dose10PercentSurv)
 ```
-We see from the above code cell that after two units of radiation, approximately
-`r (100 * survFracAfter2Units)` of cancer cells remain relative to the initial population.
-Conversely, using `computeD10` we see that on average `r dose10PercentSurv` units of radiation
+We see from the above code cell that after two units of radiation,
+`r round(100 * survFracAfter2Units, 3)`% of cancer cells remain relative to the initial population.
+Conversely, using `computeD10` we see that on average `r round(dose10PercentSurv, 3)` units of radiation
 need to be administered to result in 10% cell-line survival (i.e., 90% of cancer cells
 are killed).
 
@@ -616,32 +631,26 @@ and cancer cell viability data.
 areaUnderDoseRespCurve <- computeAUC(D=radiationDoses, pars=LQmodel, lower=0,
                                      upper=1)
 print(areaUnderDoseRespCurve)
-
-survFrac <- 1 - areaUnderDoseRespCurve
-print(survFrac)
 ```
 
 In the above code block we compute the AUC for a dose-response curve between a
-dose of 0 to 1 Gy. This area can be interpreted as the proportion of cells
-killed during the administration of 1 Gy of radiation, therefore the survival
-fraction is equal to 1 - AUC. We see that 1 Gy of radiation killed
-`r (100 * areaUnderDoseRespCurve)` of cancer cell-line colonies, thus our
-surviving fraction is `r (100 * survFrac)` or `surFrac`.
+dose of 0 to 1 Gy. This area can be interpreted as the total proportion of cells
+killed during the administration of 1 Gy of radiation.
 
 ### Dose-Response Curves
 
-The `doseResponseCurve` function can be used to generate plots of survival
+The `doseResponseCurve` function can be used to generate plots of surviving
 fraction vs dose for radiation sensitivity experiments. In this example
 we provide raw data values to create the plot. When the `plot.type` is set to
 "Both", a linear-quadratic model will also be fit to the supplied dose-response
 values.
 
-```{r plotting_rad_dose_resp}
+```{r plotting_rad_dose_resp, fig.small=TRUE}
 doseResponseCurve(
   Ds=list("Experiment 1" = c(0, 2, 4, 6)),
   SFs=list("Experiment 1" = c(1,.6,.4,.2)),
   plot.type="Both"
-  )
+)
 ```
 
 Additionally, `doseResponseCurve` can be used to create dose response curves
@@ -651,7 +660,7 @@ if you know which cell-line you are looking for. If you don't know which
 cell-line you want to visualize, the available
 cell-lines can be explored using the `cellInfo` function.
 
-```{r plotting_rad_dose_resp_rSet}
+```{r plotting_rad_dose_resp_rSet, fig.small=TRUE}
 doseResponseCurve(
   rSets=list(clevelandSmall),
   cellline=cellInfo(clevelandSmall)$cellid[3]
@@ -660,23 +669,53 @@ doseResponseCurve(
 
 ### Summarizing Sensitivity
 
-```{r}
+To retrieve a radiation type by cell-line summary of a sensitivity experiment, we use the `summarizeSensitivityProfiles` function.
+This will return a `matrix` where rows are radiation type^[Note there is currently only one radiation type available, but in the future there will be more], columns are cell-line and values are viability measurements summarized
+using `summary.stat`^[Available options are 'mean', 'median', 'first', 'last']. The sensitivity measure to summarize can be
+specified using `sensitivity.measure`^[See `sensitivityMeasures(RSet)` for available options].
 
+```{r summarize_sensitivity}
+sensSummary <- summarizeSensitivityProfiles(Cleveland)
+```
+
+```{r show_summarized_sensivitiy}
+sensSummary[, 1:3]
 ```
 
 ### Summarizing Molecular Data
 
-```{r}
+```{r summarize_molecular_data}
+mprofSummary <- RadioGx::summarizeMolecularProfiles(Cleveland, mDataType='rna', summary.stat='median', fill.missing=FALSE)
+```
 
+```{r show_summarized_sensitivity}
+mprofSummary
+```
+Due to a lack of replicates in the Cleveland `RSet`, the returned `SummarizedExperiment` object contains the same information as
+the original. For other experiments with replicates, however, the result should contain one column per unique cell-line id. For
+ease of interoperability with the response data contained in an `RSet`, if `fill.missing` is `r FALSE` empty columns for the
+cell-lines in the sensitivity experiment, but not in the molecular profile will be added to the `SummarizedExperiment` such
+that the dimensions are equal.
+
+### Molecular Signatures for Biomarker Discovery
+
+The true usefulness of the `RadioGx` packages comes from the ability to determine gene signatures for a
+cell-lines from a sensitivity experiment. Cell-lines of interest to a given researcher can be selected
+and a molecular signature computed which correlates specific molecular features with a given sensitivity profile.
+Using this method one could identify signatures associated with either radio-sensitivity or radio-resistance.
+Combining this signature with drug response gene signatures from `r BiocStyle::Biocpkg('PharmacoGx')`, as will
+be done in the subsequent section, one can identify drugs which could augment the effectiveness of a
+given radiation signature. Perhaps more powerfully, drugs which target features associated with radio-resistance
+can be found, potentially synergistically increasing the overall effectiveness of the combine treatment.
+
+```{r compute_molecular_signature}
+radSensSig <- radSensitivitySig(Cleveland, mDataType='rna', features=fNames(Cleveland, 'rna')[2:5], nthread=15)
 ```
 
 
-### Gene Signatures for Biomarker Discovery
-
-```{r}
-
+```{r exploring_molecular_signature}
+radSensSig@.Data
 ```
-
 
 # Data Analysis Walkthrough
 
