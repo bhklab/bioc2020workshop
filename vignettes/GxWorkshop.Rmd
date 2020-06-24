@@ -122,56 +122,65 @@ library(CoreGx)
 ```
 
 # Introduction
-This tutorial, titled Biomarker Discovery from High Throughput Screening Datasets, focuses on a suite of packages designed to 
-simplify analysis correlating measures of treatment response measured on model systems with molecular profiles of those systems.
-These packages primarly focus on modeling response to cancer treatments in cancer models, but the concepts presented can be 
-applied to other disease types, given availability of data for the area of interest. 
+This tutorial, titled Biomarker Discovery from High Throughput Screening
+Datasets, focuses on a suite of packages designed to  simplify analysis
+correlating measures of treatment response measured on model systems with
+molecular profiles of those systems. These packages primarly focus on modeling
+response to cancer treatments in cancer models, but the concepts presented can
+be  applied to other disease types, given availability of data for the area of
+interest. 
 
-The first two of the packages, `r BiocStyle::Biocpkg("PharmacoGx")` and `r BiocStyle::Biocpkg("RadioGx")` focus on screens done 
-using cell lines as a model system. PharmacoGx focuses on modeling and predicting the response of cell lines treated with small 
-molecule therapies. RadioGx swaps the small molecule treatment for irradiation of cell lines. The third package, 
-`r BiocStyle::Biocpkg("Xeva")`, looks at treatment response for _in vivo_ systems, primarily Patient Derived Xenographs of cancer
-tumours growing in immune compromised mice. 
+The first two of the packages, `r BiocStyle::Biocpkg("PharmacoGx")` and `r
+BiocStyle::Biocpkg("RadioGx")` focus on screens done  using cell lines as a
+model system. PharmacoGx focuses on modeling and predicting the response of cell
+lines treated with small  molecule therapies. RadioGx swaps the small molecule
+treatment for irradiation of cell lines. The third package,  `r
+BiocStyle::Biocpkg("Xeva")`, looks at treatment response for _in vivo_ systems,
+primarily Patient Derived Xenographs of cancer tumours growing in immune
+compromised mice. 
 
 
 # Data Structure and Common Functions Between Packages
 
 While the experiments analyzed by the three packages are different, the workflow
-that these packages are designed to accommodate has many similarities between
-them. First and foremost, all three packages were developed to provide data structures to package together
-the screening and molecular data, as well as all related metadata, for complete studies. 
+that these packages accommodate has many similarities between them. First and
+foremost, all three packages were developed to provide data structures that
+package together screening and molecular data, as well as all related metadata,
+for complete studies. These packages also provide an interface to download
+large, publically available datasets which have standardized naming conventions,
+so that data across different studies is immediately comparable. 
+
+Furthermore, the analysis workflow shares common tasks across the three domains 
+covered by these packages. This includes understanding and visualizing the data
+that is present in each dataset; modeling the response of the model systems to 
+treatment; summarizing that response into a measure comparable across models;
+extracting and summarizing measurements of molecular features; and ultimately
+correlating the response of model systems to their molecular state.
+
+In this tutorial, we will be highlighting each analysis step across all three 
+packages, and then finish with a demonstration of how to integrate across
+the different domains presented here. 
+
+## Experimental Designs
 
 
-# Basic Functionalities of PharmacoGx
 
-`r BiocStyle::Biocpkg("PharmacoGx")` was developed to serve as a platform for
-integrating analysis across different pharmacogenomic datasets. The main focus
-of the PharmacoGx package is to provide access to pharmacogenomics datasets that
-have been preprocessed with a uniform pipeline, and extensively curated to
-ensure maximum overlap and consistency. The package is designed around on a
-level of abstraction from the raw experimental data, and allows
-bioinformaticians and biologists to work with data at the level of genes, drugs
-and cell lines. This provides a more intuitive interface and, in combination
-with unified curation, simplifies analyses between multiple datasets. The
-purpose of this section is to familiarize the reader with the basic design of a
-high throughput drug screen, introduce the PSet, an object which stores all the
-data related to a pharmacogenomics study, and introduces the datasets which we
-will be using in  this tutorial. 
+![](CellLineFigure500ppi.png)
 
 
-PharmacoGx was made to unify the preprocessing and annotation between public 
-Pharmacogenomics studies, so that the analyst can spend less time in data
-sanitization, and skip straight to the analysis. As such, PharmacoSets for 
-major datasets are available for download from our servers. These PSets all went
-through a unified Preprocessing, QC, Normalization and Annotation  Pipeline.
+PharmacoGx:
 
-![](CreatePSet.png)
+
+Xeva:
+
+![](PDXfigure500ppi.png)
+
+
+
 
 
 ### PharmacoSet Structure
 
-PharmacoGx and RadioGx share many simularities, both in the design of experiments between the two packages, 
-and subsequently in the 
 
 The basic structure of a PharmacoSet is as follows:
 
@@ -210,7 +219,7 @@ data(CCLE)
 ```
 
 
-### Working with PSets
+### Examining and Extracting data of interest
 
 For most of your work with PSet objects, we recommend you use the accessor
 functions implemented in the package to access the data stored in the object.
@@ -230,9 +239,9 @@ pie(table(CCLE@cell[,"tissueid"]),
     cex=0.8)
 ```
 
-While we will introduce some of the functions for working with PSets in this
-tutorial, the documentation of the PharmacoSet object contains descriptions of
-the available functions to interface with PSet objects:
+While we will introduce some of the functions for subsetting and extracting data
+from PSets in this tutorial, the documentation of the PharmacoSet object
+contains descriptions of the available functions to interface with PSet objects:
 
 ```{r docs, eval=FALSE}
 ?`PharmacoSet-class`
@@ -255,6 +264,9 @@ drugs between CCLE and GDSC. Try it yourself!
 
 If you noticed as you completed the previous exercise, cell line and drug names 
 are standardized between PSets downloaded using the *downloadPSet* function. 
+This is the major benefit in working with the pre-curated objects: entities
+follow a standardized naming scheme, which was chosen to be human readable 
+whenever possible. 
 
 PharmacoGx also implements a convenience function to intersect PSets:
 
@@ -265,7 +277,44 @@ print(common)
 
 ```
 
-### Fitting Drug Dose Response Curves
+### Working with Dose Response data from PSets
+
+
+### Plotting Drug Dose Response Data
+
+Drug-Dose response data included in the PharmacoSet objects can be conviniently
+plotted using the *drugDoseResponseCurve* function. Given a list of
+PharmacoSets, a drug name and a cell name, it will plot the drug dose response
+curves for the given cell-drug combination in each dataset, allowing direct
+comparisons of data between datasets.
+
+```{r curves}
+cells <- c("SK-MEL-2","697","NCI-H1666")
+par(mfrow=c(1, 3), pty = "s")
+drugDoseResponseCurve(drug="Lapatinib", cellline=cells[1], 
+                      pSets=list(CCLE, GDSC), plot.type="Actual", 
+                      legends.label="aac_published")
+drugDoseResponseCurve(drug="Lapatinib", cellline=cells[2], 
+                      pSets=list(CCLE, GDSC), plot.type="Actual", 
+                      legends.label="aac_published")
+drugDoseResponseCurve(drug="Lapatinib", cellline=cells[3], 
+                      pSets=list(CCLE, GDSC), plot.type="Actual", 
+                      legends.label="aac_published")
+```
+
+The function *drugDoseResponseCurve* can also be used to plot your own drug dose response curves, as follows:
+
+```{r ddrc_own}
+
+concentrations <- 1/2^seq(0,8) * 1
+viabilities <-  c(0, 33.3, 60, 77.8, 88.2, 93.9, 96.9, 98.4, 99.2)
+
+drugDoseResponseCurve(concentrations = list("Exp 1" = concentrations), viabilities = list("Exp 1" = viabilities))
+
+```
+
+
+#### Fitting Drug Dose Response Curves
 
 One of the core tasks implemented in PharmacoGx is the fitting of Hill Curve
 Models to dose-response data. In PharmacoGx, we use the 3 Parameter Hill Slope
@@ -284,39 +333,6 @@ print(pars)
 ```
 
 
-
-### Plotting Drug Dose Response Data
-
-Drug-Dose response data included in the PharmacoSet objects can be conviniently
-plotted using the *drugDoseResponseCurve* function. Given a list of
-PharmacoSets, a drug name and a cell name, it will plot the drug dose response
-curves for the given cell-drug combination in each dataset, allowing direct
-comparisons of data between datasets.
-
-```{r curves}
-cells <- c("OCI-AML2","A253","NCI-H1648")
-par(mfrow=c(1, 3), pty = "s")
-drugDoseResponseCurve(drug="lapatinib", cellline=cells[1], 
-                      pSets=list(CCLE, GDSC), plot.type="Fitted", 
-                      legends.label="auc_published")
-drugDoseResponseCurve(drug="lapatinib", cellline=cells[2], 
-                      pSets=list(CCLE, GDSC), plot.type="Fitted", 
-                      legends.label="auc_published")
-drugDoseResponseCurve(drug="lapatinib", cellline=cells[3], 
-                      pSets=list(CCLE, GDSC), plot.type="Fitted", 
-                      legends.label="auc_published")
-```
-
-The function *drugDoseResponseCurve* can also be used to plot your own drug dose response curves, as follows:
-
-```{r ddrc_own}
-
-concentrations <- 1/2^seq(0,8) * 1
-viabilities <-  c(0, 33.3, 60, 77.8, 88.2, 93.9, 96.9, 98.4, 99.2)
-
-drugDoseResponseCurve(concentrations = list("Exp 1" = concentrations), viabilities = list("Exp 1" = viabilities))
-
-```
 
 
 ### Computing Summary Measures for DDRCs
@@ -363,7 +379,7 @@ data is returned as a matrix.
 
 ```{r summary}
 dim(PharmacoGx::summarizeMolecularProfiles(CCLE, "rna"))
-dim(PharmacoGx::summarizeSensitivityProfiles(CCLE))
+dim(PharmacoGx::summarizeSensitivityProfiles(CCLE, "aac_recomputed"))
 ```
 
 
