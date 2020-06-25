@@ -468,9 +468,7 @@ expression matrix, as the full computation can take some time to complete.
 
 ## Extracting the first 100 gene names. featureInfo brings up the rowData of the "rna" SummarizedExperiment
 chosen.genes <- rownames(featureInfo(GDSC, "rna"))[100]
-
 sigs <- drugSensitivitySig(GDSC, "rna", sensitivity.measure = "aac_recomputed", drugs=c("Erlotinib", "Lapatinib"), features = chosen.genes)
-
 
 ```
 
