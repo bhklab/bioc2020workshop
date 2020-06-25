@@ -546,24 +546,43 @@ knitr::kable(mProf[1:3, 1:3])
 Data from radiation sensitivity and/or perturbation experiments is also retrieved the same way it is for a PSet. Currently,
 only sensitivity experiments have been included in a `RadioSet`.
 
-```{r response_data_accessors}
+```{r response_slot_accessor}
 # Get sensitivity slot
 sens <- sensitivitySlot(Cleveland)
 ```
 
-```{r }
+```{r response_slot_accessor_example}
+names(sens)
+```
+
+```{r raw_response_data_accessor}
 # Get sensitivity raw data
 sensRaw <- sensitivityRaw(Cleveland)
 ```
 
-```{r }
+```{r raw_response_data_accessor_example}
+# Get sensitivity raw data
+knitr::kable(sensRaw[1:3, 1:3], row.names=FALSE)
+```
+
+
+```{r response_profile_accessor}
 # Get sensitivity profiles
 sensProf <- sensitivityProfiles(Cleveland)
 ```
 
-``{r }
+```{r response_profile_accessor_example}
+knitr::kable(sensProf[1:3, 1:3], row.names=FALSE)
+```
+
+
+```{r response_info_accessor}
 # Get sensitivity info
 sensInfo <- sensitivityInfo(Cleveland)
+```
+
+```{r response_info_accessor_example}
+knitr::kable(sensInfo[1:3, 1:3], row.names=FALSE)
 ```
 
 ## Fitting Linear Quadratic (LQ) Models
@@ -691,7 +710,7 @@ using `summary.stat`^[Available options are 'mean', 'median', 'first', 'last']. 
 specified using `sensitivity.measure`^[See `sensitivityMeasures(RSet)` for available options].
 
 ```{r summarize_sensitivity}
-sensSummary <- summarizeSensitivityProfiles(Cleveland)
+sensSummary <- RadioGx::summarizeSensitivityProfiles(Cleveland)
 ```
 
 ```{r show_summarized_sensivitiy}
@@ -725,12 +744,12 @@ given radiation signature. Perhaps more powerfully, drugs which target features 
 can be found, potentially synergistically increasing the overall effectiveness of the combine treatment.
 
 ```{r compute_molecular_signature}
-radSensSig <- radSensitivitySig(Cleveland, mDataType='rna', features=fNames(Cleveland, 'rna')[2:5], nthread=15)
+radSensSig <- radSensitivitySig(Cleveland, mDataType='rna', nthread=15)
 ```
 
 
 ```{r exploring_molecular_signature}
-radSensSig@.Data
+radSensDT <- data.table(radSensSig@.Data[,,], keep.rownames='rownames')
 ```
 
 # Data Analysis Walkthrough
