@@ -450,17 +450,22 @@ As the `r BiocStyle::Biocpkg('RadioGx')` package was only recently released, the
 currently only one dataset available. Let's download the 'Cleveland' RSet, which contains
 a highly curated version of the data from Yang *et al.*, 2016.
 
-```{r download_rset}
+For this workshop, we have subset this dataset. The entire dataset can be downloaded using the following:
+
+```{r download_rset, eval=FALSE}
 Cleveland <- downloadRSet('Cleveland', saveDir='.')
 ```
 
+Let's load the RSet for this workshop.
+
 ```{r printing_a_radioset, hide=TRUE}
+data(Cleveland)
 Cleveland
 ```
 
 Similar to PharmacoGx and Xeva, a summary of the contents of the RadioSet is printed
 when calling a RadioSet in the console. We can see that the Cleveland RSet contains
-sensitivity information for 540 cell-lines treated with a single type of radiation.
+sensitivity information for 303 cell-lines treated with a single type of radiation.
 The RSet also contains rna^[microarray], rna-seq and cnv molecular data for a subset of available
 cell-lines.
 
@@ -741,15 +746,26 @@ Using this method one could identify signatures associated with either radio-sen
 Combining this signature with drug response gene signatures from `r BiocStyle::Biocpkg('PharmacoGx')`, as will
 be done in the subsequent section, one can identify drugs which could augment the effectiveness of a
 given radiation signature. Perhaps more powerfully, drugs which target features associated with radio-resistance
-can be found, potentially synergistically increasing the overall effectiveness of the combine treatment.
+can be found, potentially synergistically increasing the overall effectiveness of the combined treatment.
 
 ```{r compute_molecular_signature}
 radSensSig <- radSensitivitySig(Cleveland, mDataType='rna', nthread=15)
 ```
 
-
 ```{r exploring_molecular_signature}
-radSensDT <- data.table(radSensSig@.Data[,,], keep.rownames='rownames')
+radSensSigDF <- data.frame(radSensSig@.Data[, , ], row.names=rownames(radSensSig))
+with(radSensSigDF, {
+  radSensGeneSig <- head(radSensSigDF[fdr < 0.05, ][order(estimate, decreasing=TRUE), ])
+  radResistGeneSig <- head(radSensSigDF[fdr < 0.05, ][order(estimate), ])
+})
+```
+
+```{r sensitivity_molecular_sig}
+knitr::kable(radSensGeneSig, caption="Top 10 Gene Markers of Radio-sensitivity in the Cleveland RSet")
+```
+
+```{r resistance_molecular_sig}
+knitr::kable(radResistGeneSig, caption="Top 10 Gene Markers of Radio-resistance in the Cleveland RSet")
 ```
 
 # Data Analysis Walkthrough
