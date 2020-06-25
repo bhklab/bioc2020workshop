@@ -116,7 +116,7 @@ For a 2-hr workshop:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(GxBioc2020Workshop)
+library(gxbioc2020workshop)
 library(PharmacoGx)
 library(CoreGx)
 ```
