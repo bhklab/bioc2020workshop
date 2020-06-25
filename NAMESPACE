@@ -3,6 +3,5 @@
 import(PharmacoGx)
 import(RadioGx)
 import(SummarizedExperiment)
-import(ToxicoGx)
 import(Xeva)
 import(ggplot2)

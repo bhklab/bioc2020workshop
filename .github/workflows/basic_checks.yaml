@@ -26,6 +26,10 @@ jobs:
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
+          apt-get update && \
+          apt-get install -y libglpk-dev && \
+          apt-get clean && \
+          rm -rf /var/lib/apt/lists/*
           Rscript -e "remotes::install_github('r-hub/sysreqs')"
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
           sudo -s eval "$sysreqs"
@@ -47,7 +51,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_PASS }}
-          repository: bhklab/bioc2020workshop
+          repository: bhklab/gxbioc2020workshop
           tag_with_ref: true
           tag_with_sha: true
           tags: latest

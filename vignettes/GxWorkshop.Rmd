@@ -116,7 +116,7 @@ For a 2-hr workshop:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(GxBioc2020Workshop)
+library(gxbioc2020workshop)
 library(PharmacoGx)
 library(CoreGx)
 ```
@@ -163,13 +163,46 @@ the different domains presented here.
 
 ## Experimental Designs
 
-
+RadioGx and PharmacoGx are both used to analyze data from in vitro, cell based assays.
+In cancer, the most common in vitro model used is the cancer cell line. These cell lines
+are usually obtained from patient tumour biopsies, which are passaged in a dish and often
+treated with factors to immortalize the cells - that is, to grant them infinite 
+proliferation capacity. Such models are often deposited in repositories such as the 
+ATCC, and made available for purchase to researchers who wish to use them in their experiments. 
 
 ![](CellLineFigure500ppi.png)
 
 
-PharmacoGx:
+### Pharmacogenomics
 
+In Pharmacogenomics, the design of the experiment usually involves doing two things in parallel:
+Each cell line in the study is profiled on a molecular level, which can include measuring DNA level
+aberations such as SNVs and copy number changes, RNA expression levels, DNA methylation, and 
+protein expression. In parallel, the cell lines undergo a viability based drug screen, where 
+cell lines are treated with a panel of drugs, over a range of concentrations, and the growth 
+of each cell line is compared to an untreated control. 
+
+The variable response to drug treatement across different cell lines is then compared with 
+the molecular states of the cells, using machine learning or statistical approaches to 
+discern which molecular features are predictive of the observed drug response.  
+
+![](pharmacogx_design_exp.png)
+
+
+### Radiogenomics
+
+Radiogenomics follows a very similar design to Pharmacogenomics. The main difference is the 
+form of the treatment applied to cells - in Pharmacogenomics, small molecule treatments are
+studied, while in radiogenomics, the treatement is irradiation of the cells. While the design
+of the study is similar, the difference in treatement causes differences in how the response of
+cells is modelled and quantified, as we detail below. 
+
+Currently, there is only one major, high-throughput dataset looking at _in vitro_ radiogenomics,
+the Cleveland Clinic dataset. In this dataset, gamma radiation was used as the treatment. 
+Conceptually however, there is no reason why alpha and beta radiation could not be studied in 
+a similar experimental setup. 
+
+![](radiogx_design_exp.png)
 
 Xeva:
 
@@ -317,10 +350,21 @@ drugDoseResponseCurve(concentrations = list("Exp 1" = concentrations), viabiliti
 #### Fitting Drug Dose Response Curves
 
 One of the core tasks implemented in PharmacoGx is the fitting of Hill Curve
-Models to dose-response data. In PharmacoGx, we use the 3 Parameter Hill Slope
+Models to dose-response data. In PharmacoGx, we use the 3 Parameter Hill Curve
 function as our model of drug response in cancer cell lines:
-![](hillslope.png)
-To fit a Hill Slope model to you data, you can use the *logLogisticRegression*
+
+$$y = E_\infty + \frac{1-E_\infty}{1 + (\frac{x}{EC50})^{HS}}$$
+This is a log-logistic model, meaning that it takes the form of a logistic curve when x is on the log scale. 
+The three parameters are:
+$E_infty$, which is the maximal inhibition predicted at infinite concetration of the drug (the right asymptote);
+$EC50$, which is the inflection point of the logit, where the inhibition reaches 50% of the maximum;
+$HS$, the Hill Slope, which is a measure of the cooperativity of binding. This parameter controls the steepness 
+of the logit, and is interpreted based on its relation to 1. Values larger than 1 imply positive cooperativity in 
+inhibition/binding of the target for the small molcule ligands, which values less than 1 imply negative cooperativity/
+antagonism. 
+
+
+To fit a Hill Slope model to your data in PharmacoGx, you can use the *logLogisticRegression*
 function, as below:
 
 ```{r loglogistic}
@@ -340,7 +384,7 @@ print(pars)
 Often with in vitro Pharmacogenomics data, we want to compare the drug sensitivity of a cell line 
 to some omic feature. For this, we want to summarize the drug dose response curve into a single 
 number representing the sensitivity of the cell line. The IC50 and Area Above the curve are two
-convenient metrics for quuantifying the observed drug sensitivity. If you noticed above, 
+convenient metrics for quantifying the observed drug sensitivity. If you noticed above, 
 the *drugDoseResponseCurve* function computes them by default. In PharmacoGx, they can be 
 computed manually as follows:
 
@@ -349,8 +393,8 @@ computed manually as follows:
 concentrations <- rev(1/2^seq(0,8) * 1)
 viabilities <-  c(99.2, 98.4, 96.9, 93.9, 88.2, 77.8, 60, 33.3, 0)
 
-print(computeAUC(concentration = concentrations, viability = viabilities))
-print(computeIC50(concentration = concentrations, viability = viabilities))
+print(PharmacoGx::computeAUC(concentration = concentrations, viability = viabilities))
+print(PharmacoGx::computeIC50(concentration = concentrations, viability = viabilities))
 
 ```
 
@@ -383,7 +427,7 @@ dim(PharmacoGx::summarizeSensitivityProfiles(CCLE, "aac_recomputed"))
 ```
 
 
-Below, we use the summarizeMolecularProfiles function and ggplot to investigate the distributions of 
+Below, we use the summarizeSensitivityProfiles function and ggplot to investigate the distributions of 
 AUC values within CCLE.
 
 ```{r ccleaac, fig.cap="Cells response to drugs in CCLE"}
@@ -401,6 +445,32 @@ p <- ggplot(melted_data, aes(x=Var1,y=value)) +
 print(p)
 ```
 
+
+### Signature Generation
+
+Finally, we will talk about some functions built into PharmacoGx to generate signatures of molecular features which 
+correlate with response to particular compounds. In PharmacoGx, the main function to generate signatures of response 
+across drugs is `drugSensitivitySig`. It takes as input a PSet, and the molecular data type you wish to use to 
+generate the signatures, and computes the linear association between each feature and each drug response vector independently. 
+The default of using all features, drugs and cell lines in the dataset can be modified with parameters detailed below. 
+
+At its core, drugSensitivitySig fits a nested linear model to the drug response data, using the molecular feature, as well as
+cell tissue of origin and batch effect as possible predictors. The function then uses ANOVA to judge whether including the 
+molecular feature in the model leads to a statistically significant improvement in prediction accuracy (R^2). For more
+details on the implementation, we encourage readers to reference the PharmacoGx manuscript, or the vignettes included in the 
+package. 
+
+Here, as an example, we will run `drugSensitivitySig` to generate a signature of response to Lapatinib and Erlotinib, two
+targetted therapies, from the GDSC data. We will do this with the first (largely random) 100 genes measured in the 
+expression matrix, as the full computation can take some time to complete.
+
+```{r drugSensSigEx, eval=TRUE, echo=TRUE}
+
+## Extracting the first 100 gene names. featureInfo brings up the rowData of the "rna" SummarizedExperiment
+chosen.genes <- rownames(featureInfo(GDSC, "rna"))[100]
+sigs <- drugSensitivitySig(GDSC, "rna", sensitivity.measure = "aac_recomputed", drugs=c("Erlotinib", "Lapatinib"), features = chosen.genes)
+
+```
 
 
 # Basic Functionalities of RadioGx

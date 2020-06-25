@@ -1,0 +1,2 @@
+RadioSet_name,Description,Available_molecular_profiles,Date_updated,DOI,URL
+Cleveland,"Yard BD, Adams DI, Chie EK, Tamayo P, Battaglia JS, Gopal P, et al. A genetic basis for the variation in the vulnerability of cancer to DNA damage. Nat Commum 2016;7:11428.","rna, rnaseq, cnv",2020/06/16,10.5281/zenodo.3899555,https://zenodo.org/record/3899555/files/Cleveland.rds?download=1
