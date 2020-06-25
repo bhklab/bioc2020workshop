@@ -393,8 +393,8 @@ computed manually as follows:
 concentrations <- rev(1/2^seq(0,8) * 1)
 viabilities <-  c(99.2, 98.4, 96.9, 93.9, 88.2, 77.8, 60, 33.3, 0)
 
-print(computeAUC(concentration = concentrations, viability = viabilities))
-print(computeIC50(concentration = concentrations, viability = viabilities))
+print(PharmacoGx::computeAUC(concentration = concentrations, viability = viabilities))
+print(PharmacoGx::computeIC50(concentration = concentrations, viability = viabilities))
 
 ```
 
@@ -461,11 +461,15 @@ details on the implementation, we encourage readers to reference the PharmacoGx 
 package. 
 
 Here, as an example, we will run `drugSensitivitySig` to generate a signature of response to Lapatinib and Erlotinib, two
-targetted therapies, from the GDSC data:
+targetted therapies, from the GDSC data. We will do this with the first (largely random) 100 genes measured in the 
+expression matrix, as the full computation can take some time to complete.
 
 ```{r drugSensSigEx, eval=TRUE, echo=TRUE}
 
+## Extracting the first 100 gene names. featureInfo brings up the rowData of the "rna" SummarizedExperiment
+chosen.genes <- rownames(featureInfo(GDSC, "rna"))[100]
 
+sigs <- drugSensitivitySig(GDSC, "rna", sensitivity.measure = "aac_recomputed", drugs=c("Erlotinib", "Lapatinib"), features = chosen.genes)
 
 
 ```

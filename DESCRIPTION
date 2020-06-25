@@ -12,7 +12,7 @@ LazyData: true
 License: CC BY 4.0 + file LICENSE
 RoxygenNote: 7.1.0
 Suggests: knitr, rmarkdown, BiocStyle
-Imports: PharmacoGx, RadioGx, SummarizedExperiment, ToxicoGx, ggplot2, Xeva, pkgdown
+Imports: PharmacoGx, RadioGx, SummarizedExperiment, ggplot2, Xeva, pkgdown
 URL:  https://bhklab.github.io/BiocWorkshop2020
 BugReports: https://github.com/bhklab/bioc2020workshop/issues/new/choose
 VignetteBuilder: knitr
