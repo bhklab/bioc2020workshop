@@ -672,26 +672,29 @@ Cells response to drugs in CCLE
 </tr></tbody>
 </table>
 <p>As the <em><a href="https://bioconductor.org/packages/3.12/RadioGx">RadioGx</a></em> package was only recently released, there is currently only one dataset available. Let’s download the ‘Cleveland’ RSet, which contains a highly curated version of the data from Yang <em>et al.</em>, 2016.</p>
-<div class="sourceCode" id="cb44"><html><body><pre class="r"><span class="no">Cleveland</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/downloadRSet.html">downloadRSet</a></span>(<span class="st">'Cleveland'</span>, <span class="kw">saveDir</span><span class="kw">=</span><span class="st">'.'</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="no">Cleveland</span></pre></body></html></div>
+<p>For this workshop, we have subset this dataset. The entire dataset can be downloaded using the following:</p>
+<div class="sourceCode" id="cb44"><html><body><pre class="r"><span class="no">Cleveland</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/downloadRSet.html">downloadRSet</a></span>(<span class="st">'Cleveland'</span>, <span class="kw">saveDir</span><span class="kw">=</span><span class="st">'data'</span>)</pre></body></html></div>
+<p>Let’s load the RSet for this workshop.</p>
+<div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">Cleveland</span>)
+<span class="no">Cleveland</span></pre></body></html></div>
 <pre><code>## Name:  Cleveland 
 ## Date Created:  Wed Oct 25 17:38:42 2017 
-## Number of cell lines:  540 
+## Number of cell lines:  303 
 ## Number of radiation types:  1 
 ## RNA: 
-##  Dim:  20049 517 
+##  Dim:  20049 292 
 ## RNASeq: 
-##  Dim:  61958 513 
+##  Dim:  61958 292 
 ## CNV: 
-##  Dim:  24960 403 
+##  Dim:  24960 250 
 ## Drug pertubation: 
 ##  Please look at pertNumber(rSet) to determine number of
 ##             experiments for each radiation-cell combination.
 ## Drug sensitivity: 
-##  Number of Experiments:  542 
+##  Number of Experiments:  305 
 ##  Please look at sensNumber(rSet) to determine number of
 ##             experiments for each radiation-cell combination.</code></pre>
-<p>Similar to PharmacoGx and Xeva, a summary of the contents of the RadioSet is printed when calling a RadioSet in the console. We can see that the Cleveland RSet contains sensitivity information for 540 cell-lines treated with a single type of radiation. The RSet also contains rna<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>, rna-seq and cnv molecular data for a subset of available cell-lines.</p>
+<p>Similar to PharmacoGx and Xeva, a summary of the contents of the RadioSet is printed when calling a RadioSet in the console. We can see that the Cleveland RSet contains sensitivity information for 303 cell-lines treated with a single type of radiation. The RSet also contains rna<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>, rna-seq and cnv molecular data for a subset of available cell-lines.</p>
 </div>
 <div id="accessing-data" class="section level2">
 <h2 class="hasAnchor">
@@ -755,8 +758,8 @@ Cells response to drugs in CCLE
 <td align="left">Public on Mar 20 2012</td>
 </tr>
 <tr class="odd">
-<td align="left">L3.3</td>
-<td align="left">GSM888333</td>
+<td align="left">VMRC-RCZ</td>
+<td align="left">GSM888829</td>
 <td align="left">Public on Mar 20 2012</td>
 </tr>
 </tbody>
@@ -824,41 +827,127 @@ Cells response to drugs in CCLE
 <p>Data from radiation sensitivity and/or perturbation experiments is also retrieved the same way it is for a PSet. Currently, only sensitivity experiments have been included in a <code>RadioSet</code>.</p>
 <div class="sourceCode" id="cb58"><html><body><pre class="r"><span class="co"># Get sensitivity slot</span>
 <span class="no">sens</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/sensitivitySlot.html">sensitivitySlot</a></span>(<span class="no">Cleveland</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="co"># Get sensitivity raw data</span>
+<div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">sens</span>)</pre></body></html></div>
+<pre><code>## [1] "info"     "raw"      "profiles" "n"</code></pre>
+<div class="sourceCode" id="cb61"><html><body><pre class="r"><span class="co"># Get sensitivity raw data</span>
 <span class="no">sensRaw</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/sensitivityRaw.html">sensitivityRaw</a></span>(<span class="no">Cleveland</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb60"><html><body><pre class="r"><span class="co"># Get sensitivity profiles</span>
+<div class="sourceCode" id="cb62"><html><body><pre class="r"><span class="co"># Get sensitivity raw data</span>
+<span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">sensRaw</span>[,,<span class="fl">2</span>][<span class="fl">1</span>:<span class="fl">3</span>, <span class="fl">1</span>:<span class="fl">3</span>])</pre></body></html></div>
+<table class="table">
+<thead><tr class="header">
+<th></th>
+<th align="right">doses1</th>
+<th align="right">doses2</th>
+<th align="right">doses3</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>SK-N-FI_radiation_1</td>
+<td align="right">1.0629867</td>
+<td align="right">0.841</td>
+<td align="right">0.6181713</td>
+</tr>
+<tr class="even">
+<td>SK-N-AS_radiation_3</td>
+<td align="right">0.9488615</td>
+<td align="right">0.866</td>
+<td align="right">0.7827120</td>
+</tr>
+<tr class="odd">
+<td>CHP-212_radiation_4</td>
+<td align="right">0.7312816</td>
+<td align="right">0.574</td>
+<td align="right">0.4160333</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb63"><html><body><pre class="r"><span class="co"># Get sensitivity profiles</span>
 <span class="no">sensProf</span> <span class="kw">&lt;-</span> <span class="fu">sensitivityProfiles</span>(<span class="no">Cleveland</span>)</pre></body></html></div>
-<p>``{r } # Get sensitivity info sensInfo &lt;- sensitivityInfo(Cleveland)</p>
-<pre><code>
-## Fitting Linear Quadratic (LQ) Models
-
-RadioGx provides a number of functions for analyzing dose response experiments.
-To use these functions, we must first fit a statistical model to the dose
-response data. This package exports a function for fitting linear-quadratic
-models to dose response data. The function can be used with data contained in
-a RadioSet or with raw dose-response data.
-
-
-```r
-# Extract raw sensitvity data from the RadioSet
-sensRaw &lt;- sensitivityRaw(Cleveland)</code></pre>
-<div class="sourceCode" id="cb62"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">sensRaw</span>)</pre></body></html></div>
-<pre><code>##  num [1:542, 1:9, 1:2] 1 1 1 1 1 1 1 1 1 1 ...
+<div class="sourceCode" id="cb64"><html><body><pre class="r"><span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">sensProf</span>[<span class="fl">1</span>:<span class="fl">3</span>, <span class="fl">1</span>:<span class="fl">3</span>])</pre></body></html></div>
+<table class="table">
+<thead><tr class="header">
+<th></th>
+<th align="right">AUC_published</th>
+<th align="right">AUC_recomputed</th>
+<th align="left">alpha</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>SK-N-FI_radiation_1</td>
+<td align="right">3.410</td>
+<td align="right">2.861642</td>
+<td align="left">c(doses8 = 0.152197185309997)</td>
+</tr>
+<tr class="even">
+<td>SK-N-AS_radiation_3</td>
+<td align="right">3.789</td>
+<td align="right">3.258930</td>
+<td align="left">c(doses8 = 0.124554238460761)</td>
+</tr>
+<tr class="odd">
+<td>CHP-212_radiation_4</td>
+<td align="right">1.833</td>
+<td align="right">1.344092</td>
+<td align="left">c(doses5 = 0.461572814132262)</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb65"><html><body><pre class="r"><span class="co"># Get sensitivity info</span>
+<span class="no">sensInfo</span> <span class="kw">&lt;-</span> <span class="fu">sensitivityInfo</span>(<span class="no">Cleveland</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb66"><html><body><pre class="r"><span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">sensInfo</span>[<span class="fl">1</span>:<span class="fl">3</span>, <span class="fl">1</span>:<span class="fl">3</span>])</pre></body></html></div>
+<table class="table">
+<thead><tr class="header">
+<th></th>
+<th align="left">cellid</th>
+<th align="left">radiation.type</th>
+<th align="right">Dose1-1Gy-rep1</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>SK-N-FI_radiation_1</td>
+<td align="left">SK-N-FI</td>
+<td align="left">radiation</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>SK-N-AS_radiation_3</td>
+<td align="left">SK-N-AS</td>
+<td align="left">radiation</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>CHP-212_radiation_4</td>
+<td align="left">CHP-212</td>
+<td align="left">radiation</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="fitting-linear-quadratic-lq-models" class="section level2">
+<h2 class="hasAnchor">
+<a href="#fitting-linear-quadratic-lq-models" class="anchor"></a>Fitting Linear Quadratic (LQ) Models</h2>
+<p>RadioGx provides a number of functions for analyzing dose response experiments. To use these functions, we must first fit a statistical model to the dose response data. This package exports a function for fitting linear-quadratic models to dose response data. The function can be used with data contained in a RadioSet or with raw dose-response data.</p>
+<div class="sourceCode" id="cb67"><html><body><pre class="r"><span class="co"># Extract raw sensitvity data from the RadioSet</span>
+<span class="no">sensRaw</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/sensitivityRaw.html">sensitivityRaw</a></span>(<span class="no">Cleveland</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb68"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">sensRaw</span>)</pre></body></html></div>
+<pre><code>##  num [1:305, 1:9, 1:2] 1 1 1 1 1 1 1 1 1 1 ...
 ##  - attr(*, "dimnames")=List of 3
-##   ..$ : chr [1:542] "SK-N-FI_radiation_1" "IMR-32_radiation_2" "SK-N-AS_radiation_3" "CHP-212_radiation_4" ...
+##   ..$ : chr [1:305] "SK-N-FI_radiation_1" "SK-N-AS_radiation_3" "CHP-212_radiation_4" "MHH-NB-11_radiation_6" ...
 ##   ..$ : chr [1:9] "doses1" "doses2" "doses3" "doses4" ...
 ##   ..$ : chr [1:2] "Dose" "Viability"</code></pre>
 <p>The data returned by <code><a href="https://rdrr.io/pkg/RadioGx/man/sensitivityRaw.html">sensitivityRaw(RSet)</a></code> is a three dimensional array, but it can also be thought of as a set of experiment by treatment matrices. We can see by the <code>dimnames</code> of the third dimensions that the first matrix holds the radiation dose (in Gy) for each experiment, while the second matrix holds the viability measurements for the cell-line after each dose in the experimental series.</p>
-<div class="sourceCode" id="cb64"><html><body><pre class="r"><span class="co"># Find a cancer cell-line of interest</span>
+<div class="sourceCode" id="cb70"><html><body><pre class="r"><span class="co"># Find a cancer cell-line of interest</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu">sensitivityInfo</span>(<span class="no">Cleveland</span>)$<span class="no">cellid</span>)</pre></body></html></div>
-<pre><code>## [1] "SK-N-FI"   "IMR-32"    "SK-N-AS"   "CHP-212"   "KP-N-S19s" "MHH-NB-11"</code></pre>
-<div class="sourceCode" id="cb66"><html><body><pre class="r"><span class="no">cancerCellLine</span> <span class="kw">&lt;-</span> <span class="fu">sensitivityInfo</span>(<span class="no">Cleveland</span>)$<span class="no">cellid</span>[<span class="fl">1</span>]
+<pre><code>## [1] "SK-N-FI"   "SK-N-AS"   "CHP-212"   "MHH-NB-11" "SK-N-SH"   "NB1"</code></pre>
+<div class="sourceCode" id="cb72"><html><body><pre class="r"><span class="no">cancerCellLine</span> <span class="kw">&lt;-</span> <span class="fu">sensitivityInfo</span>(<span class="no">Cleveland</span>)$<span class="no">cellid</span>[<span class="fl">1</span>]
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">cancerCellLine</span>)</pre></body></html></div>
 <pre><code>## [1] "SK-N-FI"</code></pre>
-<div class="sourceCode" id="cb68"><html><body><pre class="r"><span class="co"># Get the radiation doses and associated survival data from clevelandSmall</span>
+<div class="sourceCode" id="cb74"><html><body><pre class="r"><span class="co"># Get the radiation doses and associated survival data from clevelandSmall</span>
 <span class="no">radiationDoses</span> <span class="kw">&lt;-</span> <span class="no">sensRaw</span>[<span class="fl">1</span>, , <span class="st">'Dose'</span>]
 <span class="no">survivalFractions</span> <span class="kw">&lt;-</span> <span class="no">sensRaw</span>[<span class="fl">1</span>, , <span class="st">'Viability'</span>]</pre></body></html></div>
-<div class="sourceCode" id="cb69"><html><body><pre class="r"><span class="no">LQmodel</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/linearQuadraticModel.html">linearQuadraticModel</a></span>(<span class="kw">D</span><span class="kw">=</span><span class="no">radiationDoses</span>,
+<div class="sourceCode" id="cb75"><html><body><pre class="r"><span class="no">LQmodel</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/linearQuadraticModel.html">linearQuadraticModel</a></span>(<span class="kw">D</span><span class="kw">=</span><span class="no">radiationDoses</span>,
                                 <span class="kw">SF</span><span class="kw">=</span><span class="no">survivalFractions</span>)
 <span class="no">LQmodel</span></pre></body></html></div>
 <pre><code>##      alpha       beta 
@@ -867,21 +956,20 @@ sensRaw &lt;- sensitivityRaw(Cleveland)</code></pre>
 ## [1] 0.9882769</code></pre>
 <p>Above we see that LQmodel contains the alpha and beta coefficients for the dose response curve fit to the dose and viability data for the IMR-32 cancer cell-line. Based on the <span class="math inline">\(R^2\)</span> attribute we can see that the model fit for this data is good, with 98.8% of observed variance explained by the model.</p>
 </div>
-</div>
 <div id="calculating-dose-response-metrics" class="section level2">
 <h2 class="hasAnchor">
 <a href="#calculating-dose-response-metrics" class="anchor"></a>Calculating Dose-Response Metrics</h2>
 <p>RadioGx provides a number of functions for calculating common dose response metrics such as surviving fraction (SF), area under the curve (AUC) and dose at which only 10% of cancer cells survive (D10).</p>
 <p>Some of these functions require the alpha and beta coefficients, as calculated above using the <code>linearQuadraticModel</code> function.</p>
-<div class="sourceCode" id="cb71"><html><body><pre class="r"><span class="no">survFracAfter2Units</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/computeSF2.html">computeSF2</a></span>(<span class="kw">pars</span><span class="kw">=</span><span class="no">LQmodel</span>)
+<div class="sourceCode" id="cb77"><html><body><pre class="r"><span class="no">survFracAfter2Units</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/computeSF2.html">computeSF2</a></span>(<span class="kw">pars</span><span class="kw">=</span><span class="no">LQmodel</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">survFracAfter2Units</span>)</pre></body></html></div>
 <pre><code>## [1] 0.6867861</code></pre>
-<div class="sourceCode" id="cb73"><html><body><pre class="r"><span class="no">dose10PercentSurv</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/computeD10.html">computeD10</a></span>(<span class="kw">pars</span><span class="kw">=</span><span class="no">LQmodel</span>)
+<div class="sourceCode" id="cb79"><html><body><pre class="r"><span class="no">dose10PercentSurv</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/computeD10.html">computeD10</a></span>(<span class="kw">pars</span><span class="kw">=</span><span class="no">LQmodel</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">dose10PercentSurv</span>)</pre></body></html></div>
 <pre><code>## [1] 7.870413</code></pre>
 <p>We see from the above code cell that after two units of radiation, 68.679% of cancer cells remain relative to the initial population. Conversely, using <code>computeD10</code> we see that on average 7.87 units of radiation need to be administered to result in 10% cell-line survival (i.e., 90% of cancer cells are killed).</p>
 <p>Other dose-response metrics can be computed directly using radiation dose and cancer cell viability data.</p>
-<div class="sourceCode" id="cb75"><html><body><pre class="r"><span class="no">areaUnderDoseRespCurve</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/computeAUC.html">computeAUC</a></span>(<span class="kw">D</span><span class="kw">=</span><span class="no">radiationDoses</span>, <span class="kw">pars</span><span class="kw">=</span><span class="no">LQmodel</span>, <span class="kw">lower</span><span class="kw">=</span><span class="fl">0</span>,
+<div class="sourceCode" id="cb81"><html><body><pre class="r"><span class="no">areaUnderDoseRespCurve</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/computeAUC.html">computeAUC</a></span>(<span class="kw">D</span><span class="kw">=</span><span class="no">radiationDoses</span>, <span class="kw">pars</span><span class="kw">=</span><span class="no">LQmodel</span>, <span class="kw">lower</span><span class="kw">=</span><span class="fl">0</span>,
                                      <span class="kw">upper</span><span class="kw">=</span><span class="fl">1</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">areaUnderDoseRespCurve</span>)</pre></body></html></div>
 <pre><code>## [1] 2.872288</code></pre>
@@ -890,16 +978,16 @@ sensRaw &lt;- sensitivityRaw(Cleveland)</code></pre>
 <h3 class="hasAnchor">
 <a href="#dose-response-curves" class="anchor"></a>Dose-Response Curves</h3>
 <p>The <code>doseResponseCurve</code> function can be used to generate plots of surviving fraction vs dose for radiation sensitivity experiments. In this example we provide raw data values to create the plot. When the <code>plot.type</code> is set to “Both”, a linear-quadratic model will also be fit to the supplied dose-response values.</p>
-<div class="sourceCode" id="cb77"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/doseResponseCurve.html">doseResponseCurve</a></span>(
+<div class="sourceCode" id="cb83"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/doseResponseCurve.html">doseResponseCurve</a></span>(
   <span class="kw">Ds</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">"Experiment 1"</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">6</span>)),
   <span class="kw">SFs</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">"Experiment 1"</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>,<span class="fl">.6</span>,<span class="fl">.4</span>,<span class="fl">.2</span>)),
   <span class="kw">plot.type</span><span class="kw">=</span><span class="st">"Both"</span>
 )</pre></body></html></div>
 <p><img src="GxWorkshop_files/figure-html/plotting_rad_dose_resp-1.png" width="700"></p>
 <p>Additionally, <code>doseResponseCurve</code> can be used to create dose response curves directly from a curated RadioSet object. When utilizing this feature, a cell-line must be selected from the RadioSet. This can be done by name if you know which cell-line you are looking for. If you don’t know which cell-line you want to visualize, the available cell-lines can be explored using the <code>cellInfo</code> function.</p>
-<div class="sourceCode" id="cb78"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/doseResponseCurve.html">doseResponseCurve</a></span>(
-  <span class="kw">rSets</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="no">clevelandSmall</span>),
-  <span class="kw">cellline</span><span class="kw">=</span><span class="fu">cellInfo</span>(<span class="no">clevelandSmall</span>)$<span class="no">cellid</span>[<span class="fl">3</span>]
+<div class="sourceCode" id="cb84"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/doseResponseCurve.html">doseResponseCurve</a></span>(
+  <span class="kw">rSets</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="no">Cleveland</span>),
+  <span class="kw">cellline</span><span class="kw">=</span><span class="fu">cellInfo</span>(<span class="no">Cleveland</span>)$<span class="no">cellid</span>[<span class="fl">3</span>]
 )</pre></body></html></div>
 <p><img src="GxWorkshop_files/figure-html/plotting_rad_dose_resp_rSet-1.png" width="700"></p>
 </div>
@@ -907,97 +995,297 @@ sensRaw &lt;- sensitivityRaw(Cleveland)</code></pre>
 <h3 class="hasAnchor">
 <a href="#summarizing-sensitivity" class="anchor"></a>Summarizing Sensitivity</h3>
 <p>To retrieve a radiation type by cell-line summary of a sensitivity experiment, we use the <code>summarizeSensitivityProfiles</code> function. This will return a <code>matrix</code> where rows are radiation type<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>, columns are cell-line and values are viability measurements summarized using <code>summary.stat</code><a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>. The sensitivity measure to summarize can be specified using <code>sensitivity.measure</code><a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>.</p>
-<div class="sourceCode" id="cb79"><html><body><pre class="r"><span class="no">sensSummary</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/summarizeSensitivityProfiles.html">summarizeSensitivityProfiles</a></span>(<span class="no">Cleveland</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb80"><html><body><pre class="r"><span class="no">sensSummary</span>[, <span class="fl">1</span>:<span class="fl">3</span>]</pre></body></html></div>
-<pre><code>##   SK-N-FI    IMR-32   SK-N-AS 
-## 2.8616423 0.5490508 3.2589305</code></pre>
+<div class="sourceCode" id="cb85"><html><body><pre class="r"><span class="no">sensSummary</span> <span class="kw">&lt;-</span> <span class="kw pkg">RadioGx</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/summarizeSensitivityProfiles.html">summarizeSensitivityProfiles</a></span>(<span class="no">Cleveland</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb86"><html><body><pre class="r"><span class="no">sensSummary</span>[, <span class="fl">1</span>:<span class="fl">3</span>]</pre></body></html></div>
+<pre><code>##  SK-N-FI  SK-N-AS  CHP-212 
+## 2.861642 3.258931 1.344093</code></pre>
 </div>
 <div id="summarizing-molecular-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#summarizing-molecular-data" class="anchor"></a>Summarizing Molecular Data</h3>
-<div class="sourceCode" id="cb82"><html><body><pre class="r"><span class="no">mprofSummary</span> <span class="kw">&lt;-</span> <span class="kw pkg">RadioGx</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/summarizeMolecularProfiles.html">summarizeMolecularProfiles</a></span>(<span class="no">Cleveland</span>, <span class="kw">mDataType</span><span class="kw">=</span><span class="st">'rna'</span>, <span class="kw">summary.stat</span><span class="kw">=</span><span class="st">'median'</span>, <span class="kw">fill.missing</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb83"><html><body><pre class="r"><span class="no">mprofSummary</span></pre></body></html></div>
+<div class="sourceCode" id="cb88"><html><body><pre class="r"><span class="no">mprofSummary</span> <span class="kw">&lt;-</span> <span class="kw pkg">RadioGx</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/summarizeMolecularProfiles.html">summarizeMolecularProfiles</a></span>(<span class="no">Cleveland</span>, <span class="kw">mDataType</span><span class="kw">=</span><span class="st">'rna'</span>, <span class="kw">summary.stat</span><span class="kw">=</span><span class="st">'median'</span>, <span class="kw">fill.missing</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb89"><html><body><pre class="r"><span class="no">mprofSummary</span></pre></body></html></div>
 <pre><code>## class: SummarizedExperiment 
-## dim: 20049 517 
+## dim: 20049 292 
 ## metadata(3): experimentData annotation protocolData
 ## assays(2): exprs se.exprs
 ## rownames(20049): ENSG00000000003 ENSG00000000005 ... ENSG00000280439
 ##   ENSG00000280448
 ## rowData names(7): Probe EnsemblGeneId ... BEST rownames
-## colnames(517): SK-N-FI IMR-32 ... Ishikawa (Heraklio) 02 ER- T.T
+## colnames(292): SK-N-FI SK-N-AS ... VM-CUB-1 T.T
 ## colData names(25): samplename filename ... rownames tissueid</code></pre>
 <p>Due to a lack of replicates in the Cleveland <code>RSet</code>, the returned <code>SummarizedExperiment</code> object contains the same information as the original. For other experiments with replicates, however, the result should contain one column per unique cell-line id. For ease of interoperability with the response data contained in an <code>RSet</code>, if <code>fill.missing</code> is FALSE empty columns for the cell-lines in the sensitivity experiment, but not in the molecular profile will be added to the <code>SummarizedExperiment</code> such that the dimensions are equal.</p>
 </div>
 <div id="molecular-signatures-for-biomarker-discovery" class="section level3">
 <h3 class="hasAnchor">
 <a href="#molecular-signatures-for-biomarker-discovery" class="anchor"></a>Molecular Signatures for Biomarker Discovery</h3>
-<p>The true usefulness of the <code>RadioGx</code> packages comes from the ability to determine gene signatures for a cell-lines from a sensitivity experiment. Cell-lines of interest to a given researcher can be selected and a molecular signature computed which correlates specific molecular features with a given sensitivity profile. Using this method one could identify signatures associated with either radio-sensitivity or radio-resistance. Combining this signature with drug response gene signatures from <em><a href="https://bioconductor.org/packages/3.12/PharmacoGx">PharmacoGx</a></em>, as will be done in the subsequent section, one can identify drugs which could augment the effectiveness of a given radiation signature. Perhaps more powerfully, drugs which target features associated with radio-resistance can be found, potentially synergistically increasing the overall effectiveness of the combine treatment.</p>
-<div class="sourceCode" id="cb85"><html><body><pre class="r"><span class="no">radSensSig</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/radSensitivitySig.html">radSensitivitySig</a></span>(<span class="no">Cleveland</span>, <span class="kw">mDataType</span><span class="kw">=</span><span class="st">'rna'</span>, <span class="kw">features</span><span class="kw">=</span><span class="fu">fNames</span>(<span class="no">Cleveland</span>, <span class="st">'rna'</span>)[<span class="fl">2</span>:<span class="fl">5</span>], <span class="kw">nthread</span><span class="kw">=</span><span class="fl">15</span>)</pre></body></html></div>
+<p>The true usefulness of the <code>RadioGx</code> packages comes from the ability to determine gene signatures for a cell-lines from a sensitivity experiment. Cell-lines of interest to a given researcher can be selected and a molecular signature computed which correlates specific molecular features with a given sensitivity profile. Using this method one could identify signatures associated with either radio-sensitivity or radio-resistance. Combining this signature with drug response gene signatures from <em><a href="https://bioconductor.org/packages/3.12/PharmacoGx">PharmacoGx</a></em>, as will be done in the subsequent section, one can identify drugs which could augment the effectiveness of a given radiation signature. Perhaps more powerfully, drugs which target features associated with radio-resistance can be found, potentially synergistically increasing the overall effectiveness of the combined treatment.</p>
+<div class="sourceCode" id="cb91"><html><body><pre class="r"><span class="no">radSensSig</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/RadioGx/man/radSensitivitySig.html">radSensitivitySig</a></span>(<span class="no">Cleveland</span>, <span class="kw">mDataType</span><span class="kw">=</span><span class="st">'rna'</span>, <span class="kw">nthread</span><span class="kw">=</span><span class="fl">2</span>)</pre></body></html></div>
 <pre><code>## Computing radiation sensitivity signatures...</code></pre>
-<div class="sourceCode" id="cb87"><html><body><pre class="r"><span class="no">radSensSig</span>@<span class="kw">.Data</span></pre></body></html></div>
-<pre><code>## , , estimate
-## 
-##                 radiation
-## ENSG00000000005        NA
-## ENSG00000000419        NA
-## ENSG00000000457        NA
-## ENSG00000000460        NA
-## 
-## , , se
-## 
-##                 radiation
-## ENSG00000000005        NA
-## ENSG00000000419        NA
-## ENSG00000000457        NA
-## ENSG00000000460        NA
-## 
-## , , n
-## 
-##                 radiation
-## ENSG00000000005        NA
-## ENSG00000000419        NA
-## ENSG00000000457        NA
-## ENSG00000000460        NA
-## 
-## , , tstat
-## 
-##                 radiation
-## ENSG00000000005        NA
-## ENSG00000000419        NA
-## ENSG00000000457        NA
-## ENSG00000000460        NA
-## 
-## , , fstat
-## 
-##                 radiation
-## ENSG00000000005        NA
-## ENSG00000000419        NA
-## ENSG00000000457        NA
-## ENSG00000000460        NA
-## 
-## , , pvalue
-## 
-##                 radiation
-## ENSG00000000005        NA
-## ENSG00000000419        NA
-## ENSG00000000457        NA
-## ENSG00000000460        NA
-## 
-## , , df
-## 
-##                 radiation
-## ENSG00000000005        NA
-## ENSG00000000419        NA
-## ENSG00000000457        NA
-## ENSG00000000460        NA
-## 
-## , , fdr
-## 
-##                 radiation
-## ENSG00000000005        NA
-## ENSG00000000419        NA
-## ENSG00000000457        NA
-## ENSG00000000460        NA</code></pre>
+<div class="sourceCode" id="cb93"><html><body><pre class="r"><span class="co"># Convert to a data.frame</span>
+<span class="no">radSensSigDF</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="no">radSensSig</span>@<span class="kw">.Data</span>[, , ], <span class="kw">row.names</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span>(<span class="no">radSensSig</span>))
+
+<span class="co"># Order by estimated correlation</span>
+<span class="no">radSensSigDF</span> <span class="kw">&lt;-</span> <span class="no">radSensSigDF</span>[<span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span>(<span class="no">radSensSigDF</span>$<span class="no">estimate</span>, <span class="kw">decreasing</span><span class="kw">=</span><span class="fl">TRUE</span>), ]
+
+<span class="co"># Subset to only significant FDR</span>
+<span class="no">radSensSigDF</span> <span class="kw">&lt;-</span> <span class="no">radSensSigDF</span>[<span class="no">radSensSigDF</span>$<span class="no">fdr</span> <span class="kw">&lt;</span> <span class="fl">0.05</span>, ]</pre></body></html></div>
+<div class="sourceCode" id="cb94"><html><body><pre class="r"><span class="no">radSensGeneSig</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">radSensSigDF</span>, <span class="fl">10</span>)
+<span class="no">radResistGeneSig</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span>(<span class="no">radSensSigDF</span>[<span class="no">radSensSigDF</span>$<span class="no">fdr</span> <span class="kw">&lt;</span> <span class="fl">0.05</span>, ], <span class="fl">10</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb95"><html><body><pre class="r"><span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">radSensGeneSig</span>, <span class="kw">caption</span><span class="kw">=</span><span class="st">"Top 10 Gene Markers of Radio-sensitivity in the Cleveland RSet"</span>)</pre></body></html></div>
+<table class="table">
+<caption>Top 10 Gene Markers of Radio-sensitivity in the Cleveland RSet</caption>
+<thead><tr class="header">
+<th></th>
+<th align="left">estimate</th>
+<th align="left">se</th>
+<th align="left">n</th>
+<th align="left">tstat</th>
+<th align="left">fstat</th>
+<th align="left">pvalue</th>
+<th align="left">df</th>
+<th align="left">fdr</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td>NA.1</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td>NA.2</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td>NA.3</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td>NA.4</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td>NA.5</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td>NA.6</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td>NA.7</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td>NA.8</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td>NA.9</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb96"><html><body><pre class="r"><span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">radResistGeneSig</span>, <span class="kw">caption</span><span class="kw">=</span><span class="st">"Top 10 Gene Markers of Radio-resistance in the Cleveland RSet"</span>)</pre></body></html></div>
+<table class="table">
+<caption>Top 10 Gene Markers of Radio-resistance in the Cleveland RSet</caption>
+<thead><tr class="header">
+<th></th>
+<th align="left">estimate</th>
+<th align="left">se</th>
+<th align="left">n</th>
+<th align="left">tstat</th>
+<th align="left">fstat</th>
+<th align="left">pvalue</th>
+<th align="left">df</th>
+<th align="left">fdr</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>NA.20039</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td>NA.20040</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td>NA.20041</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td>NA.20042</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td>NA.20043</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td>NA.20044</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td>NA.20045</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td>NA.20046</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td>NA.20047</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td>NA.20048</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
