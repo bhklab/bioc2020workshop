@@ -130,17 +130,15 @@ response to cancer treatments in cancer models, but the concepts presented can
 be  applied to other disease types, given availability of data for the area of
 interest. 
 
-The first two of the packages, `r BiocStyle::Biocpkg("PharmacoGx")` and `r
-BiocStyle::Biocpkg("RadioGx")` focus on screens done  using cell lines as a
+The first two of the packages, `r BiocStyle::Biocpkg("PharmacoGx")` and `r BiocStyle::Biocpkg("RadioGx")` focus on screens done  using cell lines as a
 model system. PharmacoGx focuses on modeling and predicting the response of cell
 lines treated with small  molecule therapies. RadioGx swaps the small molecule
-treatment for irradiation of cell lines. The third package,  `r
-BiocStyle::Biocpkg("Xeva")`, looks at treatment response for _in vivo_ systems,
+treatment for irradiation of cell lines. The third package,  `r BiocStyle::Biocpkg("Xeva")`, looks at treatment response for _in vivo_ systems,
 primarily Patient Derived Xenographs of cancer tumours growing in immune
 compromised mice. 
 
 
-# Data Structure and Common Functions Between Packages
+## Data Structure and Common Functions Between Packages
 
 While the experiments analyzed by the three packages are different, the workflow
 that these packages accommodate has many similarities between them. First and
@@ -161,7 +159,7 @@ In this tutorial, we will be highlighting each analysis step across all three
 packages, and then finish with a demonstration of how to integrate across
 the different domains presented here. 
 
-## Experimental Designs
+# Experimental Designs
 
 RadioGx and PharmacoGx are both used to analyze data from in vitro, cell based assays.
 In cancer, the most common in vitro model used is the cancer cell line. These cell lines
@@ -173,9 +171,9 @@ ATCC, and made available for purchase to researchers who wish to use them in the
 ![](CellLineFigure500ppi.png)
 
 
-### Pharmacogenomics
+## In Vitro Pharmacogenomics
 
-In Pharmacogenomics, the design of the experiment usually involves doing two things in parallel:
+When studying Pharmacogenomic in vitro, the design of the experiment usually involves doing two things in parallel:
 Each cell line in the study is profiled on a molecular level, which can include measuring DNA level
 aberations such as SNVs and copy number changes, RNA expression levels, DNA methylation, and 
 protein expression. In parallel, the cell lines undergo a viability based drug screen, where 
@@ -189,7 +187,7 @@ discern which molecular features are predictive of the observed drug response.
 ![](pharmacogx_design_exp.png)
 
 
-### Radiogenomics
+## Radiogenomics
 
 Radiogenomics follows a very similar design to Pharmacogenomics. The main difference is the 
 form of the treatment applied to cells - in Pharmacogenomics, small molecule treatments are
@@ -204,6 +202,8 @@ a similar experimental setup.
 
 ![](radiogx_design_exp.png)
 
+## In Vivo Pharmacogenomics
+
 Xeva:
 
 ![](PDXfigure500ppi.png)
@@ -211,8 +211,7 @@ Xeva:
 
 
 
-
-### PharmacoSet Structure
+# Data Storage and access
 
 
 The basic structure of a PharmacoSet is as follows:
@@ -220,7 +219,7 @@ The basic structure of a PharmacoSet is as follows:
 ![](PSetStruct.png)
 
 
-### Downloading PharmacoSet objects
+## Downloading PharmacoSet objects
 Let us download the PSets used for this tutorial into our local working environment. 
 A table of available PharmacoSet objects can be obtained by using the *availablePSets*
 function. 
@@ -252,7 +251,7 @@ data(CCLE)
 ```
 
 
-### Examining and Extracting data of interest
+# Examining and Extracting data of interest
 
 For most of your work with PSet objects, we recommend you use the accessor
 functions implemented in the package to access the data stored in the object.
@@ -292,8 +291,7 @@ print(GDSC["YT","Erlotinib"])
 
 ```
 
-As an exercise, lets manually compute the number of overlaping cell lines and
-drugs between CCLE and GDSC. Try it yourself! 
+As an exercise, lets manually compute the number of overlaping cell lines between CCLE and GDSC. Try it yourself! 
 
 If you noticed as you completed the previous exercise, cell line and drug names 
 are standardized between PSets downloaded using the *downloadPSet* function. 
@@ -305,12 +303,14 @@ PharmacoGx also implements a convenience function to intersect PSets:
 
 ```{r intersect, echo=TRUE, eval=FALSE}
 
-common <- intersectPSet(list(CCLE, GDSC), intersectOn=c("drugs", "cell.lines"))
+common <- intersectPSet(list(CCLE, GDSC), intersectOn=c("cell.lines"))
 print(common)
 
 ```
 
-### Working with Dose Response data from PSets
+# Visualizing and modeling sensitivity data
+
+## Working with Dose Response data from PSets
 
 
 ### Plotting Drug Dose Response Data
@@ -323,7 +323,7 @@ comparisons of data between datasets.
 
 ```{r curves}
 cells <- c("SK-MEL-2","697","NCI-H1666")
-par(mfrow=c(1, 3), pty = "s")
+# par(mfrow=c(1, 3), pty = "s")
 drugDoseResponseCurve(drug="Lapatinib", cellline=cells[1], 
                       pSets=list(CCLE, GDSC), plot.type="Actual", 
                       legends.label="aac_published")
@@ -347,7 +347,7 @@ drugDoseResponseCurve(concentrations = list("Exp 1" = concentrations), viabiliti
 ```
 
 
-#### Fitting Drug Dose Response Curves
+### Fitting Drug Dose Response Curves
 
 One of the core tasks implemented in PharmacoGx is the fitting of Hill Curve
 Models to dose-response data. In PharmacoGx, we use the 3 Parameter Hill Curve
@@ -356,12 +356,11 @@ function as our model of drug response in cancer cell lines:
 $$y = E_\infty + \frac{1-E_\infty}{1 + (\frac{x}{EC50})^{HS}}$$
 This is a log-logistic model, meaning that it takes the form of a logistic curve when x is on the log scale. 
 The three parameters are:
-$E_infty$, which is the maximal inhibition predicted at infinite concetration of the drug (the right asymptote);
+$E_\infty$, which is the maximal inhibition predicted at infinite concetration of the drug (the right asymptote);
 $EC50$, which is the inflection point of the logit, where the inhibition reaches 50% of the maximum;
 $HS$, the Hill Slope, which is a measure of the cooperativity of binding. This parameter controls the steepness 
 of the logit, and is interpreted based on its relation to 1. Values larger than 1 imply positive cooperativity in 
-inhibition/binding of the target for the small molcule ligands, which values less than 1 imply negative cooperativity/
-antagonism. 
+inhibition/binding of the target for the small molcule ligands, which values less than 1 imply negative cooperativity/antagonism. 
 
 
 To fit a Hill Slope model to your data in PharmacoGx, you can use the *logLogisticRegression*
@@ -383,7 +382,7 @@ print(pars)
 
 Often with in vitro Pharmacogenomics data, we want to compare the drug sensitivity of a cell line 
 to some omic feature. For this, we want to summarize the drug dose response curve into a single 
-number representing the sensitivity of the cell line. The IC50 and Area Above the curve are two
+number representing the sensitivity of the cell line. The IC50 and Area Above the Curve are two
 convenient metrics for quantifying the observed drug sensitivity. If you noticed above, 
 the *drugDoseResponseCurve* function computes them by default. In PharmacoGx, they can be 
 computed manually as follows:
@@ -407,7 +406,7 @@ head(sensitivityProfiles(CCLE))
 ```
 
 
-### Summary Functions
+# Summary Functions
 
 Pharmacogenomics studies often contain many examples of either replicated or
 missing data. One of the most common tasks in preparing data for statistical or
@@ -417,9 +416,8 @@ which create deduplicated matrices with missing data filled by NAs:
 *summarizeSensitivityProfiles* and *summarizeMolecularProfiles*. They create
 matrices which are drugs x cell lines and molecular features x cell lines, with
 any cell lines profiled for only sensitivity or molecular features padded with
-NA values. For the molecular profiles, the data is returned in a `r
-BiocStyle::Biocpkg("Biobase")` *ExpressionSet* object, while drug sensitivity
-data is returned as a matrix.
+NA values. For the molecular profiles, the data are returned in a `r BiocStyle::Biocpkg("SummarizedExperiment")`object, while drug sensitivity
+data are returned as a matrix.
 
 ```{r summary}
 dim(PharmacoGx::summarizeMolecularProfiles(CCLE, "rna"))
@@ -446,7 +444,7 @@ print(p)
 ```
 
 
-### Signature Generation
+# Signature Generation
 
 Finally, we will talk about some functions built into PharmacoGx to generate signatures of molecular features which 
 correlate with response to particular compounds. In PharmacoGx, the main function to generate signatures of response 
