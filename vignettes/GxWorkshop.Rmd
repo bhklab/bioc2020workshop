@@ -523,7 +523,7 @@ a highly curated version of the data from Yang *et al.*, 2016.
 For this workshop, we have subset this dataset. The entire dataset can be downloaded using the following:
 
 ```{r download_rset, eval=FALSE}
-Cleveland <- downloadRSet('Cleveland', saveDir='.')
+Cleveland <- downloadRSet('Cleveland', saveDir='data')
 ```
 
 Let's load the RSet for this workshop.
@@ -637,7 +637,7 @@ sensRaw <- sensitivityRaw(Cleveland)
 
 ```{r raw_response_data_accessor_example}
 # Get sensitivity raw data
-knitr::kable(sensRaw[1:3, 1:3], row.names=FALSE)
+knitr::kable(sensRaw[,,2][1:3, 1:3])
 ```
 
 
@@ -647,7 +647,7 @@ sensProf <- sensitivityProfiles(Cleveland)
 ```
 
 ```{r response_profile_accessor_example}
-knitr::kable(sensProf[1:3, 1:3], row.names=FALSE)
+knitr::kable(sensProf[1:3, 1:3])
 ```
 
 
@@ -657,7 +657,7 @@ sensInfo <- sensitivityInfo(Cleveland)
 ```
 
 ```{r response_info_accessor_example}
-knitr::kable(sensInfo[1:3, 1:3], row.names=FALSE)
+knitr::kable(sensInfo[1:3, 1:3])
 ```
 
 ## Fitting Linear Quadratic (LQ) Models
@@ -772,8 +772,8 @@ cell-lines can be explored using the `cellInfo` function.
 
 ```{r plotting_rad_dose_resp_rSet, fig.small=TRUE}
 doseResponseCurve(
-  rSets=list(clevelandSmall),
-  cellline=cellInfo(clevelandSmall)$cellid[3]
+  rSets=list(Cleveland),
+  cellline=cellInfo(Cleveland)$cellid[3]
 )
 ```
 
@@ -819,15 +819,23 @@ given radiation signature. Perhaps more powerfully, drugs which target features 
 can be found, potentially synergistically increasing the overall effectiveness of the combined treatment.
 
 ```{r compute_molecular_signature}
-radSensSig <- radSensitivitySig(Cleveland, mDataType='rna', nthread=15)
+radSensSig <- radSensitivitySig(Cleveland, mDataType='rna', nthread=2)
 ```
 
-```{r exploring_molecular_signature}
+```{r ordering_molecular_signature_results}
+# Convert to a data.frame
 radSensSigDF <- data.frame(radSensSig@.Data[, , ], row.names=rownames(radSensSig))
-with(radSensSigDF, {
-  radSensGeneSig <- head(radSensSigDF[fdr < 0.05, ][order(estimate, decreasing=TRUE), ])
-  radResistGeneSig <- head(radSensSigDF[fdr < 0.05, ][order(estimate), ])
-})
+
+# Order by estimated correlation
+radSensSigDF <- radSensSigDF[order(radSensSigDF$estimate, decreasing=TRUE), ]
+
+# Subset to only significant FDR
+radSensSigDF <- radSensSigDF[radSensSigDF$fdr < 0.05, ]
+```
+
+```{r determine_gene_signature}
+radSensGeneSig <- head(radSensSigDF, 10)
+radResistGeneSig <- tail(radSensSigDF[radSensSigDF$fdr < 0.05, ], 10)
 ```
 
 ```{r sensitivity_molecular_sig}
