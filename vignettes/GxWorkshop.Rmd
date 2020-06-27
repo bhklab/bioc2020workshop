@@ -216,7 +216,7 @@ Xeva:
 
 The basic structure of a PharmacoSet is as follows:
 
-![](PSetStruct.png)
+![](PharmacoGxClassDiagram.png)
 
 
 ## Downloading PharmacoSet objects
@@ -321,7 +321,7 @@ PharmacoSets, a drug name and a cell name, it will plot the drug dose response
 curves for the given cell-drug combination in each dataset, allowing direct
 comparisons of data between datasets.
 
-```{r curves}
+```{r curves, fig.align='left'}
 cells <- c("SK-MEL-2","697","NCI-H1666")
 # par(mfrow=c(1, 3), pty = "s")
 drugDoseResponseCurve(drug="Lapatinib", cellline=cells[1], 
@@ -419,9 +419,13 @@ any cell lines profiled for only sensitivity or molecular features padded with
 NA values. For the molecular profiles, the data are returned in a `r BiocStyle::Biocpkg("SummarizedExperiment")`object, while drug sensitivity
 data are returned as a matrix.
 
-```{r summary}
-dim(PharmacoGx::summarizeMolecularProfiles(CCLE, "rna"))
-dim(PharmacoGx::summarizeSensitivityProfiles(CCLE, "aac_recomputed"))
+```{r summary, results="hide", message=FALSE, error=FALSE, warning=FALSE}
+mol.prof <- PharmacoGx::summarizeMolecularProfiles(CCLE, "rna")
+sens.prof <- PharmacoGx::summarizeSensitivityProfiles(CCLE, "aac_recomputed")
+```
+```{r}
+dim(mol.prof)
+dim(sens.prof)
 ```
 
 
@@ -459,17 +463,26 @@ details on the implementation, we encourage readers to reference the PharmacoGx 
 package. 
 
 Here, as an example, we will run `drugSensitivitySig` to generate a signature of response to Lapatinib and Erlotinib, two
-targetted therapies, from the GDSC data. We will do this with the first (largely random) 100 genes measured in the 
+targetted therapies, from the GDSC data. We will do this with a random 10 genes measured in the 
 expression matrix, as the full computation can take some time to complete.
 
-```{r drugSensSigEx, eval=TRUE, echo=TRUE}
+```{r drugSensSigEx, eval=TRUE, echo=TRUE, results="hide", message=FALSE, error=FALSE, warning=FALSE}
 
 ## Extracting the first 100 gene names. featureInfo brings up the rowData of the "rna" SummarizedExperiment
-chosen.genes <- rownames(featureInfo(GDSC, "rna"))[100]
+chosen.genes <- sample(rownames(featureInfo(GDSC, "rna"), 10))
 sigs <- drugSensitivitySig(GDSC, "rna", sensitivity.measure = "aac_recomputed", drugs=c("Erlotinib", "Lapatinib"), features = chosen.genes)
 
 ```
+Lets look at the head of the signature for the two drugs:
 
+```{r}
+knitr::kable(x = head(sigs[,1,]))
+```
+
+
+```{r}
+knitr::kable(x = head(as.data.frame(sigs[,2,])))
+```
 
 # Basic Functionalities of RadioGx
 
