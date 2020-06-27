@@ -857,7 +857,113 @@ knitr::kable(radSensGeneSig, caption="Top 10 Gene Markers of Radio-sensitivity i
 knitr::kable(radResistGeneSig, caption="Top 10 Gene Markers of Radio-resistance in the Cleveland RSet")
 ```
 
-# Data Analysis Walkthrough
+# Basic Functionalities of Xeva
+
+## In vivo pharmacogenomics
+
+In vivo models play an important role in cancer drug discovery.
+Patent derived xenografts (PDXs) are commonly used in vivo models.
+They have several advantages over cell lines:
+* PDXs are known to recapitulate tumor biology very well
+* PDXs maintain the cellular and histological structure of the source tumor
+* PDXs also keep tumor micro-enviroment and stromal elements
+* Genomic properties of the tumor are largely preserved from patient to PDX
+* Drug response of PDXs closely match the corresponding patient and clinical outcome
+
+To create PDXs, cancerous tissues or cells from patients' tumors are engrafted into immunodeficient mice (either subcutaneous or orthotopic engraftment).
+Once established, tumors from the PDXs can be passed from mouse to mouse, this is called passaging. For drug testing, PDXs were given a set drug dose at a set schedule (for example weekly). Change in tumor size is measured using calipers.
+
+The R package `Xeva` connects the tumor volume vs. time data with genomics data in an R class called `XevaSet`.  This allows users to analyze the data and perform biomarker discovery.
+![](PDXfigure500ppi.png)
+
+## Loading and visualizing PDX data
+Several `XevaSet` objects can be obtained by using the *downloadXevaSet*
+function.
+```{r X1, eval=TRUE}
+  library(Xeva)
+  Xeva::downloadXevaSet()
+```
+
+Here we will show examples of the Xeva package using data from the package. First we will load the data and view information about the XevaSet.
+
+```{r X2, eval=TRUE}
+  library(Xeva)
+  data("brca")
+  brca
+  md.info <- modelInfo(brca)
+  head(md.info)
+```
+
+Now we will visualize the PDX time vs. tumor volume curve.
+```{r X3, eval=TRUE}
+plotPDX(object = brca, patient.id = "X-1004", drug = "BGJ398")
+
+plotPDX(object=brca,patient.id="X-1004",drug="BGJ398",control.name="untreated")
+```
+
+We can also plot the normalized volume.
+```{r X4, eval=TRUE}
+plotPDX(object=brca,patient.id="X-1004",drug="BGJ398",control.name="untreated",
+        vol.normal = TRUE)
+```
+
+When replicates are avaliable Xeva can be used the visualize each model.
+```{r X5, eval=TRUE}
+data("repdx")
+plotPDX(object=repdx,patient.id="P1",drug="treatment",control.name="Control",
+        vol.normal = TRUE)
+```
+
+## PDX drug response
+
+In Xeva several response computing functions such as mRECIST, slope, AUC etc. have been implemented. Drug response can be computed for PDX models as:
+
+```{r X6, eval=TRUE}
+response(brca, model.id="X.1004.BG98", res.measure="mRECIST")
+```
+
+Drug response for all models is stored in the sensitivity slot and can be extracted using
+```{r X7, eval=TRUE}
+brca.mr <- summarizeResponse(brca, response.measure = "mRECIST",
+                             group.by="patient.id")
+```
+
+We can visualize this matrix as:
+```{r X8, eval=TRUE}
+plotmRECIST(brca.mr, control.name = "untreated")
+```
+
+
+## Biomarker discovery in PDXs
+
+For biomarker discovery we need the genomic data along with drug response. This can be extracted using the `summarizeMolecularProfiles` function. The output will be an `ExpressionSet` object which contains genomic data and drug response.
+
+```{r X9, eval=TRUE}
+suppressMessages(library(Biobase))
+dr.mol = summarizeMolecularProfiles(brca, drug="BGJ398", mDataType="RNASeq",
+                                    tissue= "BRCA",
+                                    sensitivity.measure="best.average.response")
+exprs(dr.mol)[1:5, 1:3]
+pData(dr.mol)[1:5, c("model.id", "best.average.response")]
+```
+The output can be used for further inquiry  such as correlation analysis.
+
+```{r X10, eval=TRUE}
+
+genes <- rownames(exprs(dr.mol))
+output <- data.frame()
+for(g in genes)
+{
+  cr <- cor.test(exprs(dr.mol)[g, ], pData(dr.mol)$best.average.response)
+  output <- rbind(output, data.frame(gene=g, cor=cr$estimate, p=cr$p.value))
+}
+
+print(output)
+```
+
+
+
+# Data Analysis Walk-through
 
 
 # Understanding Analysis Results and Synergies
