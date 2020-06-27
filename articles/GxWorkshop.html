@@ -258,44 +258,49 @@
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>This tutorial, titled Biomarker Discovery from High Throughput Screening Datasets, focuses on a suite of packages designed to simplify analysis correlating measures of treatment response measured on model systems with molecular profiles of those systems. These packages primarly focus on modeling response to cancer treatments in cancer models, but the concepts presented can be applied to other disease types, given availability of data for the area of interest.</p>
-<p>The first two of the packages, <em><a href="https://bioconductor.org/packages/3.12/PharmacoGx">PharmacoGx</a></em> and <code>r BiocStyle::Biocpkg("RadioGx")</code> focus on screens done using cell lines as a model system. PharmacoGx focuses on modeling and predicting the response of cell lines treated with small molecule therapies. RadioGx swaps the small molecule treatment for irradiation of cell lines. The third package, <code>r BiocStyle::Biocpkg("Xeva")</code>, looks at treatment response for <em>in vivo</em> systems, primarily Patient Derived Xenographs of cancer tumours growing in immune compromised mice.</p>
-</div>
-<div id="data-structure-and-common-functions-between-packages" class="section level1">
-<h1 class="hasAnchor">
-<a href="#data-structure-and-common-functions-between-packages" class="anchor"></a>Data Structure and Common Functions Between Packages</h1>
+<p>The first two of the packages, <em><a href="https://bioconductor.org/packages/3.12/PharmacoGx">PharmacoGx</a></em> and <em><a href="https://bioconductor.org/packages/3.12/RadioGx">RadioGx</a></em> focus on screens done using cell lines as a model system. PharmacoGx focuses on modeling and predicting the response of cell lines treated with small molecule therapies. RadioGx swaps the small molecule treatment for irradiation of cell lines. The third package, <em><a href="https://bioconductor.org/packages/3.12/Xeva">Xeva</a></em>, looks at treatment response for <em>in vivo</em> systems, primarily Patient Derived Xenographs of cancer tumours growing in immune compromised mice.</p>
+<div id="data-structure-and-common-functions-between-packages" class="section level2">
+<h2 class="hasAnchor">
+<a href="#data-structure-and-common-functions-between-packages" class="anchor"></a>Data Structure and Common Functions Between Packages</h2>
 <p>While the experiments analyzed by the three packages are different, the workflow that these packages accommodate has many similarities between them. First and foremost, all three packages were developed to provide data structures that package together screening and molecular data, as well as all related metadata, for complete studies. These packages also provide an interface to download large, publically available datasets which have standardized naming conventions, so that data across different studies is immediately comparable.</p>
 <p>Furthermore, the analysis workflow shares common tasks across the three domains covered by these packages. This includes understanding and visualizing the data that is present in each dataset; modeling the response of the model systems to treatment; summarizing that response into a measure comparable across models; extracting and summarizing measurements of molecular features; and ultimately correlating the response of model systems to their molecular state.</p>
 <p>In this tutorial, we will be highlighting each analysis step across all three packages, and then finish with a demonstration of how to integrate across the different domains presented here.</p>
-<div id="experimental-designs" class="section level2">
-<h2 class="hasAnchor">
-<a href="#experimental-designs" class="anchor"></a>Experimental Designs</h2>
+</div>
+</div>
+<div id="experimental-designs" class="section level1">
+<h1 class="hasAnchor">
+<a href="#experimental-designs" class="anchor"></a>Experimental Designs</h1>
 <p>RadioGx and PharmacoGx are both used to analyze data from in vitro, cell based assays. In cancer, the most common in vitro model used is the cancer cell line. These cell lines are usually obtained from patient tumour biopsies, which are passaged in a dish and often treated with factors to immortalize the cells - that is, to grant them infinite proliferation capacity. Such models are often deposited in repositories such as the ATCC, and made available for purchase to researchers who wish to use them in their experiments.</p>
 <p><img src="CellLineFigure500ppi.png"></p>
-<div id="pharmacogenomics" class="section level3">
-<h3 class="hasAnchor">
-<a href="#pharmacogenomics" class="anchor"></a>Pharmacogenomics</h3>
-<p>In Pharmacogenomics, the design of the experiment usually involves doing two things in parallel: Each cell line in the study is profiled on a molecular level, which can include measuring DNA level aberations such as SNVs and copy number changes, RNA expression levels, DNA methylation, and protein expression. In parallel, the cell lines undergo a viability based drug screen, where cell lines are treated with a panel of drugs, over a range of concentrations, and the growth of each cell line is compared to an untreated control.</p>
+<div id="in-vitro-pharmacogenomics" class="section level2">
+<h2 class="hasAnchor">
+<a href="#in-vitro-pharmacogenomics" class="anchor"></a>In Vitro Pharmacogenomics</h2>
+<p>When studying Pharmacogenomic in vitro, the design of the experiment usually involves doing two things in parallel: Each cell line in the study is profiled on a molecular level, which can include measuring DNA level aberations such as SNVs and copy number changes, RNA expression levels, DNA methylation, and protein expression. In parallel, the cell lines undergo a viability based drug screen, where cell lines are treated with a panel of drugs, over a range of concentrations, and the growth of each cell line is compared to an untreated control.</p>
 <p>The variable response to drug treatement across different cell lines is then compared with the molecular states of the cells, using machine learning or statistical approaches to discern which molecular features are predictive of the observed drug response.</p>
 <p><img src="pharmacogx_design_exp.png"></p>
 </div>
-<div id="radiogenomics" class="section level3">
-<h3 class="hasAnchor">
-<a href="#radiogenomics" class="anchor"></a>Radiogenomics</h3>
+<div id="radiogenomics" class="section level2">
+<h2 class="hasAnchor">
+<a href="#radiogenomics" class="anchor"></a>Radiogenomics</h2>
 <p>Radiogenomics follows a very similar design to Pharmacogenomics. The main difference is the form of the treatment applied to cells - in Pharmacogenomics, small molecule treatments are studied, while in radiogenomics, the treatement is irradiation of the cells. While the design of the study is similar, the difference in treatement causes differences in how the response of cells is modelled and quantified, as we detail below.</p>
 <p>Currently, there is only one major, high-throughput dataset looking at <em>in vitro</em> radiogenomics, the Cleveland Clinic dataset. In this dataset, gamma radiation was used as the treatment. Conceptually however, there is no reason why alpha and beta radiation could not be studied in a similar experimental setup.</p>
 <p><img src="radiogx_design_exp.png"></p>
+</div>
+<div id="in-vivo-pharmacogenomics" class="section level2">
+<h2 class="hasAnchor">
+<a href="#in-vivo-pharmacogenomics" class="anchor"></a>In Vivo Pharmacogenomics</h2>
 <p>Xeva:</p>
 <p><img src="PDXfigure500ppi.png"></p>
 </div>
-<div id="pharmacoset-structure" class="section level3">
-<h3 class="hasAnchor">
-<a href="#pharmacoset-structure" class="anchor"></a>PharmacoSet Structure</h3>
-<p>The basic structure of a PharmacoSet is as follows:</p>
-<p><img src="PSetStruct.png"></p>
 </div>
-<div id="downloading-pharmacoset-objects" class="section level3">
-<h3 class="hasAnchor">
-<a href="#downloading-pharmacoset-objects" class="anchor"></a>Downloading PharmacoSet objects</h3>
+<div id="data-storage-and-access" class="section level1">
+<h1 class="hasAnchor">
+<a href="#data-storage-and-access" class="anchor"></a>Data Storage and access</h1>
+<p>The basic structure of a PharmacoSet is as follows:</p>
+<p><img src="PharmacoGxClassDiagram.png"></p>
+<div id="downloading-pharmacoset-objects" class="section level2">
+<h2 class="hasAnchor">
+<a href="#downloading-pharmacoset-objects" class="anchor"></a>Downloading PharmacoSet objects</h2>
 <p>Let us download the PSets used for this tutorial into our local working environment. A table of available PharmacoSet objects can be obtained by using the <em>availablePSets</em> function.</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r">  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">PharmacoGx</span>)
   <span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/availablePSets.html">availablePSets</a></span>()</pre></body></html></div>
@@ -307,9 +312,10 @@
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">GDSC</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">CCLE</span>)</pre></body></html></div>
 </div>
-<div id="examining-and-extracting-data-of-interest" class="section level3">
-<h3 class="hasAnchor">
-<a href="#examining-and-extracting-data-of-interest" class="anchor"></a>Examining and Extracting data of interest</h3>
+</div>
+<div id="examining-and-extracting-data-of-interest" class="section level1">
+<h1 class="hasAnchor">
+<a href="#examining-and-extracting-data-of-interest" class="anchor"></a>Examining and Extracting data of interest</h1>
 <p>For most of your work with PSet objects, we recommend you use the accessor functions implemented in the package to access the data stored in the object. For example, here we can use the <em>cellInfo</em> function to pull out the tissue of origin for each cell line in the CCLE dataset. The <em>tissueid</em> column is standard for PSets, and should be present in all objects.</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">mycol</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"#8dd3c7"</span>,<span class="st">"#ffffb3"</span>,<span class="st">"#bebada"</span>,<span class="st">"#fb8072"</span>,<span class="st">"#80b1d3"</span>,<span class="st">"#fdb462"</span>,
            <span class="st">"#b3de69"</span>,<span class="st">"#fccde5"</span>,<span class="st">"#d9d9d9"</span>,<span class="st">"#bc80bd"</span>,<span class="st">"#ccebc5"</span>,<span class="st">"#ffed6f"</span>,
@@ -363,34 +369,38 @@ Tissue of origin of cell lines in CCLE study
 ## Drug sensitivity: 
 ##  Number of Experiments:  1 
 ##  Please look at sensNumber(cSet) to determine number of experiments for each drug-cell combination.</code></pre>
-<p>As an exercise, lets manually compute the number of overlaping cell lines and drugs between CCLE and GDSC. Try it yourself!</p>
+<p>As an exercise, lets manually compute the number of overlaping cell lines between CCLE and GDSC. Try it yourself!</p>
 <p>If you noticed as you completed the previous exercise, cell line and drug names are standardized between PSets downloaded using the <em>downloadPSet</em> function. This is the major benefit in working with the pre-curated objects: entities follow a standardized naming scheme, which was chosen to be human readable whenever possible.</p>
 <p>PharmacoGx also implements a convenience function to intersect PSets:</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">common</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/intersectPSet.html">intersectPSet</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="no">CCLE</span>, <span class="no">GDSC</span>), <span class="kw">intersectOn</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"drugs"</span>, <span class="st">"cell.lines"</span>))
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">common</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/intersectPSet.html">intersectPSet</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="no">CCLE</span>, <span class="no">GDSC</span>), <span class="kw">intersectOn</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cell.lines"</span>))
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">common</span>)</pre></body></html></div>
 </div>
-<div id="working-with-dose-response-data-from-psets" class="section level3">
-<h3 class="hasAnchor">
-<a href="#working-with-dose-response-data-from-psets" class="anchor"></a>Working with Dose Response data from PSets</h3>
-</div>
+<div id="visualizing-and-modeling-sensitivity-data" class="section level1">
+<h1 class="hasAnchor">
+<a href="#visualizing-and-modeling-sensitivity-data" class="anchor"></a>Visualizing and modeling sensitivity data</h1>
+<div id="working-with-dose-response-data-from-psets" class="section level2">
+<h2 class="hasAnchor">
+<a href="#working-with-dose-response-data-from-psets" class="anchor"></a>Working with Dose Response data from PSets</h2>
 <div id="plotting-drug-dose-response-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#plotting-drug-dose-response-data" class="anchor"></a>Plotting Drug Dose Response Data</h3>
 <p>Drug-Dose response data included in the PharmacoSet objects can be conviniently plotted using the <em>drugDoseResponseCurve</em> function. Given a list of PharmacoSets, a drug name and a cell name, it will plot the drug dose response curves for the given cell-drug combination in each dataset, allowing direct comparisons of data between datasets.</p>
 <div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">cells</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"SK-MEL-2"</span>,<span class="st">"697"</span>,<span class="st">"NCI-H1666"</span>)
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(<span class="kw">mfrow</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">3</span>), <span class="kw">pty</span> <span class="kw">=</span> <span class="st">"s"</span>)
+<span class="co"># par(mfrow=c(1, 3), pty = "s")</span>
 <span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/drugDoseResponseCurve.html">drugDoseResponseCurve</a></span>(<span class="kw">drug</span><span class="kw">=</span><span class="st">"Lapatinib"</span>, <span class="kw">cellline</span><span class="kw">=</span><span class="no">cells</span>[<span class="fl">1</span>],
                       <span class="kw">pSets</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="no">CCLE</span>, <span class="no">GDSC</span>), <span class="kw">plot.type</span><span class="kw">=</span><span class="st">"Actual"</span>,
-                      <span class="kw">legends.label</span><span class="kw">=</span><span class="st">"aac_published"</span>)
-<span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/drugDoseResponseCurve.html">drugDoseResponseCurve</a></span>(<span class="kw">drug</span><span class="kw">=</span><span class="st">"Lapatinib"</span>, <span class="kw">cellline</span><span class="kw">=</span><span class="no">cells</span>[<span class="fl">2</span>],
-                      <span class="kw">pSets</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="no">CCLE</span>, <span class="no">GDSC</span>), <span class="kw">plot.type</span><span class="kw">=</span><span class="st">"Actual"</span>,
-                      <span class="kw">legends.label</span><span class="kw">=</span><span class="st">"aac_published"</span>)
-<span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/drugDoseResponseCurve.html">drugDoseResponseCurve</a></span>(<span class="kw">drug</span><span class="kw">=</span><span class="st">"Lapatinib"</span>, <span class="kw">cellline</span><span class="kw">=</span><span class="no">cells</span>[<span class="fl">3</span>],
+                      <span class="kw">legends.label</span><span class="kw">=</span><span class="st">"aac_published"</span>)</pre></body></html></div>
+<p><img src="GxWorkshop_files/figure-html/curves-1.png" width="700" style="display: block; margin: auto auto auto 0;"></p>
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/drugDoseResponseCurve.html">drugDoseResponseCurve</a></span>(<span class="kw">drug</span><span class="kw">=</span><span class="st">"Lapatinib"</span>, <span class="kw">cellline</span><span class="kw">=</span><span class="no">cells</span>[<span class="fl">2</span>],
                       <span class="kw">pSets</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="no">CCLE</span>, <span class="no">GDSC</span>), <span class="kw">plot.type</span><span class="kw">=</span><span class="st">"Actual"</span>,
                       <span class="kw">legends.label</span><span class="kw">=</span><span class="st">"aac_published"</span>)</pre></body></html></div>
-<p><img src="GxWorkshop_files/figure-html/curves-1.png" width="700"></p>
+<p><img src="GxWorkshop_files/figure-html/curves-2.png" width="700" style="display: block; margin: auto auto auto 0;"></p>
+<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/drugDoseResponseCurve.html">drugDoseResponseCurve</a></span>(<span class="kw">drug</span><span class="kw">=</span><span class="st">"Lapatinib"</span>, <span class="kw">cellline</span><span class="kw">=</span><span class="no">cells</span>[<span class="fl">3</span>],
+                      <span class="kw">pSets</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="no">CCLE</span>, <span class="no">GDSC</span>), <span class="kw">plot.type</span><span class="kw">=</span><span class="st">"Actual"</span>,
+                      <span class="kw">legends.label</span><span class="kw">=</span><span class="st">"aac_published"</span>)</pre></body></html></div>
+<p><img src="GxWorkshop_files/figure-html/curves-3.png" width="700" style="display: block; margin: auto auto auto 0;"></p>
 <p>The function <em>drugDoseResponseCurve</em> can also be used to plot your own drug dose response curves, as follows:</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">concentrations</span> <span class="kw">&lt;-</span> <span class="fl">1</span>/<span class="fl">2</span>^<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0</span>,<span class="fl">8</span>) * <span class="fl">1</span>
+<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="no">concentrations</span> <span class="kw">&lt;-</span> <span class="fl">1</span>/<span class="fl">2</span>^<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0</span>,<span class="fl">8</span>) * <span class="fl">1</span>
 <span class="no">viabilities</span> <span class="kw">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">33.3</span>, <span class="fl">60</span>, <span class="fl">77.8</span>, <span class="fl">88.2</span>, <span class="fl">93.9</span>, <span class="fl">96.9</span>, <span class="fl">98.4</span>, <span class="fl">99.2</span>)
 
 <span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/drugDoseResponseCurve.html">drugDoseResponseCurve</a></span>(<span class="kw">concentrations</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">"Exp 1"</span> <span class="kw">=</span> <span class="no">concentrations</span>), <span class="kw">viabilities</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">"Exp 1"</span> <span class="kw">=</span> <span class="no">viabilities</span>))</pre></body></html></div>
@@ -398,20 +408,21 @@ Tissue of origin of cell lines in CCLE study
 ## conc_as_log, : Concentration Values were unsorted. Sorting concentration and
 ## ordering viability in same order</code></pre>
 <p><img src="GxWorkshop_files/figure-html/ddrc_own-1.png" width="700"></p>
-<div id="fitting-drug-dose-response-curves" class="section level4">
-<h4 class="hasAnchor">
-<a href="#fitting-drug-dose-response-curves" class="anchor"></a>Fitting Drug Dose Response Curves</h4>
+</div>
+<div id="fitting-drug-dose-response-curves" class="section level3">
+<h3 class="hasAnchor">
+<a href="#fitting-drug-dose-response-curves" class="anchor"></a>Fitting Drug Dose Response Curves</h3>
 <p>One of the core tasks implemented in PharmacoGx is the fitting of Hill Curve Models to dose-response data. In PharmacoGx, we use the 3 Parameter Hill Curve function as our model of drug response in cancer cell lines:</p>
-<p><span class="math display">\[y = E_\infty + \frac{1-E_\infty}{1 + (\frac{x}{EC50})^{HS}}\]</span> This is a log-logistic model, meaning that it takes the form of a logistic curve when x is on the log scale. The three parameters are: <span class="math inline">\(E_infty\)</span>, which is the maximal inhibition predicted at infinite concetration of the drug (the right asymptote); <span class="math inline">\(EC50\)</span>, which is the inflection point of the logit, where the inhibition reaches 50% of the maximum; <span class="math inline">\(HS\)</span>, the Hill Slope, which is a measure of the cooperativity of binding. This parameter controls the steepness of the logit, and is interpreted based on its relation to 1. Values larger than 1 imply positive cooperativity in inhibition/binding of the target for the small molcule ligands, which values less than 1 imply negative cooperativity/ antagonism.</p>
+<p><span class="math display">\[y = E_\infty + \frac{1-E_\infty}{1 + (\frac{x}{EC50})^{HS}}\]</span> This is a log-logistic model, meaning that it takes the form of a logistic curve when x is on the log scale. The three parameters are: <span class="math inline">\(E_\infty\)</span>, which is the maximal inhibition predicted at infinite concetration of the drug (the right asymptote); <span class="math inline">\(EC50\)</span>, which is the inflection point of the logit, where the inhibition reaches 50% of the maximum; <span class="math inline">\(HS\)</span>, the Hill Slope, which is a measure of the cooperativity of binding. This parameter controls the steepness of the logit, and is interpreted based on its relation to 1. Values larger than 1 imply positive cooperativity in inhibition/binding of the target for the small molcule ligands, which values less than 1 imply negative cooperativity/antagonism.</p>
 <p>To fit a Hill Slope model to your data in PharmacoGx, you can use the <em>logLogisticRegression</em> function, as below:</p>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="no">concentrations</span> <span class="kw">&lt;-</span> <span class="fl">1</span>/<span class="fl">2</span>^<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0</span>,<span class="fl">8</span>) * <span class="fl">1</span>
+<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="no">concentrations</span> <span class="kw">&lt;-</span> <span class="fl">1</span>/<span class="fl">2</span>^<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0</span>,<span class="fl">8</span>) * <span class="fl">1</span>
 <span class="no">viabilities</span> <span class="kw">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">33.3</span>, <span class="fl">60</span>, <span class="fl">77.8</span>, <span class="fl">88.2</span>, <span class="fl">93.9</span>, <span class="fl">96.9</span>, <span class="fl">98.4</span>, <span class="fl">99.2</span>)
 
 <span class="no">pars</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/logLogisticRegression.html">logLogisticRegression</a></span>(<span class="kw">conc</span> <span class="kw">=</span> <span class="no">concentrations</span>, <span class="kw">viability</span> <span class="kw">=</span> <span class="no">viabilities</span>)</pre></body></html></div>
 <pre><code>## Warning in sanitizeInput(conc = conc, viability = viability, conc_as_log =
 ## conc_as_log, : Concentration Values were unsorted. Sorting concentration and
 ## ordering viability in same order</code></pre>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">pars</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">pars</span>)</pre></body></html></div>
 <pre><code>## $HS
 ## [1] 1.900066
 ## 
@@ -421,20 +432,19 @@ Tissue of origin of cell lines in CCLE study
 ## $EC50
 ## [1] 0.2813364</code></pre>
 </div>
-</div>
 <div id="computing-summary-measures-for-ddrcs" class="section level3">
 <h3 class="hasAnchor">
 <a href="#computing-summary-measures-for-ddrcs" class="anchor"></a>Computing Summary Measures for DDRCs</h3>
-<p>Often with in vitro Pharmacogenomics data, we want to compare the drug sensitivity of a cell line to some omic feature. For this, we want to summarize the drug dose response curve into a single number representing the sensitivity of the cell line. The IC50 and Area Above the curve are two convenient metrics for quantifying the observed drug sensitivity. If you noticed above, the <em>drugDoseResponseCurve</em> function computes them by default. In PharmacoGx, they can be computed manually as follows:</p>
-<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="no">concentrations</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span>(<span class="fl">1</span>/<span class="fl">2</span>^<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0</span>,<span class="fl">8</span>) * <span class="fl">1</span>)
+<p>Often with in vitro Pharmacogenomics data, we want to compare the drug sensitivity of a cell line to some omic feature. For this, we want to summarize the drug dose response curve into a single number representing the sensitivity of the cell line. The IC50 and Area Above the Curve are two convenient metrics for quantifying the observed drug sensitivity. If you noticed above, the <em>drugDoseResponseCurve</em> function computes them by default. In PharmacoGx, they can be computed manually as follows:</p>
+<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="no">concentrations</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span>(<span class="fl">1</span>/<span class="fl">2</span>^<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0</span>,<span class="fl">8</span>) * <span class="fl">1</span>)
 <span class="no">viabilities</span> <span class="kw">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">99.2</span>, <span class="fl">98.4</span>, <span class="fl">96.9</span>, <span class="fl">93.9</span>, <span class="fl">88.2</span>, <span class="fl">77.8</span>, <span class="fl">60</span>, <span class="fl">33.3</span>, <span class="fl">0</span>)
 
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw pkg">PharmacoGx</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/computeAUC.html">computeAUC</a></span>(<span class="kw">concentration</span> <span class="kw">=</span> <span class="no">concentrations</span>, <span class="kw">viability</span> <span class="kw">=</span> <span class="no">viabilities</span>))</pre></body></html></div>
 <pre><code>## [1] 23.68416</code></pre>
-<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw pkg">PharmacoGx</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/computeICn.html">computeIC50</a></span>(<span class="kw">concentration</span> <span class="kw">=</span> <span class="no">concentrations</span>, <span class="kw">viability</span> <span class="kw">=</span> <span class="no">viabilities</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw pkg">PharmacoGx</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/computeICn.html">computeIC50</a></span>(<span class="kw">concentration</span> <span class="kw">=</span> <span class="no">concentrations</span>, <span class="kw">viability</span> <span class="kw">=</span> <span class="no">viabilities</span>))</pre></body></html></div>
 <pre><code>## [1] 0.2813364</code></pre>
 <p>In <em>PharmacoGx</em>, we call these measures sensitivity measures. PSets come with these measures precomputed, and accessible using the <em>sensitivityProfiles</em> function:</p>
-<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu">sensitivityProfiles</span>(<span class="no">CCLE</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu">sensitivityProfiles</span>(<span class="no">CCLE</span>))</pre></body></html></div>
 <pre><code>##                        ic50_published aac_published amax_published
 ## drugid_AEW541_1321N1         8.000000     0.0873750      -42.55801
 ## drugid_AEW541_22Rv1          2.329924     0.2205000      -71.58934
@@ -457,26 +467,22 @@ Tissue of origin of cell lines in CCLE study
 ## drugid_AEW541_639-V    1.350123
 ## drugid_AEW541_697      4.254253</code></pre>
 </div>
-<div id="summary-functions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#summary-functions" class="anchor"></a>Summary Functions</h3>
-<p>Pharmacogenomics studies often contain many examples of either replicated or missing data. One of the most common tasks in preparing data for statistical or machine learning analysis is aligning your features and labels. To accelerate using Pharmacogenomics data for analysis, <em>PharmacoGx</em> contains two functions which create deduplicated matrices with missing data filled by NAs: <em>summarizeSensitivityProfiles</em> and <em>summarizeMolecularProfiles</em>. They create matrices which are drugs x cell lines and molecular features x cell lines, with any cell lines profiled for only sensitivity or molecular features padded with NA values. For the molecular profiles, the data is returned in a <code>r BiocStyle::Biocpkg("Biobase")</code> <em>ExpressionSet</em> object, while drug sensitivity data is returned as a matrix.</p>
-<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="kw pkg">PharmacoGx</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/summarizeMolecularProfiles.html">summarizeMolecularProfiles</a></span>(<span class="no">CCLE</span>, <span class="st">"rna"</span>))</pre></body></html></div>
-<pre><code>## Summarizing rna molecular data for:  CCLE</code></pre>
-<pre><code>## 
-  |                                                                            
-  |                                                                      |   0%
-  |                                                                            
-  |===================================                                   |  50%
-  |                                                                            
-  |======================================================================| 100%</code></pre>
+</div>
+</div>
+<div id="summary-functions" class="section level1">
+<h1 class="hasAnchor">
+<a href="#summary-functions" class="anchor"></a>Summary Functions</h1>
+<p>Pharmacogenomics studies often contain many examples of either replicated or missing data. One of the most common tasks in preparing data for statistical or machine learning analysis is aligning your features and labels. To accelerate using Pharmacogenomics data for analysis, <em>PharmacoGx</em> contains two functions which create deduplicated matrices with missing data filled by NAs: <em>summarizeSensitivityProfiles</em> and <em>summarizeMolecularProfiles</em>. They create matrices which are drugs x cell lines and molecular features x cell lines, with any cell lines profiled for only sensitivity or molecular features padded with NA values. For the molecular profiles, the data are returned in a <em><a href="https://bioconductor.org/packages/3.12/SummarizedExperiment">SummarizedExperiment</a></em>object, while drug sensitivity data are returned as a matrix.</p>
+<div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="no">mol.prof</span> <span class="kw">&lt;-</span> <span class="kw pkg">PharmacoGx</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/summarizeMolecularProfiles.html">summarizeMolecularProfiles</a></span>(<span class="no">CCLE</span>, <span class="st">"rna"</span>)
+<span class="no">sens.prof</span> <span class="kw">&lt;-</span> <span class="kw pkg">PharmacoGx</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/summarizeSensitivityProfiles.html">summarizeSensitivityProfiles</a></span>(<span class="no">CCLE</span>, <span class="st">"aac_recomputed"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">mol.prof</span>)</pre></body></html></div>
 <pre><code>## [1] 10012  1094</code></pre>
-<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="kw pkg">PharmacoGx</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/summarizeSensitivityProfiles.html">summarizeSensitivityProfiles</a></span>(<span class="no">CCLE</span>, <span class="st">"aac_recomputed"</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">sens.prof</span>)</pre></body></html></div>
 <pre><code>## [1]   24 1094</code></pre>
 <p>Below, we use the summarizeSensitivityProfiles function and ggplot to investigate the distributions of AUC values within CCLE.</p>
-<div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>, <span class="kw">verbose</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>, <span class="kw">verbose</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></body></html></div>
 <pre><code>## Warning: package 'ggplot2' was built under R version 4.0.1</code></pre>
-<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">reshape2</span>, <span class="kw">verbose</span><span class="kw">=</span><span class="fl">FALSE</span>)
+<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">reshape2</span>, <span class="kw">verbose</span><span class="kw">=</span><span class="fl">FALSE</span>)
 <span class="no">CCLE.aac</span> <span class="kw">&lt;-</span> <span class="kw pkg">PharmacoGx</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/summarizeSensitivityProfiles.html">summarizeSensitivityProfiles</a></span>(<span class="no">CCLE</span>, <span class="kw">sensitivity.measure</span> <span class="kw">=</span> <span class="st">"aac_recomputed"</span>)
 <span class="no">melted_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/reshape2/man/melt.html">melt</a></span>(<span class="no">CCLE.aac</span>)
 <span class="no">NA_rows</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">melted_data</span>), <span class="kw">arr.ind</span><span class="kw">=</span><span class="no">T</span>)[,<span class="fl">1</span>])
@@ -493,144 +499,202 @@ Cells response to drugs in CCLE
 </p>
 </div>
 </div>
-<div id="signature-generation" class="section level3">
-<h3 class="hasAnchor">
-<a href="#signature-generation" class="anchor"></a>Signature Generation</h3>
+<div id="signature-generation" class="section level1">
+<h1 class="hasAnchor">
+<a href="#signature-generation" class="anchor"></a>Signature Generation</h1>
 <p>Finally, we will talk about some functions built into PharmacoGx to generate signatures of molecular features which correlate with response to particular compounds. In PharmacoGx, the main function to generate signatures of response across drugs is <code>drugSensitivitySig</code>. It takes as input a PSet, and the molecular data type you wish to use to generate the signatures, and computes the linear association between each feature and each drug response vector independently. The default of using all features, drugs and cell lines in the dataset can be modified with parameters detailed below.</p>
 <p>At its core, drugSensitivitySig fits a nested linear model to the drug response data, using the molecular feature, as well as cell tissue of origin and batch effect as possible predictors. The function then uses ANOVA to judge whether including the molecular feature in the model leads to a statistically significant improvement in prediction accuracy (R^2). For more details on the implementation, we encourage readers to reference the PharmacoGx manuscript, or the vignettes included in the package.</p>
-<p>Here, as an example, we will run <code>drugSensitivitySig</code> to generate a signature of response to Lapatinib and Erlotinib, two targetted therapies, from the GDSC data. We will do this with the first (largely random) 100 genes measured in the expression matrix, as the full computation can take some time to complete.</p>
-<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="co">## Extracting the first 100 gene names. featureInfo brings up the rowData of the "rna" SummarizedExperiment</span>
-<span class="no">chosen.genes</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span>(<span class="fu">featureInfo</span>(<span class="no">GDSC</span>, <span class="st">"rna"</span>))[<span class="fl">100</span>]
+<p>Here, as an example, we will run <code>drugSensitivitySig</code> to generate a signature of response to Lapatinib and Erlotinib, two targetted therapies, from the GDSC data. We will do this with a random 10 genes measured in the expression matrix, as the full computation can take some time to complete.</p>
+<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="co">## Extracting the first 100 gene names. featureInfo brings up the rowData of the "rna" SummarizedExperiment</span>
+<span class="no">chosen.genes</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span>(<span class="fu">featureInfo</span>(<span class="no">GDSC</span>, <span class="st">"rna"</span>), <span class="fl">10</span>))
 <span class="no">sigs</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/drugSensitivitySig.html">drugSensitivitySig</a></span>(<span class="no">GDSC</span>, <span class="st">"rna"</span>, <span class="kw">sensitivity.measure</span> <span class="kw">=</span> <span class="st">"aac_recomputed"</span>, <span class="kw">drugs</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Erlotinib"</span>, <span class="st">"Lapatinib"</span>), <span class="kw">features</span> <span class="kw">=</span> <span class="no">chosen.genes</span>)</pre></body></html></div>
-<pre><code>## Summarizing rna molecular data for:  GDSC_v1</code></pre>
-<pre><code>## 
-  |                                                                            
-  |                                                                      |   0%
-  |                                                                            
-  |=                                                                     |   2%
-  |                                                                            
-  |==                                                                    |   3%
-  |                                                                            
-  |===                                                                   |   5%
-  |                                                                            
-  |=====                                                                 |   7%
-  |                                                                            
-  |======                                                                |   8%
-  |                                                                            
-  |=======                                                               |  10%
-  |                                                                            
-  |========                                                              |  11%
-  |                                                                            
-  |=========                                                             |  13%
-  |                                                                            
-  |==========                                                            |  15%
-  |                                                                            
-  |===========                                                           |  16%
-  |                                                                            
-  |=============                                                         |  18%
-  |                                                                            
-  |==============                                                        |  20%
-  |                                                                            
-  |===============                                                       |  21%
-  |                                                                            
-  |================                                                      |  23%
-  |                                                                            
-  |=================                                                     |  25%
-  |                                                                            
-  |==================                                                    |  26%
-  |                                                                            
-  |====================                                                  |  28%
-  |                                                                            
-  |=====================                                                 |  30%
-  |                                                                            
-  |======================                                                |  31%
-  |                                                                            
-  |=======================                                               |  33%
-  |                                                                            
-  |========================                                              |  34%
-  |                                                                            
-  |=========================                                             |  36%
-  |                                                                            
-  |==========================                                            |  38%
-  |                                                                            
-  |============================                                          |  39%
-  |                                                                            
-  |=============================                                         |  41%
-  |                                                                            
-  |==============================                                        |  43%
-  |                                                                            
-  |===============================                                       |  44%
-  |                                                                            
-  |================================                                      |  46%
-  |                                                                            
-  |=================================                                     |  48%
-  |                                                                            
-  |==================================                                    |  49%
-  |                                                                            
-  |====================================                                  |  51%
-  |                                                                            
-  |=====================================                                 |  52%
-  |                                                                            
-  |======================================                                |  54%
-  |                                                                            
-  |=======================================                               |  56%
-  |                                                                            
-  |========================================                              |  57%
-  |                                                                            
-  |=========================================                             |  59%
-  |                                                                            
-  |==========================================                            |  61%
-  |                                                                            
-  |============================================                          |  62%
-  |                                                                            
-  |=============================================                         |  64%
-  |                                                                            
-  |==============================================                        |  66%
-  |                                                                            
-  |===============================================                       |  67%
-  |                                                                            
-  |================================================                      |  69%
-  |                                                                            
-  |=================================================                     |  70%
-  |                                                                            
-  |==================================================                    |  72%
-  |                                                                            
-  |====================================================                  |  74%
-  |                                                                            
-  |=====================================================                 |  75%
-  |                                                                            
-  |======================================================                |  77%
-  |                                                                            
-  |=======================================================               |  79%
-  |                                                                            
-  |========================================================              |  80%
-  |                                                                            
-  |=========================================================             |  82%
-  |                                                                            
-  |===========================================================           |  84%
-  |                                                                            
-  |============================================================          |  85%
-  |                                                                            
-  |=============================================================         |  87%
-  |                                                                            
-  |==============================================================        |  89%
-  |                                                                            
-  |===============================================================       |  90%
-  |                                                                            
-  |================================================================      |  92%
-  |                                                                            
-  |=================================================================     |  93%
-  |                                                                            
-  |===================================================================   |  95%
-  |                                                                            
-  |====================================================================  |  97%
-  |                                                                            
-  |===================================================================== |  98%
-  |                                                                            
-  |======================================================================| 100%</code></pre>
-<pre><code>## Computing drug sensitivity signatures...</code></pre>
-</div>
-</div>
+<p>Lets look at the head of the signature for the two drugs:</p>
+<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">sigs</span>[,<span class="fl">1</span>,]))</pre></body></html></div>
+<table class="table">
+<colgroup>
+<col width="18%">
+<col width="12%">
+<col width="11%">
+<col width="4%">
+<col width="12%">
+<col width="11%">
+<col width="11%">
+<col width="4%">
+<col width="11%">
+</colgroup>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">estimate</th>
+<th align="right">se</th>
+<th align="right">n</th>
+<th align="right">tstat</th>
+<th align="right">fstat</th>
+<th align="right">pvalue</th>
+<th align="right">df</th>
+<th align="right">fdr</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSG00000135643</td>
+<td align="right">-0.0017758</td>
+<td align="right">0.0527474</td>
+<td align="right">288</td>
+<td align="right">-0.0336666</td>
+<td align="right">0.0011334</td>
+<td align="right">0.9731686</td>
+<td align="right">262</td>
+<td align="right">0.9929906</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000013583</td>
+<td align="right">0.0441622</td>
+<td align="right">0.0712744</td>
+<td align="right">288</td>
+<td align="right">0.6196076</td>
+<td align="right">0.3839136</td>
+<td align="right">0.5360546</td>
+<td align="right">262</td>
+<td align="right">0.8717089</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000168734</td>
+<td align="right">0.0896012</td>
+<td align="right">0.0581700</td>
+<td align="right">288</td>
+<td align="right">1.5403324</td>
+<td align="right">2.3726239</td>
+<td align="right">0.1246862</td>
+<td align="right">262</td>
+<td align="right">0.5954016</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000176871</td>
+<td align="right">-0.0114449</td>
+<td align="right">0.0672276</td>
+<td align="right">288</td>
+<td align="right">-0.1702415</td>
+<td align="right">0.0289822</td>
+<td align="right">0.8649516</td>
+<td align="right">262</td>
+<td align="right">0.9718271</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000164209</td>
+<td align="right">-0.0251662</td>
+<td align="right">0.0598613</td>
+<td align="right">288</td>
+<td align="right">-0.4204088</td>
+<td align="right">0.1767436</td>
+<td align="right">0.6745314</td>
+<td align="right">262</td>
+<td align="right">0.9193390</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000118855</td>
+<td align="right">0.0039092</td>
+<td align="right">0.0599560</td>
+<td align="right">288</td>
+<td align="right">0.0652012</td>
+<td align="right">0.0042512</td>
+<td align="right">0.9480635</td>
+<td align="right">262</td>
+<td align="right">0.9877188</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb40"><html><body><pre class="r"><span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(<span class="no">sigs</span>[,<span class="fl">2</span>,])))</pre></body></html></div>
+<table class="table">
+<colgroup>
+<col width="18%">
+<col width="12%">
+<col width="11%">
+<col width="4%">
+<col width="12%">
+<col width="11%">
+<col width="11%">
+<col width="4%">
+<col width="11%">
+</colgroup>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">estimate</th>
+<th align="right">se</th>
+<th align="right">n</th>
+<th align="right">tstat</th>
+<th align="right">fstat</th>
+<th align="right">pvalue</th>
+<th align="right">df</th>
+<th align="right">fdr</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSG00000135643</td>
+<td align="right">-0.0236689</td>
+<td align="right">0.0533972</td>
+<td align="right">297</td>
+<td align="right">-0.4432602</td>
+<td align="right">0.1964796</td>
+<td align="right">0.6579312</td>
+<td align="right">271</td>
+<td align="right">0.9158332</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000013583</td>
+<td align="right">0.0184189</td>
+<td align="right">0.0721793</td>
+<td align="right">297</td>
+<td align="right">0.2551832</td>
+<td align="right">0.0651185</td>
+<td align="right">0.7987752</td>
+<td align="right">271</td>
+<td align="right">0.9544537</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000168734</td>
+<td align="right">-0.0111232</td>
+<td align="right">0.0595979</td>
+<td align="right">297</td>
+<td align="right">-0.1866370</td>
+<td align="right">0.0348334</td>
+<td align="right">0.8520849</td>
+<td align="right">271</td>
+<td align="right">0.9648259</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000176871</td>
+<td align="right">0.0324641</td>
+<td align="right">0.0685860</td>
+<td align="right">297</td>
+<td align="right">0.4733347</td>
+<td align="right">0.2240457</td>
+<td align="right">0.6363555</td>
+<td align="right">271</td>
+<td align="right">0.9062667</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000164209</td>
+<td align="right">0.0331942</td>
+<td align="right">0.0604337</td>
+<td align="right">297</td>
+<td align="right">0.5492659</td>
+<td align="right">0.3016931</td>
+<td align="right">0.5832753</td>
+<td align="right">271</td>
+<td align="right">0.8874327</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000118855</td>
+<td align="right">0.0236242</td>
+<td align="right">0.0605183</td>
+<td align="right">297</td>
+<td align="right">0.3903653</td>
+<td align="right">0.1523851</td>
+<td align="right">0.6965731</td>
+<td align="right">271</td>
+<td align="right">0.9251681</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="basic-functionalities-of-radiogx" class="section level1">
 <h1 class="hasAnchor">
@@ -709,11 +773,11 @@ Cells response to drugs in CCLE
 <div class="sourceCode" id="cb48"><html><body><pre class="r"><span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">radInf</span>)</pre></body></html></div>
 <table class="table">
 <thead><tr class="header">
-<th></th>
+<th align="left"></th>
 <th align="left">X.radiation.</th>
 </tr></thead>
 <tbody><tr class="odd">
-<td>radiation</td>
+<td align="left">radiation</td>
 <td align="left">radiation</td>
 </tr></tbody>
 </table>
@@ -794,26 +858,26 @@ Cells response to drugs in CCLE
 <span class="no">mProf</span> <span class="kw">&lt;-</span> <span class="fu">molecularProfiles</span>(<span class="no">Cleveland</span>, <span class="st">'rnaseq'</span>)</pre></body></html></div>
 <table class="table">
 <thead><tr class="header">
-<th></th>
+<th align="left"></th>
 <th align="right">G20461.HSC-3.2</th>
 <th align="right">G20463.C2BBe1.2</th>
 <th align="right">G20466.5637.2</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>ENSG00000000003</td>
+<td align="left">ENSG00000000003</td>
 <td align="right">4.527</td>
 <td align="right">5.860</td>
 <td align="right">5.394</td>
 </tr>
 <tr class="even">
-<td>ENSG00000000005</td>
+<td align="left">ENSG00000000005</td>
 <td align="right">0.000</td>
 <td align="right">0.070</td>
 <td align="right">0.000</td>
 </tr>
 <tr class="odd">
-<td>ENSG00000000419</td>
+<td align="left">ENSG00000000419</td>
 <td align="right">6.314</td>
 <td align="right">7.303</td>
 <td align="right">6.140</td>
@@ -835,26 +899,26 @@ Cells response to drugs in CCLE
 <span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">sensRaw</span>[,,<span class="fl">2</span>][<span class="fl">1</span>:<span class="fl">3</span>, <span class="fl">1</span>:<span class="fl">3</span>])</pre></body></html></div>
 <table class="table">
 <thead><tr class="header">
-<th></th>
+<th align="left"></th>
 <th align="right">doses1</th>
 <th align="right">doses2</th>
 <th align="right">doses3</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>SK-N-FI_radiation_1</td>
+<td align="left">SK-N-FI_radiation_1</td>
 <td align="right">1.0629867</td>
 <td align="right">0.841</td>
 <td align="right">0.6181713</td>
 </tr>
 <tr class="even">
-<td>SK-N-AS_radiation_3</td>
+<td align="left">SK-N-AS_radiation_3</td>
 <td align="right">0.9488615</td>
 <td align="right">0.866</td>
 <td align="right">0.7827120</td>
 </tr>
 <tr class="odd">
-<td>CHP-212_radiation_4</td>
+<td align="left">CHP-212_radiation_4</td>
 <td align="right">0.7312816</td>
 <td align="right">0.574</td>
 <td align="right">0.4160333</td>
@@ -866,29 +930,29 @@ Cells response to drugs in CCLE
 <div class="sourceCode" id="cb64"><html><body><pre class="r"><span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">sensProf</span>[<span class="fl">1</span>:<span class="fl">3</span>, <span class="fl">1</span>:<span class="fl">3</span>])</pre></body></html></div>
 <table class="table">
 <thead><tr class="header">
-<th></th>
+<th align="left"></th>
 <th align="right">AUC_published</th>
 <th align="right">AUC_recomputed</th>
 <th align="left">alpha</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>SK-N-FI_radiation_1</td>
+<td align="left">SK-N-FI_radiation_1</td>
 <td align="right">3.410</td>
 <td align="right">2.861642</td>
-<td align="left">c(doses8 = 0.152197185309997)</td>
+<td align="left">0.1521972</td>
 </tr>
 <tr class="even">
-<td>SK-N-AS_radiation_3</td>
+<td align="left">SK-N-AS_radiation_3</td>
 <td align="right">3.789</td>
 <td align="right">3.258930</td>
-<td align="left">c(doses8 = 0.124554238460761)</td>
+<td align="left">0.1245542</td>
 </tr>
 <tr class="odd">
-<td>CHP-212_radiation_4</td>
+<td align="left">CHP-212_radiation_4</td>
 <td align="right">1.833</td>
 <td align="right">1.344092</td>
-<td align="left">c(doses5 = 0.461572814132262)</td>
+<td align="left">0.4615728</td>
 </tr>
 </tbody>
 </table>
@@ -897,26 +961,26 @@ Cells response to drugs in CCLE
 <div class="sourceCode" id="cb66"><html><body><pre class="r"><span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">sensInfo</span>[<span class="fl">1</span>:<span class="fl">3</span>, <span class="fl">1</span>:<span class="fl">3</span>])</pre></body></html></div>
 <table class="table">
 <thead><tr class="header">
-<th></th>
+<th align="left"></th>
 <th align="left">cellid</th>
 <th align="left">radiation.type</th>
 <th align="right">Dose1-1Gy-rep1</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>SK-N-FI_radiation_1</td>
+<td align="left">SK-N-FI_radiation_1</td>
 <td align="left">SK-N-FI</td>
 <td align="left">radiation</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
-<td>SK-N-AS_radiation_3</td>
+<td align="left">SK-N-AS_radiation_3</td>
 <td align="left">SK-N-AS</td>
 <td align="left">radiation</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
-<td>CHP-212_radiation_4</td>
+<td align="left">CHP-212_radiation_4</td>
 <td align="left">CHP-212</td>
 <td align="left">radiation</td>
 <td align="right">1</td>
@@ -1036,7 +1100,7 @@ Cells response to drugs in CCLE
 <table class="table">
 <caption>Top 10 Gene Markers of Radio-sensitivity in the Cleveland RSet</caption>
 <thead><tr class="header">
-<th></th>
+<th align="left"></th>
 <th align="left">estimate</th>
 <th align="left">se</th>
 <th align="left">n</th>
@@ -1048,7 +1112,7 @@ Cells response to drugs in CCLE
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>NA</td>
+<td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1059,7 +1123,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td>NA.1</td>
+<td align="left">NA.1</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1070,7 +1134,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
-<td>NA.2</td>
+<td align="left">NA.2</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1081,7 +1145,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td>NA.3</td>
+<td align="left">NA.3</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1092,7 +1156,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
-<td>NA.4</td>
+<td align="left">NA.4</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1103,7 +1167,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td>NA.5</td>
+<td align="left">NA.5</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1114,7 +1178,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
-<td>NA.6</td>
+<td align="left">NA.6</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1125,7 +1189,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td>NA.7</td>
+<td align="left">NA.7</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1136,7 +1200,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
-<td>NA.8</td>
+<td align="left">NA.8</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1147,7 +1211,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td>NA.9</td>
+<td align="left">NA.9</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1163,7 +1227,7 @@ Cells response to drugs in CCLE
 <table class="table">
 <caption>Top 10 Gene Markers of Radio-resistance in the Cleveland RSet</caption>
 <thead><tr class="header">
-<th></th>
+<th align="left"></th>
 <th align="left">estimate</th>
 <th align="left">se</th>
 <th align="left">n</th>
@@ -1175,7 +1239,7 @@ Cells response to drugs in CCLE
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>NA.20039</td>
+<td align="left">NA.20039</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1186,7 +1250,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td>NA.20040</td>
+<td align="left">NA.20040</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1197,7 +1261,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
-<td>NA.20041</td>
+<td align="left">NA.20041</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1208,7 +1272,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td>NA.20042</td>
+<td align="left">NA.20042</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1219,7 +1283,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
-<td>NA.20043</td>
+<td align="left">NA.20043</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1230,7 +1294,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td>NA.20044</td>
+<td align="left">NA.20044</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1241,7 +1305,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
-<td>NA.20045</td>
+<td align="left">NA.20045</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1252,7 +1316,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td>NA.20046</td>
+<td align="left">NA.20046</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1263,7 +1327,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
-<td>NA.20047</td>
+<td align="left">NA.20047</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
@@ -1274,7 +1338,7 @@ Cells response to drugs in CCLE
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td>NA.20048</td>
+<td align="left">NA.20048</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
