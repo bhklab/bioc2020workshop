@@ -116,14 +116,16 @@ For a 2-hr workshop:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(gxbioc2020workshop)
-library(PharmacoGx)
 library(CoreGx)
+library(PharmacoGx)
+library(RadioGx)
+library(gxbioc2020workshop)
+
 ```
 
 # Introduction
 This tutorial, titled Biomarker Discovery from High Throughput Screening
-Datasets, focuses on a suite of packages designed to  simplify analysis
+Datasets, focuses on a suite of packages designed to simplify analysis
 correlating measures of treatment response measured on model systems with
 molecular profiles of those systems. These packages primarly focus on modeling
 response to cancer treatments in cancer models, but the concepts presented can
@@ -173,7 +175,7 @@ ATCC, and made available for purchase to researchers who wish to use them in the
 
 ## In Vitro Pharmacogenomics
 
-When studying Pharmacogenomic in vitro, the design of the experiment usually involves doing two things in parallel:
+When studying Pharmacogenomics in vitro, the design of the experiment usually involves doing two things in parallel:
 Each cell line in the study is profiled on a molecular level, which can include measuring DNA level
 aberations such as SNVs and copy number changes, RNA expression levels, DNA methylation, and 
 protein expression. In parallel, the cell lines undergo a viability based drug screen, where 
@@ -204,22 +206,40 @@ a similar experimental setup.
 
 ## In Vivo Pharmacogenomics
 
-Xeva:
 
+In vivo models play an important role in cancer drug discovery.
+Patent derived xenografts (PDXs) are commonly used in vivo models in cancer research.
+They have several advantages over cell lines:
+* PDXs are known to recapitulate tumor biology very well
+* PDXs maintain the cellular and histological structure of the source tumor
+* PDXs also keep tumor micro-enviroment and stromal elements
+* Genomic properties of the tumor are largely preserved from patient to PDX
+* Drug response of PDXs closely match the corresponding patient and clinical outcome
+
+To create PDXs, cancerous tissues or cells from patients' tumors are engrafted into immunodeficient mice (either subcutaneous or orthotopic engraftment).
+Once established, tumors from the PDXs can be passed from mouse to mouse, this is called passaging. For drug testing, PDXs were given a set drug dose at a set schedule (for example weekly). Change in tumor size is measured, usually physically using calipers.
 ![](PDXfigure500ppi.png)
 
 
 
 
-# Data Storage and access
+# Data Storage and Access
 
+## PharmacoGx
 
+PharmacoGx stores drug screening data together with molecular profiling of 
+cell lines in an object called a `PharmacoSet`, or `PSet` for short. This object
+inherits for the `CoreSet` class defined in our package `CoreGx`, which abstracts
+the common functionality across our similar packages. 
 The basic structure of a PharmacoSet is as follows:
 
-![](PharmacoGxClassDiagram.png)
+```{r pharmacoset, echo=FALSE, fig.wide=TRUE, fig.cap = "**PharmacoSet class diagram**. Objects comprising a `PharmacoSet` are enclosed in boxes. First box indicates type and name of each object. Second box indicates the structure of an object or class. Third box shows accessor methods from `PharmacoGx` for that specific object. '=>' represents return and specifies what is returned from that item or method."}
+knitr::include_graphics('./PharmacoGxClassDiagram.png')
+```
+<!-- "fig.cap = **RadioSet class diagram**. Objects comprising a `RadioSet` are enclosed in boxes. First box indicates type and name of each object. Second box indicates the structure of an object or class. Third box shows accessor methods from `RadioGx` for that specific object. '=>' represents return and specifies what is returned from that item or method." -->
+<!-- TODO: fixme caption -->
 
-
-## Downloading PharmacoSet objects
+### Downloading PharmacoSet objects
 Let us download the PSets used for this tutorial into our local working environment. 
 A table of available PharmacoSet objects can be obtained by using the *availablePSets*
 function. 
@@ -250,11 +270,141 @@ data(GDSC)
 data(CCLE)
 ```
 
+We can print out summary information about these datasets to the console,
+simply by evaluating them on the command line. 
 
+```{r print_out_psets, eval=TRUE}
+CCLE
+```
+
+## RadioGx
+
+The RadioSet has a structure similar to the `PharmacoSet` and also inherits
+from the CoreSet^[exported by `r BiocStyle::Biocpkg('CoreGx')`] class . The radiation
+slot is implemented in `r BiocStyle::Biocpkg('RadioGx')`  to hold relevant metadata
+about the type(s) of radiation used in the dose-response experiment,
+and is analogous to the drug slot in a `PharmacoSet`. The remainder of the slots
+mirror the `PharmacoSet`.
+
+```{r radioset, echo=FALSE, fig.wide=TRUE, fig.cap = "**RadioSet class diagram**. Objects comprising a `RadioSet` are enclosed in boxes. First box indicates type and name of each object. Second box indicates the structure of an object or class. Third box shows accessor methods from `RadioGx` for that specific object. '=>' represents return and specifies what is returned from that item or method."}
+knitr::include_graphics('./RadioGxClassDiagram.png')
+```
+
+### Downloading an RSet
+
+`r BiocStyle::Biocpkg('RadioGx')` provides an interface similar to `r BiocStyle::Biocpkg("PharmacoGx")`
+and `r BiocStyle::Biocpkg('Xeva')` for downloading our curated versions of published datasets.
+
+To get a list of available `RadioSet`s, use:
+
+```{r available_rsets, message=FALSE}
+RSets <- availableRSets()
+```
+
+```{r available_radiosets_table, echo=FALSE, results="asis"}
+knitr::kable(RSets[, c("RadioSet_name", "Date_updated", "DOI")])
+```
+
+As the `r BiocStyle::Biocpkg('RadioGx')` package was only recently released, there is
+currently only one dataset available. Let's download the 'Cleveland' RSet, which contains
+a highly curated version of the data from Yang *et al.*, 2016.
+
+For this workshop, we have subset this dataset. The entire dataset can be downloaded using the following:
+
+```{r download_rset, eval=FALSE}
+Cleveland <- downloadRSet('Cleveland', saveDir='data')
+```
+
+Let's load the RSet for this workshop.
+
+```{r printing_a_radioset, hide=TRUE}
+data(Cleveland)
+Cleveland
+```
+
+Similar to PharmacoGx and Xeva, a summary of the contents of the RadioSet is printed
+when calling a RadioSet in the console. We can see that the Cleveland RSet contains
+sensitivity information for 303 cell-lines treated with a single type of radiation.
+The RSet also contains rna^[microarray], rna-seq and cnv molecular data for a subset of available
+cell-lines.
+
+
+## Xeva
+
+
+The R package `Xeva` connects the tumor volume vs. time data with genomics data in an R class called `XevaSet`.  This allows users to analyze the data and perform biomarker discovery.
+
+<!-- TODO:: insert a class diagram for Xeva? -->
+
+
+### Downloading Xevaset objects
+Several `XevaSet` objects can be obtained by using the *downloadXevaSet*
+function.
+```{r X1, eval=TRUE}
+  library(Xeva)
+  Xeva::downloadXevaSet()
+```
+The following chunk loads the dataset used in the tutorial and prints out its summary:
+
+```{r X2_1, eval=TRUE}
+data("brca")
+brca
+```
 # Examining and Extracting data of interest
 
-For most of your work with PSet objects, we recommend you use the accessor
-functions implemented in the package to access the data stored in the object.
+There are many common functions between the datasets for extracting the data
+relevant to your analysis. PharmacoGx are RadioGx are the most similar, due
+to the large similarities in their experimental designs. 
+For most of your work with the objects, we recommend you use the accessor
+functions implemented in the packages to access the data. 
+These accessors are largely stable across versions, while the implementation in 
+the background can change as datasets grow in size and complexity. 
+
+
+This section is meant both as an introduction, and as a reference to the most used 
+accessors for each package. 
+
+## CoreGx accessors
+
+PharmacoGx and RadioGx share a lot of similarities in their object structure. 
+This also means that a lot of the functions used to access the data provided in these 
+objects can be accessed using the same interface. 
+
+
+In general, the PSet and RSet store three major categories of data: 
+metadata/annotations, molecular data and radiation response data.
+These are demarcated in **Fig.** \@ref(fig:pharmacoset) and **Fig.** \@ref(fig:radioset) using green, blue and red, respectively. Accessor methods are available
+to retrieve all three kinds of data from a CoreSet; the accessor methods for each component are listed
+in the bottom most cell of each object in the class diagrams. We will discuss a subset of these methods
+now.
+
+### Accessing metadata
+
+There are two major metadata slots in the `CoreSet` which are commonly useful for your analysis. 
+The first is common between all the packages, the `cell` slot. This slot contains 
+information about the cell lines which were profiled in the dataset. This information exists 
+for all cell lines, if they exist in any of the molecular or sensitivity data included in the 
+objects. Note that not all cell lines are profiled in all assays, which is one of the sources
+of complexity when analyzing data from large studies. 
+
+To access the cell line metadata, you can use the following accessors:
+
+```{r cell_slot_accessors, results="asis", align="left"}
+
+knitr::kable(cellInfo(CCLE)[1:3,1:3])
+knitr::kable(cellInfo(Cleveland)[1:3,1:3])
+
+```
+
+The standardized identifiers for those cell lines across our packages are 
+the row names of this object. For convenience, they are accessible through
+the `cellNames` function:
+
+```{r cellnames_accessor}
+head(cellNames(CCLE))
+```
+
+
 For example, here we can use the *cellInfo* function to pull out the tissue of
 origin for each cell line in the CCLE dataset. The *tissueid* column is standard
 for PSets, and should be present in all objects.
@@ -271,13 +421,154 @@ pie(table(CCLE@cell[,"tissueid"]),
     cex=0.8)
 ```
 
-While we will introduce some of the functions for subsetting and extracting data
-from PSets in this tutorial, the documentation of the PharmacoSet object
-contains descriptions of the available functions to interface with PSet objects:
+The other important metadata slot will vary across the two packages, being called 
+`drug` in PharmacoGx, and `radiation` in RadioGx. They are discussed just below. 
 
-```{r docs, eval=FALSE}
-?`PharmacoSet-class`
+The `CoreSet` also includes `annotations`, which keep track of metadata about
+the creation of the `CoreSet` object itself, and `curation`, which keeps track of the 
+remapping of identifiers from those used in the original study to those in the object. 
+
+
+### Accessing molecular data
+
+Molecular data are contained in the `molecularProfiles` slot.
+
+```{r molecular_data_slot_accessors}
+# Get the list (equivalent to @molecularProfiles, except that it is robust to changes in CoreSet structure
+## PSet
+str(molecularProfilesSlot(CCLE), max.level=2)
+## RSet
+str(molecularProfilesSlot(Cleveland), max.level=2)
+
+# Get the names from the list
+mDataNames(CCLE)
+mDataNames(Cleveland)
 ```
+
+All molecular data in any class inheriting from CoreSet is contained in a `SummarizedExperiment`
+object. While `r BiocStyle::Biocpkg('SummarizedExperiment')` comes with it's own set of accessors, we recommend using
+available `RadioGx` and `PharmacoGx` accessor methods as it allows your scripts to be robust to future changes
+in the structure of a `CoreSet` object. Below, we demonstrate each method with an RSet, but encourage you to 
+try them on the PSets as well. They should all work!
+
+```{r sample_meta_data}
+# Get sample metadata
+phenoInf <- phenoInfo(Cleveland, 'cnv')
+```
+
+To keep the document formatted nicely, the following tables have been subset to the first three rows and columns.
+
+```{r print_sample_meta_data, echo=FALSE, fig.small=TRUE, results="asis"}
+knitr::kable(phenoInf[1:3, 1:3], row.names=FALSE)
+```
+
+```{r feature_meta_data}
+# Get feature metadata
+featInfo <- featureInfo(Cleveland, 'rna')
+```
+
+```{r print_feature_meta_data, echo=FALSE, align="center", results="asis"}
+knitr::kable(featInfo[1:3, 1:3], row.names=FALSE)
+```
+
+```{r molecular_data, fig.wide=TRUE}
+# Access the moleclar feature data
+mProf <- molecularProfiles(Cleveland, 'rnaseq')
+```
+
+```{r print_molecular_profile_data, echo=FALSE, results="asis"}
+knitr::kable(mProf[1:3, 1:3])
+```
+
+### Accessing response data
+
+Data for treatment response can also be accesssed the same way across `PharmacoGx` and `RadioGx`.
+The difference between the two packages is in the data itself, and the models applied to the data, discussed 
+below. Here is a quick summary of accessor functions for response data.
+
+```{r response_slot_accessor}
+# Get sensitivity slot
+sens <- sensitivitySlot(CCLE)
+```
+
+```{r response_slot_accessor_example}
+names(sens)
+```
+
+```{r raw_response_data_accessor}
+# Get sensitivity raw data
+sensRaw <- sensitivityRaw(CCLE)
+```
+
+```{r raw_response_data_accessor_example, results="asis"}
+# Get sensitivity raw data
+knitr::kable(sensRaw[,,2][1:3, 1:3])
+```
+
+
+```{r response_profile_accessor}
+# Get sensitivity profiles
+sensProf <- sensitivityProfiles(CCLE)
+```
+
+```{r response_profile_accessor_example, results="asis"}
+knitr::kable(sensProf[1:3, 1:3])
+```
+
+
+```{r response_info_accessor}
+# Get sensitivity info
+sensInfo <- sensitivityInfo(CCLE)
+```
+
+```{r response_info_accessor_example, results="asis"}
+knitr::kable(sensInfo[1:3, 1:3])
+```
+
+
+
+## PharmacoGx Drug Metadata
+
+In PharmacoGx, metadata about the compounds used can be accessed through the `drugInfo` accessor.
+This works very similar to the `cellInfo` function. 
+```{r drug_slot_accessors, results="asis", align="left"}
+
+knitr::kable(drugInfo(CCLE)[1:3,1:3])
+```
+
+Drug names are also accessed as one would expect:
+
+```{r drug_names}
+drugNames(CCLE)
+
+```
+
+## Radiation Metadata
+
+A unique slot to RadioGx, `radiation` has additional
+accessor methods to retrieve the radiation types used in a given sensitivity experiment.
+
+```{r radiation_info_accessor}
+# Get the radiation info data.frame from an RSet
+radInf <- radiationInfo(Cleveland)
+```
+
+```{r print_radinf, fig.wide = TRUE, results="asis"}
+knitr::kable(radInf)
+```
+
+Currently, only one type of radiation has been used in an `RSet`. However, we hope to add new `RSet`s covering a wider range of radiation
+sensitivity and perturbation experiments in the near future. The following method is also available to retrieve the radiation
+types as a `character` vector instead of a `data.frame`.
+
+```{r radiation_types_accessor}
+radTypes <- radiationTypes(Cleveland)
+radTypes
+```
+
+
+## Subsetting PharmacoSets
+
 
 PSets can be subsetted by refering directly to the drugs and cell lines you want
 to keep in the dataset. For example, we can subset the GDSC PSet in the following 
@@ -307,6 +598,21 @@ common <- intersectPSet(list(CCLE, GDSC), intersectOn=c("cell.lines"))
 print(common)
 
 ```
+
+## Xeva
+
+
+The structure of Xeva is different from the CoreGx structure. As such, many of the accessor functions
+are also different.
+
+```{r X_accessors}
+md.info <- modelInfo(brca)
+head(md.info)
+
+```
+
+
+
 
 # Visualizing and modeling sensitivity data
 
@@ -375,6 +681,14 @@ pars <- logLogisticRegression(conc = concentrations, viability = viabilities)
 print(pars)
 ```
 
+For all the data in PSets, this modeling has been precomputed and stored in the object, 
+under `sensitivityProfiles`:
+
+```{r log_logistic_precomputed, results="asis"}
+knitr::kable(sensitivityProfiles(CCLE)[1:5,c("E_inf", "EC50", "HS")])
+
+
+```
 
 
 
@@ -401,281 +715,25 @@ In *PharmacoGx*, we call these measures sensitivity measures. PSets come with
 these measures precomputed, and accessible using the *sensitivityProfiles*
 function:
 
-```{r sensProf}
-head(sensitivityProfiles(CCLE))
+```{r sensProf, results="asis", size="small"}
+knitr::kable(head(sensitivityProfiles(CCLE)[,1:5]))
 ```
 
+## RadioGx
 
-# Summary Functions
 
-Pharmacogenomics studies often contain many examples of either replicated or
-missing data. One of the most common tasks in preparing data for statistical or
-machine learning analysis is aligning your features and labels. To accelerate
-using Pharmacogenomics data for analysis, *PharmacoGx* contains two functions
-which create deduplicated matrices with missing data filled by NAs:
-*summarizeSensitivityProfiles* and *summarizeMolecularProfiles*. They create
-matrices which are drugs x cell lines and molecular features x cell lines, with
-any cell lines profiled for only sensitivity or molecular features padded with
-NA values. For the molecular profiles, the data are returned in a `r BiocStyle::Biocpkg("SummarizedExperiment")`object, while drug sensitivity
-data are returned as a matrix.
-
-```{r summary, results="hide", message=FALSE, error=FALSE, warning=FALSE}
-mol.prof <- PharmacoGx::summarizeMolecularProfiles(CCLE, "rna")
-sens.prof <- PharmacoGx::summarizeSensitivityProfiles(CCLE, "aac_recomputed")
-```
-```{r}
-dim(mol.prof)
-dim(sens.prof)
-```
-
-
-Below, we use the summarizeSensitivityProfiles function and ggplot to investigate the distributions of 
-AUC values within CCLE.
-
-```{r ccleaac, fig.cap="Cells response to drugs in CCLE"}
-library(ggplot2, verbose=FALSE)
-library(reshape2, verbose=FALSE)
-CCLE.aac <- PharmacoGx::summarizeSensitivityProfiles(CCLE, sensitivity.measure = "aac_recomputed")
-melted_data <- melt(CCLE.aac)
-NA_rows <- unique(which(is.na(melted_data), arr.ind=T)[,1])
-melted_data <- melted_data[-NA_rows,]
-p <- ggplot(melted_data, aes(x=Var1,y=value)) +
-  geom_boxplot(fill="gray") +
-  theme(axis.text.x=element_text(angle=90,hjust=1)) +
-  xlab("Drugs") +
-  ylab("AAC")
-print(p)
-```
-
-
-# Signature Generation
-
-Finally, we will talk about some functions built into PharmacoGx to generate signatures of molecular features which 
-correlate with response to particular compounds. In PharmacoGx, the main function to generate signatures of response 
-across drugs is `drugSensitivitySig`. It takes as input a PSet, and the molecular data type you wish to use to 
-generate the signatures, and computes the linear association between each feature and each drug response vector independently. 
-The default of using all features, drugs and cell lines in the dataset can be modified with parameters detailed below. 
-
-At its core, drugSensitivitySig fits a nested linear model to the drug response data, using the molecular feature, as well as
-cell tissue of origin and batch effect as possible predictors. The function then uses ANOVA to judge whether including the 
-molecular feature in the model leads to a statistically significant improvement in prediction accuracy (R^2). For more
-details on the implementation, we encourage readers to reference the PharmacoGx manuscript, or the vignettes included in the 
-package. 
-
-Here, as an example, we will run `drugSensitivitySig` to generate a signature of response to Lapatinib and Erlotinib, two
-targetted therapies, from the GDSC data. We will do this with a random 10 genes measured in the 
-expression matrix, as the full computation can take some time to complete.
-
-```{r drugSensSigEx, eval=TRUE, echo=TRUE, results="hide", message=FALSE, error=FALSE, warning=FALSE}
-
-## Extracting the first 100 gene names. featureInfo brings up the rowData of the "rna" SummarizedExperiment
-chosen.genes <- sample(rownames(featureInfo(GDSC, "rna"), 10))
-sigs <- drugSensitivitySig(GDSC, "rna", sensitivity.measure = "aac_recomputed", drugs=c("Erlotinib", "Lapatinib"), features = chosen.genes)
-
-```
-Lets look at the head of the signature for the two drugs:
-
-```{r}
-knitr::kable(x = head(sigs[,1,]))
-```
-
-
-```{r}
-knitr::kable(x = head(as.data.frame(sigs[,2,])))
-```
-
-# Basic Functionalities of RadioGx
-
-## Installing RadioGx
-
-To install the `r BiocStyle::Biocpkg('RadioGx')` package, run:
-
-```{r install_radiogx, eval=FALSE, message=FALSE}
-devtools::install_github('bhklab/RadioGx')
-# BiocManager::install('RadioGx', version='devel') # Waiting on issue with Bioconductor credentials to be resolved so I can push updates
-```
-
-```{r load_package, message=FALSE}
-library(RadioGx)
-```
-
-## RadioSet
-
-The RadioSet has a structure similar to the `PharmacoSet` and also inherits
-from the CoreSet^[exported by `r BiocStyle::Biocpkg('CoreGx')`] class . The radiation
-slot is implemented in `r BiocStyle::Biocpkg('RadioGx')`  to hold relevant metadata
-about the type(s) of radiation used in the dose-response experiment,
-and is analogous to the drug slot in a `PharmacoSet`. The remainder of the slots
-mirror the `PharmacoSet`.
-
-```{r radioset, echo=FALSE, fig.wide=TRUE, fig.cap = "**RadioSet class diagram**. Objects comprising a `RadioSet` are enclosed in boxes. First box indicates type and name of each object. Second box indicates the structure of an object or class. Third box shows accessor methods from `RadioGx` for that specific object. '=>' represents return and specifies what is returned from that item or method."}
-knitr::include_graphics('./RadioGxClassDiagram.png')
-```
-
-## Downloading an RSet
-
-`r BiocStyle::Biocpkg('RadioGx')` provides an interface similar to `r BiocStyle::Biocpkg("PharmacoGx")`
-and `r BiocStyle::Biocpkg('Xeva')` for downloading our curated versions of published datasets.
-
-To get a list of available `RadioSet`s, use:
-
-```{r available_rsets, message=FALSE}
-RSets <- availableRSets()
-```
-
-```{r available_radiosets_table, echo=FALSE}
-knitr::kable(RSets[, c("RadioSet_name", "Date_updated", "DOI")])
-```
-
-As the `r BiocStyle::Biocpkg('RadioGx')` package was only recently released, there is
-currently only one dataset available. Let's download the 'Cleveland' RSet, which contains
-a highly curated version of the data from Yang *et al.*, 2016.
-
-For this workshop, we have subset this dataset. The entire dataset can be downloaded using the following:
-
-```{r download_rset, eval=FALSE}
-Cleveland <- downloadRSet('Cleveland', saveDir='data')
-```
-
-Let's load the RSet for this workshop.
-
-```{r printing_a_radioset, hide=TRUE}
-data(Cleveland)
-Cleveland
-```
-
-Similar to PharmacoGx and Xeva, a summary of the contents of the RadioSet is printed
-when calling a RadioSet in the console. We can see that the Cleveland RSet contains
-sensitivity information for 303 cell-lines treated with a single type of radiation.
-The RSet also contains rna^[microarray], rna-seq and cnv molecular data for a subset of available
-cell-lines.
-
-## Accessing Data
-
-RadioGx stores three major categories of data: metadata/annotations, molecular data and radiation response data.
-These are demarcated in **Fig.** \@ref(fig:radioset) using green, blue and red, respectively. Accessor methods are available
-to retrieve all three kinds of data from an RSet; the accessor methods for each component are listed
-in the bottom most cell of each object in the RadioGx class diagram. We will discuss a subset of these methods
-now.
-
-### Accessing metadata
-
-Metadata in an RSet is stored in the same slots as in a `PharmacoSet`, and can be accessed using the same
-generic accessor functions as in `r BiocStyle::Biocpkg('PharmacoGx')`. A unique slot, `radiation` has additional
-accessor methods to retrieve the radiation types used in a given sensitivity experiment.
-
-```{r radiation_info_accessor}
-# Get the radiation info data.frame from an RSet
-radInf <- radiationInfo(Cleveland)
-```
-
-```{r print_radinf, fig.wide = TRUE}
-knitr::kable(radInf)
-```
-
-Currently, only one type of radiation has been used in an `RSet`. However, we hope to add new `RSet`s covering a wider range of radiation
-sensitivity and perturbation experiments in the near future. The following method is also available to retrieve the radiation
-types as a `character` vector instead of a `data.frame`.
-
-```{r radiation_types_accessor}
-radTypes <- radiationTypes(Cleveland)
-radTypes
-```
-### Accessing molecular data
-
-Molecular data in an `RSet` is contained in the `molecularProfiles` slot and can be accessed the same way it is for a `PSet`.
-
-```{r molecular_data_slot_accessors}
-# Get the list (equivalent to @molecularProfiles, except that it is robust to changes in RSet structure
-str(molecularProfilesSlot(Cleveland), max.level=2)
-
-# Get the names from the list
-mDataNames(Cleveland)
-```
-
-All molecular data in an RSet (any class inheriting from CoreSet, actually) is contained in a `SummarizedExperiment`
-object. While `r BiocStyle::Biocpkg('SummarizedExperiment')` comes with it's own set of accessors, we recommend using
-available `r BiocStyle::Biocpkg('RadioGx')` accessor methods as it allows your scripts to be robust to future changes
-in the structure of a `RadioSet` object.
-
-```{r sample_meta_data}
-# Get sample metadata
-phenoInf <- phenoInfo(Cleveland, 'cnv')
-```
-
-To keep the document formatted nicely, the following tables have been subset to the first three rows and columns.
-
-```{r print_sample_meta_data, echo=FALSE, fig.small=TRUE}
-knitr::kable(phenoInf[1:3, 1:3], row.names=FALSE)
-```
-
-```{r feature_meta_data}
-# Get feature metadata
-featInfo <- featureInfo(Cleveland, 'rna')
-```
-
-```{r print_feature_meta_data, echo=FALSE, align="center"}
-knitr::kable(featInfo[1:3, 1:3], row.names=FALSE)
-```
-
-```{r molecular_data, fig.wide=TRUE}
-# Access the moleclar feature data
-mProf <- molecularProfiles(Cleveland, 'rnaseq')
-```
-
-```{r print_molecular_profile_data, echo=FALSE}
-knitr::kable(mProf[1:3, 1:3])
-```
-
-### Accessing response data
-
-Data from radiation sensitivity and/or perturbation experiments is also retrieved the same way it is for a PSet. Currently,
-only sensitivity experiments have been included in a `RadioSet`.
-
-```{r response_slot_accessor}
-# Get sensitivity slot
-sens <- sensitivitySlot(Cleveland)
-```
-
-```{r response_slot_accessor_example}
-names(sens)
-```
-
-```{r raw_response_data_accessor}
-# Get sensitivity raw data
-sensRaw <- sensitivityRaw(Cleveland)
-```
-
-```{r raw_response_data_accessor_example}
-# Get sensitivity raw data
-knitr::kable(sensRaw[,,2][1:3, 1:3])
-```
-
-
-```{r response_profile_accessor}
-# Get sensitivity profiles
-sensProf <- sensitivityProfiles(Cleveland)
-```
-
-```{r response_profile_accessor_example}
-knitr::kable(sensProf[1:3, 1:3])
-```
-
-
-```{r response_info_accessor}
-# Get sensitivity info
-sensInfo <- sensitivityInfo(Cleveland)
-```
-
-```{r response_info_accessor_example}
-knitr::kable(sensInfo[1:3, 1:3])
-```
-
-## Fitting Linear Quadratic (LQ) Models
+### Fitting Linear Quadratic (LQ) Models
 
 RadioGx provides a number of functions for analyzing dose response experiments.
 To use these functions, we must first fit a statistical model to the dose
-response data. This package exports a function for fitting linear-quadratic
+response data. Due to the nature of radiation treatment, the model used is 
+different from the model in Pharmacogenomics. While Pharmacogenomics uses
+a log-logistic Hill Curve for modeling the dose-response relationship, 
+Radiogenomics analysis traditionally uses a Linear Quadratic model. This is due
+to the different action of radiation treatment compared to compound inhibition of
+targets. 
+
+This package exports a function for fitting linear-quadratic
 models to dose response data. The function can be used with data contained in
 a RadioSet or with raw dose-response data.
 
@@ -723,7 +781,7 @@ Based on the $R^2$ attribute we can see that the model fit for this data is
 good, with `r round(attributes(LQmodel)$Rsquare,3 ) * 100`% of observed variance
 explained by the model.
 
-## Calculating Dose-Response Metrics
+### Calculating Dose-Response Metrics
 
 RadioGx provides a number of functions for calculating common dose response
 metrics such as surviving fraction (SF), area under the curve (AUC) and dose at
@@ -788,12 +846,109 @@ doseResponseCurve(
 )
 ```
 
+## Xeva
+
+Drug response in PDX models is usually not assessed in the same way as in vitro. 
+Rather than looking at viability vs dose curves, one looks at tumour growth vs
+time curves, to see if the treatement with a drug can inhibit tumour growth or
+initiate tumour shrinkage and clearance. Given the increased complexity of a tumour
+growing within a living mouse, there is no canonical model that is fit to this data.
+Rather, there are several options for assessing response in these models, each with 
+its pros and cons.
+
+### Visualizing Tumour Growth Curves
+Xeva provides functions to visualize these PDX time vs. tumor volume curve.
+```{r 1X3, eval=TRUE}
+plotPDX(object = brca, patient.id = "X-1004", drug = "BGJ398")
+
+plotPDX(object=brca,patient.id="X-1004",drug="BGJ398",control.name="untreated")
+```
+
+We can also plot the normalized volume.
+```{r 1X4, eval=TRUE}
+plotPDX(object=brca,patient.id="X-1004",drug="BGJ398",control.name="untreated",
+        vol.normal = TRUE)
+```
+
+When replicates are avaliable Xeva can be used the visualize each model.
+```{r 1X5, eval=TRUE}
+data("repdx")
+plotPDX(object=repdx,patient.id="P1",drug="treatment",control.name="Control",
+        vol.normal = TRUE)
+```
+
+## Quantifying PDX drug response
+
+In Xeva several response computing functions such as mRECIST, slope, AUC etc. have been implemented. Drug response can be computed for PDX models as:
+
+```{r 1X6, eval=TRUE}
+response(brca, model.id="X.1004.BG98", res.measure="mRECIST")
+```
+
+Drug response for all models is stored in the sensitivity slot and can be extracted using
+```{r 1X7, eval=TRUE}
+brca.mr <- summarizeResponse(brca, response.measure = "mRECIST",
+                             group.by="patient.id")
+```
+
+We can visualize this matrix as:
+```{r 1X8, eval=TRUE}
+plotmRECIST(brca.mr, control.name = "untreated")
+```
+
+
+
+# Summary Functions
+
+## PharmacoGx
+
+Pharmacogenomics studies often contain many examples of either replicated or
+missing data. One of the most common tasks in preparing data for statistical or
+machine learning analysis is aligning your features and labels. To accelerate
+using Pharmacogenomics data for analysis, *PharmacoGx* contains two functions
+which create deduplicated matrices with missing data filled by NAs:
+*summarizeSensitivityProfiles* and *summarizeMolecularProfiles*. They create
+matrices which are drugs x cell lines and molecular features x cell lines, with
+any cell lines profiled for only sensitivity or molecular features padded with
+NA values. For the molecular profiles, the data are returned in a `r BiocStyle::Biocpkg("SummarizedExperiment")` object, while drug sensitivity data are returned as a matrix.
+
+```{r summary, results="hide", message=FALSE, error=FALSE, warning=FALSE}
+mol.prof <- PharmacoGx::summarizeMolecularProfiles(CCLE, "rna")
+sens.prof <- PharmacoGx::summarizeSensitivityProfiles(CCLE, "aac_recomputed")
+```
+```{r}
+dim(mol.prof)
+dim(sens.prof)
+```
+
+
+Below, we use the summarizeSensitivityProfiles function and ggplot to investigate the distributions of 
+AUC values within CCLE.
+
+```{r ccleaac, fig.cap="Cells response to drugs in CCLE"}
+library(ggplot2, verbose=FALSE)
+library(reshape2, verbose=FALSE)
+CCLE.aac <- PharmacoGx::summarizeSensitivityProfiles(CCLE, sensitivity.measure = "aac_recomputed")
+melted_data <- melt(CCLE.aac)
+NA_rows <- unique(which(is.na(melted_data), arr.ind=T)[,1])
+melted_data <- melted_data[-NA_rows,]
+p <- ggplot(melted_data, aes(x=Var1,y=value)) +
+  geom_boxplot(fill="gray") +
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  xlab("Drugs") +
+  ylab("AAC")
+print(p)
+```
+## RadioGx
+
+
 ### Summarizing Sensitivity
 
 To retrieve a radiation type by cell-line summary of a sensitivity experiment, we use the `summarizeSensitivityProfiles` function.
 This will return a `matrix` where rows are radiation type^[Note there is currently only one radiation type available, but in the future there will be more], columns are cell-line and values are viability measurements summarized
 using `summary.stat`^[Available options are 'mean', 'median', 'first', 'last']. The sensitivity measure to summarize can be
-specified using `sensitivity.measure`^[See `sensitivityMeasures(RSet)` for available options].
+specified using 
+`sensitivity.measure`^[See `sensitivityMeasures(RSet)` for available options].
 
 ```{r summarize_sensitivity}
 sensSummary <- RadioGx::summarizeSensitivityProfiles(Cleveland)
@@ -818,7 +973,55 @@ ease of interoperability with the response data contained in an `RSet`, if `fill
 cell-lines in the sensitivity experiment, but not in the molecular profile will be added to the `SummarizedExperiment` such
 that the dimensions are equal.
 
-### Molecular Signatures for Biomarker Discovery
+## Xeva
+### Summarizing Molecular Data
+
+As already seen above, Xeva provides a method to extract drug response data from XevaSets. Like PharmacoGx and RadioGx,
+the package also provides a method to extract the molecular data associated with a particular set of mice. For example, 
+we can extract the RNAseq data for all the PDXs treated with trastuzumab, as below:
+
+```{r xeva_summarize_mol, results="asis"}
+brca_trastuz <- Xeva::summarizeMolecularProfiles(brca, mDataType="RNASeq", drug = "trastuzumab")
+```
+
+
+# Signature Generation and Biomarker Discovery
+## Drug Sensitivity Signatures
+Finally, we will talk about some functions built into PharmacoGx to generate signatures of molecular features which 
+correlate with response to particular compounds. In PharmacoGx, the main function to generate signatures of response 
+across drugs is `drugSensitivitySig`. It takes as input a PSet, and the molecular data type you wish to use to 
+generate the signatures, and computes the linear association between each feature and each drug response vector independently. 
+The default of using all features, drugs and cell lines in the dataset can be modified with parameters detailed below. 
+
+At its core, drugSensitivitySig fits a nested linear model to the drug response data, using the molecular feature, as well as
+cell tissue of origin and batch effect as possible predictors. The function then uses ANOVA to judge whether including the 
+molecular feature in the model leads to a statistically significant improvement in prediction accuracy (R^2). For more
+details on the implementation, we encourage readers to reference the PharmacoGx manuscript, or the vignettes included in the 
+package. 
+
+Here, as an example, we will run `drugSensitivitySig` to generate a signature of response to Lapatinib and Erlotinib, two
+targetted therapies, from the GDSC data. We will do this with a random 10 genes measured in the 
+expression matrix, as the full computation can take some time to complete.
+
+```{r drugSensSigEx, eval=TRUE, echo=TRUE, results="hide", message=FALSE, error=FALSE, warning=FALSE, cache=TRUE}
+
+## Extracting the first 100 gene names. featureInfo brings up the rowData of the "rna" SummarizedExperiment
+chosen.genes <- sample(rownames(featureInfo(GDSC, "rna"), 10))
+sigs <- PharmacoGx::drugSensitivitySig(GDSC, "rna", sensitivity.measure = "aac_recomputed", drugs=c("Erlotinib", "Lapatinib"), features = chosen.genes)
+
+```
+Lets look at the head of the signature for the two drugs:
+
+```{r, results="asis"}
+knitr::kable(x = head(sigs[,1,]))
+```
+
+
+```{r, results="asis"}
+knitr::kable(x = head(as.data.frame(sigs[,2,])))
+```
+
+## Radiation Sensitivity Signatures
 
 The true usefulness of the `RadioGx` packages comes from the ability to determine gene signatures for a
 cell-lines from a sensitivity experiment. Cell-lines of interest to a given researcher can be selected
@@ -827,9 +1030,12 @@ Using this method one could identify signatures associated with either radio-sen
 Combining this signature with drug response gene signatures from `r BiocStyle::Biocpkg('PharmacoGx')`, as will
 be done in the subsequent section, one can identify drugs which could augment the effectiveness of a
 given radiation signature. Perhaps more powerfully, drugs which target features associated with radio-resistance
-can be found, potentially synergistically increasing the overall effectiveness of the combined treatment.
+can be found, potentially synergistically increasing the overall effectiveness of the combined treatment. We must 
+note however that this is an active area of research, and the examples provided are illustrative only. When conducting
+research in this field, care must be taken in choosing the right model systems, measures of sensitivity, and 
+incorporating prior knowledge to differentiate promising hits from experimental artifacts. 
 
-```{r compute_molecular_signature}
+```{r compute_molecular_signature, cache=TRUE}
 radSensSig <- radSensitivitySig(Cleveland, mDataType='rna', nthread=2)
 ```
 
@@ -849,94 +1055,17 @@ radSensGeneSig <- head(radSensSigDF, 10)
 radResistGeneSig <- tail(radSensSigDF[radSensSigDF$fdr < 0.05, ], 10)
 ```
 
-```{r sensitivity_molecular_sig}
+```{r sensitivity_molecular_sig, results="asis"}
 knitr::kable(radSensGeneSig, caption="Top 10 Gene Markers of Radio-sensitivity in the Cleveland RSet")
 ```
 
-```{r resistance_molecular_sig}
+```{r resistance_molecular_sig, results="asis"}
 knitr::kable(radResistGeneSig, caption="Top 10 Gene Markers of Radio-resistance in the Cleveland RSet")
 ```
 
-# Basic Functionalities of Xeva
+## In Vivo Biomarker Discovery
 
-## In vivo pharmacogenomics
-
-In vivo models play an important role in cancer drug discovery.
-Patent derived xenografts (PDXs) are commonly used in vivo models.
-They have several advantages over cell lines:
-* PDXs are known to recapitulate tumor biology very well
-* PDXs maintain the cellular and histological structure of the source tumor
-* PDXs also keep tumor micro-enviroment and stromal elements
-* Genomic properties of the tumor are largely preserved from patient to PDX
-* Drug response of PDXs closely match the corresponding patient and clinical outcome
-
-To create PDXs, cancerous tissues or cells from patients' tumors are engrafted into immunodeficient mice (either subcutaneous or orthotopic engraftment).
-Once established, tumors from the PDXs can be passed from mouse to mouse, this is called passaging. For drug testing, PDXs were given a set drug dose at a set schedule (for example weekly). Change in tumor size is measured using calipers.
-
-The R package `Xeva` connects the tumor volume vs. time data with genomics data in an R class called `XevaSet`.  This allows users to analyze the data and perform biomarker discovery.
-![](PDXfigure500ppi.png)
-
-## Loading and visualizing PDX data
-Several `XevaSet` objects can be obtained by using the *downloadXevaSet*
-function.
-```{r X1, eval=TRUE}
-  library(Xeva)
-  Xeva::downloadXevaSet()
-```
-
-Here we will show examples of the Xeva package using data from the package. First we will load the data and view information about the XevaSet.
-
-```{r X2, eval=TRUE}
-  library(Xeva)
-  data("brca")
-  brca
-  md.info <- modelInfo(brca)
-  head(md.info)
-```
-
-Now we will visualize the PDX time vs. tumor volume curve.
-```{r X3, eval=TRUE}
-plotPDX(object = brca, patient.id = "X-1004", drug = "BGJ398")
-
-plotPDX(object=brca,patient.id="X-1004",drug="BGJ398",control.name="untreated")
-```
-
-We can also plot the normalized volume.
-```{r X4, eval=TRUE}
-plotPDX(object=brca,patient.id="X-1004",drug="BGJ398",control.name="untreated",
-        vol.normal = TRUE)
-```
-
-When replicates are avaliable Xeva can be used the visualize each model.
-```{r X5, eval=TRUE}
-data("repdx")
-plotPDX(object=repdx,patient.id="P1",drug="treatment",control.name="Control",
-        vol.normal = TRUE)
-```
-
-## PDX drug response
-
-In Xeva several response computing functions such as mRECIST, slope, AUC etc. have been implemented. Drug response can be computed for PDX models as:
-
-```{r X6, eval=TRUE}
-response(brca, model.id="X.1004.BG98", res.measure="mRECIST")
-```
-
-Drug response for all models is stored in the sensitivity slot and can be extracted using
-```{r X7, eval=TRUE}
-brca.mr <- summarizeResponse(brca, response.measure = "mRECIST",
-                             group.by="patient.id")
-```
-
-We can visualize this matrix as:
-```{r X8, eval=TRUE}
-plotmRECIST(brca.mr, control.name = "untreated")
-```
-
-
-## Biomarker discovery in PDXs
-
-For biomarker discovery we need the genomic data along with drug response. This can be extracted using the `summarizeMolecularProfiles` function. The output will be an `ExpressionSet` object which contains genomic data and drug response.
+For in vivo biomarker discovery we need the genomic data along with drug response. As discussed above, this can be extracted using the `summarizeMolecularProfiles` function. The output will be an `ExpressionSet` object which contains genomic data and drug response.
 
 ```{r X9, eval=TRUE}
 suppressMessages(library(Biobase))
@@ -962,6 +1091,7 @@ print(output)
 ```
 
 
+Below, we will use this functionality of Xeva to see if an association discovered in vitro holds up in an in vivo setting.
 
 # Data Analysis Walk-through
 
