@@ -877,7 +877,7 @@ plotPDX(object=repdx,patient.id="P1",drug="treatment",control.name="Control",
         vol.normal = TRUE)
 ```
 
-## Quantifying PDX drug response
+### Quantifying PDX Drug Response
 
 In Xeva several response computing functions such as mRECIST, slope, AUC etc. have been implemented. Drug response can be computed for PDX models as:
 
@@ -1093,11 +1093,98 @@ print(output)
 
 Below, we will use this functionality of Xeva to see if an association discovered in vitro holds up in an in vivo setting.
 
-# Data Analysis Walk-through
+# Integrative Analysis across Packages and Disciplines
+
+In this section, we will go through two short examples of analysis which integrates across the packages presented above,
+highlighting the use of these packages to explore hypotheses across domains.  
+
+## Comparing Sensitivity Signatures between Radiation and Drug Response
+
+Both RadioGx and PharmacoGx allow you to compute signatures of how much each molecular feature correlates 
+with response to treatment, in the in vitro model systems. A natural question to ask is how the signature 
+for response to gamma radiation will compare to signatures of response to various drugs. This can be used
+to generate hypothesis for combination therapies, or to gain insight into mechanisms of action. 
+
+We will run through the steps necessary to generate these results below, but note that the example datasets 
+included with this workshop are incomplete (due to file size limits for github hosted R packages), and that 
+due to time constraints the signatures we examine will have been precomputed from the full objects. We encourage
+the reader to work through this example with the full dataset.
+
+To start, we will load the packages, and the data we will be using.
+
+```{r start_rgx_pgx, echo=TRUE, eval=FALSE}
+library(PharmacoGx)
+library(RadioGx)
+
+GDSC1 <- downloadPSet("GDSC_2019(v1_8.0)")
+Cleveland <- downloadRSet("Cleveland")
+
+```
+
+_In reality, we run the code below for the purpose of building this vignette:_
+
+```{r load_data_example_walkthrough}
+data("GDSC")
+data("Cleveland")
+```
+
+Now, we will compute signatures of radiation sensitivity and drug sensitivity for a selected set of drugs:
+Lapatinib, Dabrafenib, Paclitaxel, and Cisplatin. These drugs were chosen to have a mix of targetted and broad 
+action therapies, and a couple of different targets for the two groups. 
+
+```{r signatures_walkthrough_prep, cache=TRUE}
+ft.rad <- rownames(featureInfo(Cleveland, "rna"))[which(featureInfo(Cleveland, "rna")$GeneBioType == "protein_coding")]
+
+ft.info <- featureInfo(GDSC, "rna")
+ft.drug <- rownames(ft.info)[which(ft.info$GeneBioType == "protein_coding")]
+
+drugs.selected <- c("Lapatinib", "Paclitaxel", "Cisplatin", "Dabrafenib")
+```
 
 
-# Understanding Analysis Results and Synergies
+```{r eval=FALSE, echo=TRUE}
+radSig <- radSensitivitySig(Cleveland, mDataType = "rna", features=ft.rad)
+
+gdscSigs <- drugSensitivitySig(GDSC, mDataType="rna", sensitivity.measure="aac_recomputed", drugs = drugs.selected, features=ft.drug)
+```
 
 
+We will preload the precomputed signatures in interest of computation time. 
+```{r sig_load}
+data(gdscSigs)
+data(radSig)
+common.genes <- intersect(rownames(gdscSigs), rownames(radSig))
+radSig <- radSig[common.genes,,,drop=FALSE]
+gdscSigs <- gdscSigs[common.genes,,]
+```
 
-# Use Case Discussion: Translational Science
+Now, we can go directly to comparing the signatures. For this, we will use a function called `connectivityScore`, which 
+wraps around two methods. It provides an interface to GSEA, for connecting your sensitivity signature to a disease or 
+pathway gene set. It also implements genome wide weighted correlation, allowing the assessment of signature similarity,
+with the weights derived from significance estimates for the association of each gene with drug response.  
+
+```{r gwc}
+
+connectivity.res <- lapply(drugs.selected, function(drug){
+  return(connectivityScore(x=radSig[,1,c("estimate", "pvalue")], y=gdscSigs[,drug, c("estimate","pvalue")], method = "gwc", nperm = 200))
+})
+
+names(connectivity.res) <- drugs.selected
+
+print(connectivity.res)
+
+```
+
+## Translational Biomarker Discovery 
+
+```{r xeva_pgx}
+library(PharmacoGx)
+library(Xeva)
+
+data("brca")
+data("GRAY")
+
+ERBB2 <- PharmacoGx::drugSensitivitySig(GRAY, mDataType="Kallisto_0.46.1.rnaseq", drug="Trastuzumab", sensitivity.measure="aac_recomputed", feature="ENSG00000141736.13")[1,1,]
+ERBB2.in.vivo <- drugSensitivitySig(brca, "trastuzumab", mDataType = "RNASeq", features=c("ESR1", "ERBB2"), sensitivity.measure = "best.average.response")
+
+```
