@@ -12,6 +12,7 @@ author:
   - name: Christopher Eeles
     email: christopher.eeles@uhnresearch.ca
     affiliation: *pm
+bibliography: bibliography.json
 output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{Biomarker Discovery from High Throughput Screening Datasets}
@@ -30,7 +31,7 @@ vignette: >
 
 ## Workshop Description {-}
 
-This workshop will focus on the synergies between analysis results from the `PharmacoGx`, `Xeva` and `RadioGx` packages and their usefulness for discovery of biomarkers of drug and/or radiation sensitivity in cancer cell lines (CCLs) and patent derived xenograft models (PDXs). We will discuss issues with data curation, consistency and reproducibility within the literature as well as illustrate the importance of unified analytical platforms, data and code sharing in bioinformatics and biomedical research. In this lab learners will be led through an analysis for each of the three packages on data provided by the download functions within them. The results of these analyses will then be explored to highlight how drug and radiation dose-response profiles in CCLs and PDXs can be used to discover potential synergistic biomarkers for drug-radiation and drug combination therapies. The resulting biomarkers will be discussed in the context of translational cancer research and clinical applications of genomic data. We will conclude with a discussion of how these biomarkers can be used to inform future in vitro and in vivo treatment screenings and ultimately provide useful insights for clinical trial design.
+This workshop will focus on the synergies between analysis results from the `PharmacoGx`, `Xeva` and `RadioGx` packages and their usefulness for discovery of biomarkers of drug and/or radiation sensitivity in cancer cell lines (CCLs) and patent derived xenograft models (PDXs). We will discuss issues with data curation, consistency and reproducibility within the literature as well as illustrate the importance of unified analytical platforms, data and code sharing in bioinformatics and biomedical research. In this lab learners will be led through an analysis for each of the three packages on data provided by the download functions within them. The results of these analyses will then be explored to highlight how drug and radiation dose-response profiles in CCLs and PDXs can be used to discover potential synergistic biomarkers for drug-radiation and drug combination therapies. The resulting biomarkers will be discussed in the context of translational cancer research and clinical applications of genomic data. We will conclude with a discussion of how these biomarkers can be used to inform future _in vitro_ and _in vivo_ treatment screenings and ultimately provide useful insights for clinical trial design.
 
 ### Pre-requisites {-}
 
@@ -109,7 +110,7 @@ For a 2-hr workshop:
 * Calculate the AAC, AUC, IC50, SF2, D10 metrics for response quantification in cell lines
 * Calculate the mRECIST, Slope, ABC, linear mix model and other tumour growth curve summary metrics
 * Visualize response of PDX experiments using an Oncoprint heatmap
-* Predict in vivo and in vitro univariate biomarkers using the PharmacoGx, Xeva and RadioGx packages
+* Predict _in vivo_ and _in vitro_ univariate biomarkers using the PharmacoGx, Xeva and RadioGx packages
 * Compare signatures of response between chemotherapy compounds and radiotherapy
 * Compare univariate biomarkers between cell line and PDX experiments
 
@@ -120,7 +121,6 @@ library(CoreGx)
 library(PharmacoGx)
 library(RadioGx)
 library(gxbioc2020workshop)
-
 ```
 
 # Introduction
@@ -135,7 +135,7 @@ interest.
 The first two of the packages, `r BiocStyle::Biocpkg("PharmacoGx")` and `r BiocStyle::Biocpkg("RadioGx")` focus on screens done  using cell lines as a
 model system. PharmacoGx focuses on modeling and predicting the response of cell
 lines treated with small  molecule therapies. RadioGx swaps the small molecule
-treatment for irradiation of cell lines. The third package,  `r BiocStyle::Biocpkg("Xeva")`, looks at treatment response for _in vivo_ systems,
+treatment for irradiation of cell lines. The third package,  `r BiocStyle::Biocpkg("Xeva")`, looks at treatment response for __in vivo__ systems,
 primarily Patient Derived Xenographs of cancer tumours growing in immune
 compromised mice. 
 
@@ -163,8 +163,8 @@ the different domains presented here.
 
 # Experimental Designs
 
-RadioGx and PharmacoGx are both used to analyze data from in vitro, cell based assays.
-In cancer, the most common in vitro model used is the cancer cell line. These cell lines
+RadioGx and PharmacoGx are both used to analyze data from _in vitro_, cell based assays.
+In cancer, the most common _in vitro_ model used is the cancer cell line. These cell lines
 are usually obtained from patient tumour biopsies, which are passaged in a dish and often
 treated with factors to immortalize the cells - that is, to grant them infinite 
 proliferation capacity. Such models are often deposited in repositories such as the 
@@ -173,9 +173,9 @@ ATCC, and made available for purchase to researchers who wish to use them in the
 ![](CellLineFigure500ppi.png)
 
 
-## In Vitro Pharmacogenomics
+## _in vitro_ Pharmacogenomics
 
-When studying Pharmacogenomics in vitro, the design of the experiment usually involves doing two things in parallel:
+When studying Pharmacogenomics _in vitro_, the design of the experiment usually involves doing two things in parallel:
 Each cell line in the study is profiled on a molecular level, which can include measuring DNA level
 aberations such as SNVs and copy number changes, RNA expression levels, DNA methylation, and 
 protein expression. In parallel, the cell lines undergo a viability based drug screen, where 
@@ -197,18 +197,18 @@ studied, while in radiogenomics, the treatement is irradiation of the cells. Whi
 of the study is similar, the difference in treatement causes differences in how the response of
 cells is modelled and quantified, as we detail below. 
 
-Currently, there is only one major, high-throughput dataset looking at _in vitro_ radiogenomics,
+Currently, there is only one major, high-throughput dataset looking at __in vitro__ radiogenomics,
 the Cleveland Clinic dataset. In this dataset, gamma radiation was used as the treatment. 
 Conceptually however, there is no reason why alpha and beta radiation could not be studied in 
 a similar experimental setup. 
 
 ![](radiogx_design_exp.png)
 
-## In Vivo Pharmacogenomics
+## _in vivo_ Pharmacogenomics
 
 
-In vivo models play an important role in cancer drug discovery.
-Patent derived xenografts (PDXs) are commonly used in vivo models in cancer research.
+_in vivo_ models play an important role in cancer drug discovery.
+Patent derived xenografts (PDXs) are commonly used _in vivo_ models in cancer research.
 They have several advantages over cell lines:
 * PDXs are known to recapitulate tumor biology very well
 * PDXs maintain the cellular and histological structure of the source tumor
@@ -233,11 +233,9 @@ inherits for the `CoreSet` class defined in our package `CoreGx`, which abstract
 the common functionality across our similar packages. 
 The basic structure of a PharmacoSet is as follows:
 
-```{r pharmacoset, echo=FALSE, fig.wide=TRUE, fig.cap = "**PharmacoSet class diagram**. Objects comprising a `PharmacoSet` are enclosed in boxes. First box indicates type and name of each object. Second box indicates the structure of an object or class. Third box shows accessor methods from `PharmacoGx` for that specific object. '=>' represents return and specifies what is returned from that item or method."}
+```{r pharmacoset, echo=FALSE, fig.cap = "**PharmacoSet class diagram**. Objects comprising a `PharmacoSet` are enclosed in boxes. First box indicates type and name of each object. Second box indicates the structure of an object or class. Third box shows accessor methods from `PharmacoGx` for that specific object. '=>' represents return and specifies what is returned from that item or method."}
 knitr::include_graphics('./PharmacoGxClassDiagram.png')
 ```
-<!-- "fig.cap = **RadioSet class diagram**. Objects comprising a `RadioSet` are enclosed in boxes. First box indicates type and name of each object. Second box indicates the structure of an object or class. Third box shows accessor methods from `RadioGx` for that specific object. '=>' represents return and specifies what is returned from that item or method." -->
-<!-- TODO: fixme caption -->
 
 ### Downloading PharmacoSet objects
 Let us download the PSets used for this tutorial into our local working environment. 
@@ -255,7 +253,7 @@ to uniquely identify the data used in your analysis and retrieve it in the futur
 for research reproducibility.  
 
 Any of the PharmacoSets in the table can then be downloaded by calling
-*downloadPSet*, which saves the datasets into a directory of the users choice,
+`downloadPSet`, which saves the datasets into a directory of the users choice,
 and returns the data into the R session. Lets try downloading the GDSC and CCLE
 PSets. The following code is included as an example, but not run, as the objects
 were preloaded onto the VM for the workshop. 
@@ -330,11 +328,26 @@ cell-lines.
 
 
 ## Xeva
-
-
 The R package `Xeva` connects the tumor volume vs. time data with genomics data in an R class called `XevaSet`.  This allows users to analyze the data and perform biomarker discovery.
 
-<!-- TODO:: insert a class diagram for Xeva? -->
+In a Xeva object, the `experiment` slot stores the data for each individual PDX/mouse. With the exception of tumor growth data (time vs. tumor volume), for each individual PDX/mouse, you can access metadata such as the patient's age, sex, tissue histology, and passage information.
+All of this metadata is stored in the `pdxModel` class, where a unique ID called `model.id` is given to each PDX/mouse model. As for the tumor growth information, Xeva provides separate functions for retrieving and visualizing time vs. tumor volume data.
+We will see later how to get these data for an individual `model.id`, but first, let's define some other terms that appear in the Xeva package.
+
+A PDX experiment can be one of the two categories:
+
+- *treatment* represents experiments in which the PDX receives some kind of drug (or drug combination)
+- *control* represents experiments in which the PDX receives no drug
+
+
+To see the effect of a drug, several replicate experiments are done for both the control and the treatment categories.
+In Xeva, a collection of PDX `model.ids` originating from the same patient is organized in batches (`batch`). A `batch` has two arms: `control` and `treatment`. This is illustrated in the figure below:
+
+```{r xevastructure, echo=FALSE, fig.wide=TRUE, fig.cap = "A PDX experiment. The text under each of the PDX/mouse (ie. m1, m2, p1, etc.) denotes the `model.id` in Xeva. In this example, three PDXs are delclared as control (m1, m2, and m3). Similarly, in the treatment arm, 3 PDXs are given the drug paclitaxel (p1, p2, and p3), 3 are given tamoxifen (t1, t2, and t3), and 3 are given binimetinib (b1, b2, b3). The PDXs in the control arm and one of the treatment arms together constitute a \textit{batch}. For example, control arm models (m1, m2, and m3) and treatment arm models (t1,t2, and t3) together create a batch called batch-2."}
+knitr::include_graphics('./Xeva_batch_2.png')
+```
+
+
 
 
 ### Downloading Xevaset objects
@@ -390,10 +403,8 @@ of complexity when analyzing data from large studies.
 To access the cell line metadata, you can use the following accessors:
 
 ```{r cell_slot_accessors, results="asis", align="left"}
-
 knitr::kable(cellInfo(CCLE)[1:3,1:3])
 knitr::kable(cellInfo(Cleveland)[1:3,1:3])
-
 ```
 
 The standardized identifiers for those cell lines across our packages are 
@@ -404,9 +415,8 @@ the `cellNames` function:
 head(cellNames(CCLE))
 ```
 
-
-For example, here we can use the *cellInfo* function to pull out the tissue of
-origin for each cell line in the CCLE dataset. The *tissueid* column is standard
+For example, here we can use the `cellInfo` function to pull out the tissue of
+origin for each cell line in the CCLE dataset. The `tissueid` column is standard
 for PSets, and should be present in all objects.
 
 ```{r piechart, fig.cap="Tissue of origin of cell lines in CCLE study"}
@@ -532,7 +542,6 @@ knitr::kable(sensInfo[1:3, 1:3])
 In PharmacoGx, metadata about the compounds used can be accessed through the `drugInfo` accessor.
 This works very similar to the `cellInfo` function. 
 ```{r drug_slot_accessors, results="asis", align="left"}
-
 knitr::kable(drugInfo(CCLE)[1:3,1:3])
 ```
 
@@ -540,7 +549,6 @@ Drug names are also accessed as one would expect:
 
 ```{r drug_names}
 drugNames(CCLE)
-
 ```
 
 ## Radiation Metadata
@@ -593,7 +601,6 @@ whenever possible.
 PharmacoGx also implements a convenience function to intersect PSets:
 
 ```{r intersect, echo=TRUE, eval=FALSE}
-
 common <- intersectPSet(list(CCLE, GDSC), intersectOn=c("cell.lines"))
 print(common)
 
@@ -605,24 +612,44 @@ print(common)
 The structure of Xeva is different from the CoreGx structure. As such, many of the accessor functions
 are also different.
 
-```{r X_accessors}
-md.info <- modelInfo(brca)
-head(md.info)
-
+As mentioned earlier, Xeva stores metadata for each individual PDX model.
+We can retrieve the meta-information about each PDX, such as number of models and tissue type, using:
+```{r X_modelInfo}
+brca.mod <- modelInfo(brca)
+dim(brca.mod)
+brca.mod[1:4, ]
 ```
 
+The output shows that the `brca` dataset contains `r nrow(brca.mod)` PDX models.
+We can also see the time vs. tumor volume data for a model using:
 
+```{r X_getEx}
+model.data <- getExperiment(brca, model.id = "X.1004.BG98")
+head(model.data)
+```
+
+Similarly, for `batch` names, we can obtain all predefined batch names using:
+
+```{r X_batchInfo}
+batch.name <- batchInfo(brca)
+batch.name[1:4]
+```
+
+The information about a \textbf{batch} can be shown using:
+```{r X_batchInfo2}
+batchInfo(brca, batch = "X-1004.binimetinib")
+```
+Here, for the batch named `X-1004.binimetinib`, we can see that the control sample is `X.1004.uned` and the treatment sample is `X.1004.biib`.
 
 
 # Visualizing and modeling sensitivity data
 
 ## Working with Dose Response data from PSets
 
-
 ### Plotting Drug Dose Response Data
 
 Drug-Dose response data included in the PharmacoSet objects can be conviniently
-plotted using the *drugDoseResponseCurve* function. Given a list of
+plotted using the `drugDoseResponseCurve` function. Given a list of
 PharmacoSets, a drug name and a cell name, it will plot the drug dose response
 curves for the given cell-drug combination in each dataset, allowing direct
 comparisons of data between datasets.
@@ -641,15 +668,13 @@ drugDoseResponseCurve(drug="Lapatinib", cellline=cells[3],
                       legends.label="aac_published")
 ```
 
-The function *drugDoseResponseCurve* can also be used to plot your own drug dose response curves, as follows:
+The function `drugDoseResponseCurve` can also be used to plot your own drug dose response curves, as follows:
 
 ```{r ddrc_own}
-
 concentrations <- 1/2^seq(0,8) * 1
 viabilities <-  c(0, 33.3, 60, 77.8, 88.2, 93.9, 96.9, 98.4, 99.2)
 
 drugDoseResponseCurve(concentrations = list("Exp 1" = concentrations), viabilities = list("Exp 1" = viabilities))
-
 ```
 
 
@@ -669,11 +694,10 @@ of the logit, and is interpreted based on its relation to 1. Values larger than 
 inhibition/binding of the target for the small molcule ligands, which values less than 1 imply negative cooperativity/antagonism. 
 
 
-To fit a Hill Slope model to your data in PharmacoGx, you can use the *logLogisticRegression*
+To fit a Hill Slope model to your data in PharmacoGx, you can use the `logLogisticRegression`
 function, as below:
 
 ```{r loglogistic}
-
 concentrations <- 1/2^seq(0,8) * 1
 viabilities <-  c(0, 33.3, 60, 77.8, 88.2, 93.9, 96.9, 98.4, 99.2)
 
@@ -686,33 +710,29 @@ under `sensitivityProfiles`:
 
 ```{r log_logistic_precomputed, results="asis"}
 knitr::kable(sensitivityProfiles(CCLE)[1:5,c("E_inf", "EC50", "HS")])
-
-
 ```
 
 
 
 ### Computing Summary Measures for DDRCs
 
-Often with in vitro Pharmacogenomics data, we want to compare the drug sensitivity of a cell line 
+Often with _in vitro_ Pharmacogenomics data, we want to compare the drug sensitivity of a cell line 
 to some omic feature. For this, we want to summarize the drug dose response curve into a single 
 number representing the sensitivity of the cell line. The IC50 and Area Above the Curve are two
 convenient metrics for quantifying the observed drug sensitivity. If you noticed above, 
-the *drugDoseResponseCurve* function computes them by default. In PharmacoGx, they can be 
+the `drugDoseResponseCurve` function computes them by default. In PharmacoGx, they can be 
 computed manually as follows:
 
 ```{r sens_own}
-
 concentrations <- rev(1/2^seq(0,8) * 1)
 viabilities <-  c(99.2, 98.4, 96.9, 93.9, 88.2, 77.8, 60, 33.3, 0)
 
 print(PharmacoGx::computeAUC(concentration = concentrations, viability = viabilities))
 print(PharmacoGx::computeIC50(concentration = concentrations, viability = viabilities))
-
 ```
 
-In *PharmacoGx*, we call these measures sensitivity measures. PSets come with
-these measures precomputed, and accessible using the *sensitivityProfiles*
+In PharmacoGx, we call these measures sensitivity measures. PSets come with
+these measures precomputed, and accessible using the `sensitivityProfiles`
 function:
 
 ```{r sensProf, results="asis", size="small"}
@@ -848,7 +868,7 @@ doseResponseCurve(
 
 ## Xeva
 
-Drug response in PDX models is usually not assessed in the same way as in vitro. 
+Drug response in PDX models is usually not assessed in the same way as _in vitro_. 
 Rather than looking at viability vs dose curves, one looks at tumour growth vs
 time curves, to see if the treatement with a drug can inhibit tumour growth or
 initiate tumour shrinkage and clearance. Given the increased complexity of a tumour
@@ -896,8 +916,6 @@ We can visualize this matrix as:
 plotmRECIST(brca.mr, control.name = "untreated")
 ```
 
-
-
 # Summary Functions
 
 ## PharmacoGx
@@ -905,9 +923,9 @@ plotmRECIST(brca.mr, control.name = "untreated")
 Pharmacogenomics studies often contain many examples of either replicated or
 missing data. One of the most common tasks in preparing data for statistical or
 machine learning analysis is aligning your features and labels. To accelerate
-using Pharmacogenomics data for analysis, *PharmacoGx* contains two functions
+using Pharmacogenomics data for analysis, PharmacoGx contains two functions
 which create deduplicated matrices with missing data filled by NAs:
-*summarizeSensitivityProfiles* and *summarizeMolecularProfiles*. They create
+`summarizeSensitivityProfiles` and `summarizeMolecularProfiles`. They create
 matrices which are drugs x cell lines and molecular features x cell lines, with
 any cell lines profiled for only sensitivity or molecular features padded with
 NA values. For the molecular profiles, the data are returned in a `r BiocStyle::Biocpkg("SummarizedExperiment")` object, while drug sensitivity data are returned as a matrix.
@@ -940,7 +958,6 @@ p <- ggplot(melted_data, aes(x=Var1,y=value)) +
 print(p)
 ```
 ## RadioGx
-
 
 ### Summarizing Sensitivity
 
@@ -1004,11 +1021,10 @@ targetted therapies, from the GDSC data. We will do this with a random 10 genes 
 expression matrix, as the full computation can take some time to complete.
 
 ```{r drugSensSigEx, eval=TRUE, echo=TRUE, results="hide", message=FALSE, error=FALSE, warning=FALSE, cache=TRUE}
-
 ## Extracting the first 100 gene names. featureInfo brings up the rowData of the "rna" SummarizedExperiment
 chosen.genes <- sample(rownames(featureInfo(GDSC, "rna"), 10))
-sigs <- PharmacoGx::drugSensitivitySig(GDSC, "rna", sensitivity.measure = "aac_recomputed", drugs=c("Erlotinib", "Lapatinib"), features = chosen.genes)
 
+sigs <- PharmacoGx::drugSensitivitySig(GDSC, "rna", sensitivity.measure = "aac_recomputed", drugs=c("Erlotinib", "Lapatinib"), features = chosen.genes)
 ```
 Lets look at the head of the signature for the two drugs:
 
@@ -1016,14 +1032,13 @@ Lets look at the head of the signature for the two drugs:
 knitr::kable(x = head(sigs[,1,]))
 ```
 
-
 ```{r, results="asis"}
 knitr::kable(x = head(as.data.frame(sigs[,2,])))
 ```
 
 ## Radiation Sensitivity Signatures
 
-The true usefulness of the `RadioGx` packages comes from the ability to determine gene signatures for a
+The true usefulness of the RadioGx package comes from the ability to determine gene signatures for a
 cell-lines from a sensitivity experiment. Cell-lines of interest to a given researcher can be selected
 and a molecular signature computed which correlates specific molecular features with a given sensitivity profile.
 Using this method one could identify signatures associated with either radio-sensitivity or radio-resistance.
@@ -1063,9 +1078,9 @@ knitr::kable(radSensGeneSig, caption="Top 10 Gene Markers of Radio-sensitivity i
 knitr::kable(radResistGeneSig, caption="Top 10 Gene Markers of Radio-resistance in the Cleveland RSet")
 ```
 
-## In Vivo Biomarker Discovery
+## _in vivo_ Biomarker Discovery
 
-For in vivo biomarker discovery we need the genomic data along with drug response. As discussed above, this can be extracted using the `summarizeMolecularProfiles` function. The output will be an `ExpressionSet` object which contains genomic data and drug response.
+For _in vivo_ biomarker discovery we need the genomic data along with drug response. As discussed above, this can be extracted using the `summarizeMolecularProfiles` function. The output will be an `ExpressionSet` object which contains genomic data and drug response.
 
 ```{r X9, eval=TRUE}
 suppressMessages(library(Biobase))
@@ -1091,7 +1106,7 @@ print(output)
 ```
 
 
-Below, we will use this functionality of Xeva to see if an association discovered in vitro holds up in an in vivo setting.
+Below, we will use this functionality of Xeva to see if an association discovered _in vitro_ holds up in an _in vivo_ setting.
 
 # Integrative Analysis across Packages and Disciplines
 
@@ -1101,7 +1116,7 @@ highlighting the use of these packages to explore hypotheses across domains.
 ## Comparing Sensitivity Signatures between Radiation and Drug Response
 
 Both RadioGx and PharmacoGx allow you to compute signatures of how much each molecular feature correlates 
-with response to treatment, in the in vitro model systems. A natural question to ask is how the signature 
+with response to treatment, in the _in vitro_ model systems. A natural question to ask is how the signature 
 for response to gamma radiation will compare to signatures of response to various drugs. This can be used
 to generate hypothesis for combination therapies, or to gain insight into mechanisms of action. 
 
@@ -1118,7 +1133,6 @@ library(RadioGx)
 
 GDSC1 <- downloadPSet("GDSC_2019(v1_8.0)")
 Cleveland <- downloadRSet("Cleveland")
-
 ```
 
 _In reality, we run the code below for the purpose of building this vignette:_
@@ -1141,18 +1155,18 @@ ft.drug <- rownames(ft.info)[which(ft.info$GeneBioType == "protein_coding")]
 drugs.selected <- c("Lapatinib", "Paclitaxel", "Cisplatin", "Dabrafenib")
 ```
 
-
+To generate the signatures, we would run the code below. 
 ```{r eval=FALSE, echo=TRUE}
 radSig <- radSensitivitySig(Cleveland, mDataType = "rna", features=ft.rad)
 
 gdscSigs <- drugSensitivitySig(GDSC, mDataType="rna", sensitivity.measure="aac_recomputed", drugs = drugs.selected, features=ft.drug)
 ```
 
-
-We will preload the precomputed signatures in interest of computation time. 
+However, for the purpose of this vignette, we will preload the precomputed signatures in interest of computation time. 
 ```{r sig_load}
 data(gdscSigs)
 data(radSig)
+
 common.genes <- intersect(rownames(gdscSigs), rownames(radSig))
 radSig <- radSig[common.genes,,,drop=FALSE]
 gdscSigs <- gdscSigs[common.genes,,]
@@ -1161,10 +1175,11 @@ gdscSigs <- gdscSigs[common.genes,,]
 Now, we can go directly to comparing the signatures. For this, we will use a function called `connectivityScore`, which 
 wraps around two methods. It provides an interface to GSEA, for connecting your sensitivity signature to a disease or 
 pathway gene set. It also implements genome wide weighted correlation, allowing the assessment of signature similarity,
-with the weights derived from significance estimates for the association of each gene with drug response.  
+with the weights derived from significance estimates for the association of each gene with drug response.  Here, we
+will use the genome-wide correlation, comparing standardized coefficients from each signature, weighted by our confidence 
+that the gene is informative to predict response. 
 
 ```{r gwc}
-
 connectivity.res <- lapply(drugs.selected, function(drug){
   return(connectivityScore(x=radSig[,1,c("estimate", "pvalue")], y=gdscSigs[,drug, c("estimate","pvalue")], method = "gwc", nperm = 200))
 })
@@ -1175,16 +1190,65 @@ print(connectivity.res)
 
 ```
 
+The score returned can be interpreted as a correlation coefficient, ranging from $-1$ to $1$. A positive correlation suggests that the similar molecular features distinguish cells
+responding to lapatinib treatment as to radiation. Of interest here is the negative correlation between the radiation response signature and cisplatin response. Cisplatin is 
+a commonly used radiosensitizing agent, which when used in conjungtion with ionizing radiation has been shown to improve treatment efficacy. 
+The negative correlation of the signatures can be naively interpreted to predict that radiation and cisplatin would target different cell populations in a tumour. However, 
+the picture is probably not so simple: there is evidence that the radiosensitizing properties of cisplatin arise from its impairment of the Non-Homologous End Joining 
+DNA repair pathway, and that cells which lack the NHEJ pathways are already hypersensitive to radiation [[@boeckman_cisplatin_2005]]. Therefore, its probably synergistic mechanisms, not 
+intra-tumoural heterogeneity, that drive efficacy of the combination of treatments. 
+
+
 ## Translational Biomarker Discovery 
+
+Here, we look at a simple example of cross-species validation of biomarkers which are "discovered" within an 
+_in vitro_ setting, and then can be reproduced _in vivo_. For this example, we will focus on breast cancer models, 
+a well known drug Trastuzumab, also known as Herceptin. We will look for gene expression biomarkers for this drug. 
+
+For the _in vitro_ data in PharmacoGx, we will be using the `GRAY` dataset, from the Oregon Health and Science 
+University, as it is the largest collection of _in vitro_ drug sensitivity data within breast cancer cell lines. 
+
+First, we load the data. As always, these datasets could be downloaded from within the package, but we preloaded them
+for interest of time. 
 
 ```{r xeva_pgx}
 library(PharmacoGx)
 library(Xeva)
 
-data("brca")
+data("brca_full")
 data("GRAY")
-
-ERBB2 <- PharmacoGx::drugSensitivitySig(GRAY, mDataType="Kallisto_0.46.1.rnaseq", drug="Trastuzumab", sensitivity.measure="aac_recomputed", feature="ENSG00000141736.13")[1,1,]
-ERBB2.in.vivo <- drugSensitivitySig(brca, "trastuzumab", mDataType = "RNASeq", features=c("ESR1", "ERBB2"), sensitivity.measure = "best.average.response")
-
 ```
+
+
+Then we will run the `drugSensitivitySig` functions in both PharmacoGx and Xeva. In PharmacoGx, we run the function across gene expression for all protein coding genes, which we filter as above using the `featureInfo` table. We will look at the top 5 most significant hits from this correlation analysis. 
+
+```{r xeva_pgx2, echo=TRUE, cache=TRUE}
+ft.info <- featureInfo(GRAY, "Kallisto_0.46.1.rnaseq")
+ft.gray <- rownames(ft.info)[ft.info$gene_type == "protein_coding"]
+
+
+Trastuzumab.sig <- PharmacoGx::drugSensitivitySig(GRAY, mDataType="Kallisto_0.46.1.rnaseq", drug="Trastuzumab", sensitivity.measure="aac_recomputed", feature=ft.gray)
+```
+
+```{r xeva_pgx3}
+
+Trastuzumab.sig <- Trastuzumab.sig[order(Trastuzumab.sig[,1,"pvalue"]),1,]
+to.run <- ft.info[head(rownames(Trastuzumab.sig), n=5),"gene_name"]
+knitr::kable(head(Trastuzumab.sig))
+```
+
+Below, we try to see whether these top 5 hits will replicate looking at in vivo data, using the breast cancer PDXs 
+from the Novartis PDX encyclopedia. 
+
+```{r xeva_pgx4}
+Trastuzumab.in.vivo <- drugSensitivitySig(brca_full, "trastuzumab", mDataType = "RNASeq", features=to.run, sensitivity.measure = "best.average.response")
+knitr::kable(Trastuzumab.in.vivo)
+```
+As we can see, no biomarker quite reaches statistical significance in vivo, after correcting for multiple testing. Prior to 
+the multiple testing correction, `r Trastuzumab.in.vivo[which.min(Trastuzumab.in.vivo[,"pvalue"]), "feature"]` does reach 
+significance. The analysis is limited in this case by sample size, as you can see the sample size _in vivo_ is much smaller
+than the sample size _in vitro_. This is one of the major reasons to follow this path of analysis, where potential hits are
+ranked first using larger _in virto_ datasets, prior to being tested either in publically available PDX data, or in a PDX
+based drug screen. 
+
+
