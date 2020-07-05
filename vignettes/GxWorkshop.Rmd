@@ -360,8 +360,8 @@ function.
 The following chunk loads the dataset used in the tutorial and prints out its summary:
 
 ```{r X2_1, eval=TRUE}
-data("brca")
-brca
+data(brca_full)
+brca <- brca_full
 ```
 # Examining and Extracting data of interest
 
@@ -492,7 +492,7 @@ knitr::kable(mProf[1:3, 1:3])
 
 ### Accessing response data
 
-Data for treatment response can also be accesssed the same way across `PharmacoGx` and `RadioGx`.
+Data for treatment response can also be accessed the same way across `PharmacoGx` and `RadioGx`.
 The difference between the two packages is in the data itself, and the models applied to the data, discussed 
 below. Here is a quick summary of accessor functions for response data.
 
@@ -1039,7 +1039,7 @@ knitr::kable(x = head(as.data.frame(sigs[,2,])))
 ## Radiation Sensitivity Signatures
 
 The true usefulness of the RadioGx package comes from the ability to determine gene signatures for a
-cell-lines from a sensitivity experiment. Cell-lines of interest to a given researcher can be selected
+cell-line from a sensitivity experiment. Cell-lines of interest to a given researcher can be selected
 and a molecular signature computed which correlates specific molecular features with a given sensitivity profile.
 Using this method one could identify signatures associated with either radio-sensitivity or radio-resistance.
 Combining this signature with drug response gene signatures from `r BiocStyle::Biocpkg('PharmacoGx')`, as will
@@ -1048,10 +1048,11 @@ given radiation signature. Perhaps more powerfully, drugs which target features 
 can be found, potentially synergistically increasing the overall effectiveness of the combined treatment. We must 
 note however that this is an active area of research, and the examples provided are illustrative only. When conducting
 research in this field, care must be taken in choosing the right model systems, measures of sensitivity, and 
-incorporating prior knowledge to differentiate promising hits from experimental artifacts. 
+incorporating prior knowledge to differentiate promising hits from experimental artifacts.
 
 ```{r compute_molecular_signature, cache=TRUE}
-radSensSig <- radSensitivitySig(Cleveland, mDataType='rna', nthread=2)
+protein_coding <- which(featInfo$GeneBioType %in% "protein_coding")
+radSensSig <- radSensitivitySig(Cleveland, mDataType='rna', nthread=16, features=fNames(Cleveland, 'rna')[protein_coding])
 ```
 
 ```{r ordering_molecular_signature_results}
@@ -1095,14 +1096,16 @@ The output can be used for further inquiry  such as correlation analysis.
 ```{r X10, eval=TRUE}
 
 genes <- rownames(exprs(dr.mol))
-output <- data.frame()
-for(g in genes)
-{
+
+.computeCorTestDF <- function(g, dr.mol) {
   cr <- cor.test(exprs(dr.mol)[g, ], pData(dr.mol)$best.average.response)
-  output <- rbind(output, data.frame(gene=g, cor=cr$estimate, p=cr$p.value))
+  return(data.frame(gene=g, cor=cr$estimate, p=cr$p.value))
 }
 
-print(output)
+corDataFrames <- lapply(genes, .computeCorTestDF, dr.mol=dr.mol)
+output <- do.call(rbind, corDataFrames)
+
+head(output)
 ```
 
 
@@ -1157,9 +1160,12 @@ drugs.selected <- c("Lapatinib", "Paclitaxel", "Cisplatin", "Dabrafenib")
 
 To generate the signatures, we would run the code below. 
 ```{r eval=FALSE, echo=TRUE}
-radSig <- radSensitivitySig(Cleveland, mDataType = "rna", features=ft.rad)
+nthread <- 16
+radSig <- radSensitivitySig(Cleveland, mDataType = "rna", features=ft.rad, nthread=nthread)
+```
 
-gdscSigs <- drugSensitivitySig(GDSC, mDataType="rna", sensitivity.measure="aac_recomputed", drugs = drugs.selected, features=ft.drug)
+```{r eval=FALSE, echo=TRUE}
+gdscSigs <- PharmacoGx::drugSensitivitySig(GDSC, mDataType="rna", sensitivity.measure="aac_recomputed", drugs=drugs.selected, features=ft.drug, nthread=nthread)
 ```
 
 However, for the purpose of this vignette, we will preload the precomputed signatures in interest of computation time. 
