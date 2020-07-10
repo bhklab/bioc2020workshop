@@ -1,6 +1,6 @@
 Package: gxbioc2020workshop
 Title: A workshop on discovering biomarkers from high through put response screens
-Version: 0.2.0
+Version: 0.2.1
 Author: Petr Smirnov, Chris Eeles, Arvind Mer, Benjamin Haibe-Kains
 Maintainer: Petr Smirnov <psmirnov2000@gmail.com>
 Description: This workshop focuses on the synergies between analysis results 
