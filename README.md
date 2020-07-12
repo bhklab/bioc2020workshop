@@ -41,10 +41,8 @@ The workshop will be presented as a set of analysis steps to be replicated by th
 Bioconductor:
 * https://bioconductor.org/packages/release/bioc/html/PharmacoGx.html
 * http://bioconductor.org/packages/release/bioc/html/Xeva.html 
-* https://cran.r-project.org/web/packages/RadioGx/index.html 
-  * RadioGx is currently being prepared for inclusion in Bioc 3.11 release in April/May
-* https://cran.r-project.org/web/packages/CoreGx/index.html
-  * CoreGx is currently being prepared for inclusion in Bioc 3.11 release in April/May; it abstracts shared functionality between the expanding set of ...Gx packages our lab has developed and will be a dependency
+* https://bioconductor.org/packages/3.12/bioc/html/RadioGx.html
+* https://bioconductor.org/packages/3.12/bioc/html/CoreGx.html
 
 ## Time outline
 
