@@ -9,4 +9,4 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
     
-RUN Rscript -e "options(repos = c(CRAN = 'https://cran.r-project.org')); BiocManager::install('bhklab/bioc2020workshop', update = TRUE, ask=FALSE)"
+RUN Rscript -e "options(repos = c(CRAN = 'https://cran.r-project.org')); BiocManager::install('bhklab/bioc2020workshop', update = TRUE, ask=FALSE, dependencies=TRUE)"
