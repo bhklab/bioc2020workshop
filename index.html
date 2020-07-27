@@ -91,20 +91,18 @@
 <div id="pre-requisites" class="section level3">
 <h3 class="hasAnchor">
 <a href="#pre-requisites" class="anchor"></a>Pre-requisites</h3>
-<p>List any workshop prerequisites:</p>
 <ul>
 <li>Basic knowledge of R syntax</li>
 <li>Knowledge of or interest in pharmacogenomics and radio-genomics</li>
 <li>Familiarity with base bioconductor objects, including the SummarizedExperiment Class</li>
 <li>Familiarity with linear modelling in R; ANOVA, and goodness of fit tests</li>
 </ul>
-<p>List relevant background reading for the workshop, including any theoretical background you expect students to have.</p>
+<p>Useful publications:</p>
 <ul>
 <li>Smirnov, P. et al. PharmacoGx: An R package for analysis of large pharmacogenomic datasets. Bioinformatics 32, 1244–1246 (2016).</li>
 <li>Manem, V. SK. et al. Modeling Cellular Response in Large-Scale Radiogenomic Databases to Advance Precision Radiotherapy. Cancer Research (2019) <a href="doi:10.1158/0008-5472.CAN-19-0179" class="uri">doi:10.1158/0008-5472.CAN-19-0179</a>.</li>
 <li>Mer, A. S. et al. Integrative pharmacogenomics analysis of patient-derived xenografts. Cancer Res canres.0349.2019 (2019) <a href="doi:10.1158/0008-5472.CAN-19-0349" class="uri">doi:10.1158/0008-5472.CAN-19-0349</a>.</li>
 </ul>
-<p>r</p>
 </div>
 <div id="workshop-participation" class="section level3">
 <h3 class="hasAnchor">
@@ -126,44 +124,44 @@
 <div id="time-outline" class="section level2">
 <h2 class="hasAnchor">
 <a href="#time-outline" class="anchor"></a>Time outline</h2>
-<p>For a 2-hr workshop:</p>
+<p>For a 1-hr workshop:</p>
 <table class="table">
+<colgroup>
+<col width="88%">
+<col width="11%">
+</colgroup>
 <thead><tr class="header">
 <th>Activity</th>
 <th>Time</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>Introduction</td>
+<td>Introduction and Experimental Design</td>
 <td>5m</td>
 </tr>
 <tr class="even">
 <td>Data Structure and Common Functions Between Packages</td>
-<td>10m</td>
+<td>5m</td>
 </tr>
 <tr class="odd">
-<td>Basic functionalities of PharmacoGx</td>
-<td>10m</td>
+<td>Examining and Extracting data of interest</td>
+<td>5m</td>
 </tr>
 <tr class="even">
-<td>Basic functionalities of Xeva</td>
-<td>10m</td>
+<td>Visualizing and modelling Sensitivity Data</td>
+<td>14m</td>
 </tr>
 <tr class="odd">
-<td>Basic functionalities of RadioGx</td>
-<td>10m</td>
+<td>Summary Functions</td>
+<td>3m</td>
 </tr>
 <tr class="even">
-<td>Data Analysis Walkthrough</td>
-<td>30m</td>
+<td>Signature Generation and Biomarker Discovery</td>
+<td>5m</td>
 </tr>
 <tr class="odd">
-<td>Understanding Analysis Results and Synergies</td>
-<td>10m</td>
-</tr>
-<tr class="even">
-<td>Use Case Discussion: Translational Science</td>
-<td>15m</td>
+<td>Integrative Analysis Across Packages and Disciplines: - 20 Minutes - Interactive Portion</td>
+<td>20m</td>
 </tr>
 </tbody>
 </table>
@@ -182,7 +180,6 @@
 <li>Learn measures to quantify the response in both cell line and PDX sensitivity screens, for both drug and radiation treatments</li>
 <li>Understand the differences in experimental design between radiotherapy and small compound treatments in cell lines</li>
 <li>Understand the differences in measuring response to therapy between cell line and PDX based models</li>
-<li>Understand how to choose the appropriate sensitivity quantification metric for your task</li>
 <li>Understand how to identify potential genomic signatures of drug and radiation response and explore how synergies between these signatures can inform clinical trial design</li>
 </ul>
 </div>
@@ -197,7 +194,7 @@
 <li>Fit linear-quadratic models to radiotherapy experiments in cell lines</li>
 <li>Fit Hill Slope models to dose-response experiments using small compound treatments in cell lines</li>
 <li>Calculate the AAC, AUC, IC50, SF2, D10 metrics for response quantification in cell lines</li>
-<li>Calculate the mRECIST, Slope, ABC, linear mix model and other tumour growth curve summary metrics</li>
+<li>Calculate the mRECIST and other tumour growth curve summary metrics</li>
 <li>Visualize response of PDX experiments using an Oncoprint heatmap</li>
 <li>Predict in vivo and in vitro univariate biomarkers using the PharmacoGx, Xeva and RadioGx packages</li>
 <li>Compare signatures of response between chemotherapy compounds and radiotherapy</li>
