@@ -694,7 +694,7 @@ of the logit, and is interpreted based on its relation to 1. Values larger than 
 inhibition/binding of the target for the small molcule ligands, which values less than 1 imply negative cooperativity/antagonism. 
 
 ```{r hillSlopeFig, fig.cap="Diagram of a logLogistic Hill Slope"}
-knitr::include_graphics("hillSlope.png")
+knitr::include_graphics("./hillSlope.png")
 ```
 
 
@@ -725,7 +725,7 @@ to some omic feature. For this, we want to summarize the drug dose response curv
 number representing the sensitivity of the cell line. 
 
 ```{r hillSlopeSumFig, fig.cap="Some commonly used summary metrics for a dose-response curve"}
-knitr::include_graphics("hillSlopeSummary.png")
+knitr::include_graphics("./hillSlopeSummary.png")
 ```
 
 
