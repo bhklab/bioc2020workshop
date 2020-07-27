@@ -51,7 +51,6 @@ theoretical background you expect students to have.
 * Mer, A. S. et al. Integrative pharmacogenomics analysis of patient-derived xenografts. Cancer Res canres.0349.2019 (2019) doi:10.1158/0008-5472.CAN-19-0349.
 
 
-
 ### Workshop Participation {-}
 
 Participants expected to have the following required packages installed on their machines to be able to run the commands along with the instructors.
@@ -210,6 +209,7 @@ a similar experimental setup.
 _in vivo_ models play an important role in cancer drug discovery.
 Patent derived xenografts (PDXs) are commonly used _in vivo_ models in cancer research.
 They have several advantages over cell lines:
+
 * PDXs are known to recapitulate tumor biology very well
 * PDXs maintain the cellular and histological structure of the source tumor
 * PDXs also keep tumor micro-enviroment and stromal elements
@@ -241,7 +241,7 @@ knitr::include_graphics('./PharmacoGxClassDiagram.png')
 Let us download the PSets used for this tutorial into our local working environment. 
 A table of available PharmacoSet objects can be obtained by using the *availablePSets*
 function. 
-```{r avail_psets, eval=FALSE}
+```{r avail_psets, eval=TRUE}
   library(PharmacoGx)
   availablePSets()
 ```
@@ -343,7 +343,7 @@ A PDX experiment can be one of the two categories:
 To see the effect of a drug, several replicate experiments are done for both the control and the treatment categories.
 In Xeva, a collection of PDX `model.ids` originating from the same patient is organized in batches (`batch`). A `batch` has two arms: `control` and `treatment`. This is illustrated in the figure below:
 
-```{r xevastructure, echo=FALSE, fig.wide=TRUE, fig.cap = "A PDX experiment. The text under each of the PDX/mouse (ie. m1, m2, p1, etc.) denotes the `model.id` in Xeva. In this example, three PDXs are delclared as control (m1, m2, and m3). Similarly, in the treatment arm, 3 PDXs are given the drug paclitaxel (p1, p2, and p3), 3 are given tamoxifen (t1, t2, and t3), and 3 are given binimetinib (b1, b2, b3). The PDXs in the control arm and one of the treatment arms together constitute a \textit{batch}. For example, control arm models (m1, m2, and m3) and treatment arm models (t1,t2, and t3) together create a batch called batch-2."}
+```{r xevastructure, echo=FALSE, fig.wide=TRUE, fig.cap = "A PDX experiment. The text under each of the PDX/mouse (ie. m1, m2, p1, etc.) denotes the `model.id` in Xeva. In this example, three PDXs are delclared as control (m1, m2, and m3). Similarly, in the treatment arm, 3 PDXs are given the drug paclitaxel (p1, p2, and p3), 3 are given tamoxifen (t1, t2, and t3), and 3 are given binimetinib (b1, b2, b3). The PDXs in the control arm and one of the treatment arms together constitute a batch. For example, control arm models (m1, m2, and m3) and treatment arm models (t1,t2, and t3) together create a batch called batch-2."}
 knitr::include_graphics('./Xeva_batch_2.png')
 ```
 
@@ -424,7 +424,7 @@ mycol <- c("#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462",
            "#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f",
            "#a6cee3","#1f78b4","#b2df8a","#33a02c","#fb9a99","#e31a1c",
            "#fdbf6f","#ff7f00","#cab2d6","#6a3d9a","#ffff99","#b15928")
-pie(table(CCLE@cell[,"tissueid"]), 
+pie(table(cellInfo(CCLE)[,"tissueid"]), 
     col=mycol, 
     main="Tissue types", 
     radius=1, 
@@ -482,7 +482,7 @@ knitr::kable(featInfo[1:3, 1:3], row.names=FALSE)
 ```
 
 ```{r molecular_data, fig.wide=TRUE}
-# Access the moleclar feature data
+# Access the molecular feature data
 mProf <- molecularProfiles(Cleveland, 'rnaseq')
 ```
 
@@ -585,8 +585,8 @@ ways:
 ```{r subsets, eval=TRUE}
 print(GDSC)
 print(drugNames(GDSC)[1])
-print(subsetTo(GDSC, drugs="Erlotinib"))
-print(GDSC["YT","Erlotinib"])
+print(subsetTo(GDSC, drugs="Paclitaxel"))
+print(GDSC["YT","Paclitaxel"])
 
 ```
 
@@ -693,6 +693,10 @@ $HS$, the Hill Slope, which is a measure of the cooperativity of binding. This p
 of the logit, and is interpreted based on its relation to 1. Values larger than 1 imply positive cooperativity in 
 inhibition/binding of the target for the small molcule ligands, which values less than 1 imply negative cooperativity/antagonism. 
 
+```{r hillSlopeFig, fig.cap="Diagram of a logLogistic Hill Slope"}
+knitr::include_graphics("hillSlope.png")
+```
+
 
 To fit a Hill Slope model to your data in PharmacoGx, you can use the `logLogisticRegression`
 function, as below:
@@ -718,7 +722,14 @@ knitr::kable(sensitivityProfiles(CCLE)[1:5,c("E_inf", "EC50", "HS")])
 
 Often with _in vitro_ Pharmacogenomics data, we want to compare the drug sensitivity of a cell line 
 to some omic feature. For this, we want to summarize the drug dose response curve into a single 
-number representing the sensitivity of the cell line. The IC50 and Area Above the Curve are two
+number representing the sensitivity of the cell line. 
+
+```{r hillSlopeSumFig, fig.cap="Some commonly used summary metrics for a dose-response curve"}
+knitr::include_graphics("hillSlopeSummary.png")
+```
+
+
+The IC50 and Area Above the Curve are two
 convenient metrics for quantifying the observed drug sensitivity. If you noticed above, 
 the `drugDoseResponseCurve` function computes them by default. In PharmacoGx, they can be 
 computed manually as follows:
@@ -752,6 +763,8 @@ a log-logistic Hill Curve for modeling the dose-response relationship,
 Radiogenomics analysis traditionally uses a Linear Quadratic model. This is due
 to the different action of radiation treatment compared to compound inhibition of
 targets. 
+
+$$SF = e^{-\alpha D * \beta D^2} $$
 
 This package exports a function for fitting linear-quadratic
 models to dose response data. The function can be used with data contained in
@@ -999,6 +1012,7 @@ we can extract the RNAseq data for all the PDXs treated with trastuzumab, as bel
 
 ```{r xeva_summarize_mol, results="asis"}
 brca_trastuz <- Xeva::summarizeMolecularProfiles(brca, mDataType="RNASeq", drug = "trastuzumab")
+head(brca_trastuz)
 ```
 
 
@@ -1022,7 +1036,7 @@ expression matrix, as the full computation can take some time to complete.
 
 ```{r drugSensSigEx, eval=TRUE, echo=TRUE, results="hide", message=FALSE, error=FALSE, warning=FALSE, cache=TRUE}
 ## Extracting the first 100 gene names. featureInfo brings up the rowData of the "rna" SummarizedExperiment
-chosen.genes <- sample(rownames(featureInfo(GDSC, "rna"), 10))
+chosen.genes <- sample(rownames(featureInfo(GDSC, "rna")), 10)
 
 sigs <- PharmacoGx::drugSensitivitySig(GDSC, "rna", sensitivity.measure = "aac_recomputed", drugs=c("Erlotinib", "Lapatinib"), features = chosen.genes)
 ```
