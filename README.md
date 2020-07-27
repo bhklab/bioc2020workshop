@@ -43,7 +43,7 @@ Bioconductor:
 
 ## Time outline
 
-For a 2-hr workshop:
+For a 1-hr workshop:
 
 | Activity                                    | Time |
 |---------------------------------------------|------|
