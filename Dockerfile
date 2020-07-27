@@ -8,5 +8,5 @@ RUN apt-get update && \
     apt-get install -y libglpk-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-    
-RUN Rscript -e "options(repos = c(CRAN = 'https://cran.r-project.org')); BiocManager::install('bhklab/bioc2020workshop', update = TRUE, ask=FALSE)"
+
+RUN Rscript -e "options(repos = c(CRAN = 'https://cloud.r-project.org')); BiocManager::install(update = TRUE, ask = FALSE); devtools::install('.', dependencies = TRUE, repos = BiocManager::repositories(), build_vignettes = TRUE)"

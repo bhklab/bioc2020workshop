@@ -13,7 +13,7 @@ home:
 navbar:
   left:
   - text: Workshop
-      href: articles/GxWorkshop.html
+    href: articles/GxWorkshop.html
   right:
    - icon: fa-github
      href: https://github.com/bhklab/bioc2020workshop
