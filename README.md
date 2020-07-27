@@ -13,21 +13,18 @@ This workshop will focus on the synergies between analysis results from the Phar
 
 ### Pre-requisites
 
-List any workshop prerequisites:
+
 * Basic knowledge of R syntax
 * Knowledge of or interest in pharmacogenomics and radio-genomics
 * Familiarity with base bioconductor objects, including the SummarizedExperiment Class
 * Familiarity with linear modelling in R; ANOVA, and goodness of fit tests
 
-
-List relevant background reading for the workshop, including any
-theoretical background you expect students to have.
+Useful publications: 
 
 *  Smirnov, P. et al. PharmacoGx: An R package for analysis of large pharmacogenomic datasets. Bioinformatics 32, 1244–1246 (2016).
 * Manem, V. SK. et al. Modeling Cellular Response in Large-Scale Radiogenomic Databases to Advance Precision Radiotherapy. Cancer Research (2019) doi:10.1158/0008-5472.CAN-19-0179.
 * Mer, A. S. et al. Integrative pharmacogenomics analysis of patient-derived xenografts. Cancer Res canres.0349.2019 (2019) doi:10.1158/0008-5472.CAN-19-0349.
 
-r
 
 
 ### Workshop Participation
@@ -50,14 +47,13 @@ For a 2-hr workshop:
 
 | Activity                                    | Time |
 |---------------------------------------------|------|
-| Introduction                                                | 5m   |
-| Data Structure and Common Functions Between Packages     | 10m |
-| Basic functionalities of PharmacoGx                     | 10m |
-| Basic functionalities of Xeva                     | 10m |
-| Basic functionalities of RadioGx                     | 10m |
-| Data Analysis Walkthrough                         | 30m |
-| Understanding Analysis Results and Synergies            | 10m |
-| Use Case Discussion: Translational Science             | 15m |
+| Introduction and Experimental Design                     | 5m   |
+| Data Structure and Common Functions Between Packages     | 5m |
+| Examining and Extracting data of interest                     | 5m |
+| Visualizing and modelling Sensitivity Data                     | 14m |
+| Summary Functions                     | 3m |
+| Signature Generation and Biomarker Discovery                   | 5m |
+| Integrative Analysis Across Packages and Disciplines: - 20 Minutes - Interactive Portion | 20m | 
 
 
 ## Workshop goals and objectives
@@ -71,7 +67,6 @@ For a 2-hr workshop:
 * Learn measures to quantify the response in both cell line and PDX sensitivity screens, for both drug and radiation treatments
 * Understand the differences in experimental design between radiotherapy and small compound treatments in cell lines
 * Understand the differences in measuring response to therapy between cell line and PDX based models
-* Understand how to choose the appropriate sensitivity quantification metric for your task 
 * Understand how to identify potential genomic signatures of drug and radiation response and explore how synergies between these signatures can inform clinical trial design
 
 ### Learning objectives
@@ -83,7 +78,7 @@ For a 2-hr workshop:
 * Fit linear-quadratic models to radiotherapy experiments in cell lines
 * Fit Hill Slope models to dose-response experiments using small compound treatments in cell lines
 * Calculate the AAC, AUC, IC50, SF2, D10 metrics for response quantification in cell lines
-* Calculate the mRECIST, Slope, ABC, linear mix model and other tumour growth curve summary metrics
+* Calculate the mRECIST and other tumour growth curve summary metrics
 * Visualize response of PDX experiments using an Oncoprint heatmap
 * Predict in vivo and in vitro univariate biomarkers using the PharmacoGx, Xeva and RadioGx packages
 * Compare signatures of response between chemotherapy compounds and radiotherapy
