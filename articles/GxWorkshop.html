@@ -128,7 +128,7 @@
 <div id="workshop-participation" class="section level3 unnumbered">
 <h3 class="hasAnchor">
 <a href="#workshop-participation" class="anchor"></a>Workshop Participation</h3>
-<p>Participants expected to have the following required packages installed on their machines to be able to run the commands along with the instructors. PharmacoGx, Xeva, RadioGx, CoreGx and Biobase from Bioconductor The workshop will be presented as a set of analysis steps to be replicated by the learners, with instructors available to explain the why and how of applying these functions to the given datasets.</p>
+<p>Participants are expected to have the following required packages installed on their machines to be able to run the commands along with the instructors: PharmacoGx, Xeva, RadioGx, CoreGx and Biobase from Bioconductor. The workshop will be presented as a set of analysis steps to be replicated by the learners, with instructors available to explain the why and how of applying these functions to the given datasets.</p>
 </div>
 <div id="r-bioconductor-packages-used" class="section level3 unnumbered">
 <h3 class="hasAnchor">
@@ -194,8 +194,8 @@
 <h3 class="hasAnchor">
 <a href="#learning-goals" class="anchor"></a>Learning goals</h3>
 <ul>
-<li>Describe pharmacogenomic datasets and radiogenomic datasets and usefulness in cancer research</li>
-<li>Learn how to extract information from these datasets and to intersect them over their common measured features, experiments, model systems</li>
+<li>Describe pharmacogenomic and radiogenomic datasets and their usefulness in cancer research</li>
+<li>Learn how to extract information from these datasets and to intersect them over their common measured features, experiments and model systems</li>
 <li>Learn how to visualize experimental results from these datasets</li>
 <li>Learn how to model dose-response for both small compound and radiotherapy datasets</li>
 <li>Learn measures to quantify the response in both cell line and PDX sensitivity screens, for both drug and radiation treatments</li>
@@ -208,7 +208,7 @@
 <h3 class="hasAnchor">
 <a href="#learning-objectives" class="anchor"></a>Learning objectives</h3>
 <ul>
-<li>List available standardized pharmacogenomic and radiogenomic datasets and download them</li>
+<li>List and download available standardized pharmacogenomic and radiogenomic datasets</li>
 <li>Access the molecular features, dose-response and metadata contained within the data structures defined in the packages</li>
 <li>Create drug-dose and radiation-dose response plots for cell line experiments</li>
 <li>Create tumor growth curve plots for PDX experiments</li>
@@ -227,13 +227,13 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>This tutorial, titled Biomarker Discovery from High Throughput Screening Datasets, focuses on a suite of packages designed to simplify analysis correlating measures of treatment response measured on model systems with molecular profiles of those systems. These packages primarly focus on modeling response to cancer treatments in cancer models, but the concepts presented can be applied to other disease types, given availability of data for the area of interest.</p>
-<p>The first two of the packages, <em><a href="https://bioconductor.org/packages/3.12/PharmacoGx">PharmacoGx</a></em> and <em><a href="https://bioconductor.org/packages/3.12/RadioGx">RadioGx</a></em> focus on screens done using cell lines as a model system. PharmacoGx focuses on modeling and predicting the response of cell lines treated with small molecule therapies. RadioGx swaps the small molecule treatment for irradiation of cell lines. The third package, <em><a href="https://bioconductor.org/packages/3.12/Xeva">Xeva</a></em>, looks at treatment response for <strong>in vivo</strong> systems, primarily Patient Derived Xenographs of cancer tumours growing in immune compromised mice.</p>
+<p>This tutorial, titled Biomarker Discovery from High Throughput Screening Datasets, focuses on a suite of packages designed to simplify analyses correlating measures of treatment response measured on model systems with molecular profiles of those systems. These packages primarly focus on modeling response to cancer treatments in cancer models, but the concepts presented can be applied to other disease types, given availability of data for the area of interest.</p>
+<p>The first two packages, <em><a href="https://bioconductor.org/packages/3.12/PharmacoGx">PharmacoGx</a></em> and <em><a href="https://bioconductor.org/packages/3.12/RadioGx">RadioGx</a></em> focus on screens done using cell lines as a model system. PharmacoGx focuses on modeling and predicting the response of cell lines treated with small molecule therapies. RadioGx swaps the small molecule treatment for irradiation of cell lines. The third package, <em><a href="https://bioconductor.org/packages/3.12/Xeva">Xeva</a></em>, looks at treatment response for <strong>in vivo</strong> systems, primarily Patient Derived Xenographs of cancer tumours growing in immune compromised mice.</p>
 <div id="data-structure-and-common-functions-between-packages" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data-structure-and-common-functions-between-packages" class="anchor"></a>Data Structure and Common Functions Between Packages</h2>
-<p>While the experiments analyzed by the three packages are different, the workflow that these packages accommodate has many similarities between them. First and foremost, all three packages were developed to provide data structures that package together screening and molecular data, as well as all related metadata, for complete studies. These packages also provide an interface to download large, publically available datasets which have standardized naming conventions, so that data across different studies is immediately comparable.</p>
-<p>Furthermore, the analysis workflow shares common tasks across the three domains covered by these packages. This includes understanding and visualizing the data that is present in each dataset; modeling the response of the model systems to treatment; summarizing that response into a measure comparable across models; extracting and summarizing measurements of molecular features; and ultimately correlating the response of model systems to their molecular state.</p>
+<p>While the experiments analyzed by the three packages are different, the workflow that these packages accommodate are quite similar. First and foremost, all three packages were developed to provide data structures that package together screening and molecular data, as well as all related metadata, for complete studies. These packages also provide an interface to download large, publically available datasets which have standardized naming conventions, so that data across different studies is immediately comparable.</p>
+<p>Furthermore, the analysis workflows share common tasks across the three domains covered by these packages. This includes understanding and visualizing the data that is present in each dataset; modeling the response of the model systems to treatment; summarizing that response into a measure comparable across models; extracting and summarizing measurements of molecular features; and ultimately correlating the response of model systems to their molecular state.</p>
 <p>In this tutorial, we will be highlighting each analysis step across all three packages, and then finish with a demonstration of how to integrate across the different domains presented here.</p>
 </div>
 </div>
@@ -258,8 +258,8 @@
 </div>
 <div id="in-vivo-pharmacogenomics" class="section level2">
 <h2 class="hasAnchor">
-<a href="#in-vivo-pharmacogenomics" class="anchor"></a><em>in vivo</em> Pharmacogenomics</h2>
-<p><em>in vivo</em> models play an important role in cancer drug discovery. Patent derived xenografts (PDXs) are commonly used <em>in vivo</em> models in cancer research. They have several advantages over cell lines:</p>
+<a href="#in-vivo-pharmacogenomics" class="anchor"></a><em>In vivo</em> Pharmacogenomics</h2>
+<p><em>In vivo</em> models play an important role in cancer drug discovery. Patent derived xenografts (PDXs) are commonly used <em>in vivo</em> models in cancer research. They have several advantages over cell lines:</p>
 <ul>
 <li>PDXs are known to recapitulate tumor biology very well</li>
 <li>PDXs maintain the cellular and histological structure of the source tumor</li>
@@ -267,7 +267,7 @@
 <li>Genomic properties of the tumor are largely preserved from patient to PDX</li>
 <li>Drug response of PDXs closely match the corresponding patient and clinical outcome</li>
 </ul>
-<p>To create PDXs, cancerous tissues or cells from patients’ tumors are engrafted into immunodeficient mice (either subcutaneous or orthotopic engraftment). Once established, tumors from the PDXs can be passed from mouse to mouse, this is called passaging. For drug testing, PDXs were given a set drug dose at a set schedule (for example weekly). Change in tumor size is measured, usually physically using calipers. <img src="PDXfigure500ppi.png"></p>
+<p>To create PDXs, cancerous tissues or cells from patients’ tumors are engrafted into immunodeficient mice (either subcutaneous or orthotopic engraftment). Once established, tumors from the PDXs can be passed from mouse to mouse, this is called passaging. For drug testing, PDXs are given a set drug dose at a set schedule (for example weekly). Change in tumor size is measured, usually physically using calipers. <img src="PDXfigure500ppi.png"></p>
 </div>
 </div>
 <div id="data-storage-and-access" class="section level1">
@@ -278,8 +278,8 @@
 <a href="#pharmacogx" class="anchor"></a>PharmacoGx</h2>
 <p>PharmacoGx stores drug screening data together with molecular profiling of cell lines in an object called a <code>PharmacoSet</code>, or <code>PSet</code> for short. This object inherits for the <code>CoreSet</code> class defined in our package <code>CoreGx</code>, which abstracts the common functionality across our similar packages. The basic structure of a PharmacoSet is as follows:</p>
 <div class="figure">
-<img src="PharmacoGxClassDiagram.png" alt="**PharmacoSet class diagram**. Objects comprising a `PharmacoSet` are enclosed in boxes. First box indicates type and name of each object. Second box indicates the structure of an object or class. Third box shows accessor methods from `PharmacoGx` for that specific object. '=&gt;' represents return and specifies what is returned from that item or method." width="1894"><p class="caption">
-<strong>PharmacoSet class diagram</strong>. Objects comprising a <code>PharmacoSet</code> are enclosed in boxes. First box indicates type and name of each object. Second box indicates the structure of an object or class. Third box shows accessor methods from <code>PharmacoGx</code> for that specific object. ‘=&gt;’ represents return and specifies what is returned from that item or method.
+<img src="PharmacoGxClassDiagram.png" alt="**PharmacoSet class diagram**. Objects comprising a `PharmacoSet` are enclosed in boxes. The first box indicates the type and name of each object. The second box indicates the structure of an object or class. The third box shows accessor methods from `PharmacoGx` for that specific object. '=&gt;' represents return and specifies what is returned from that item or method." width="1894"><p class="caption">
+<strong>PharmacoSet class diagram</strong>. Objects comprising a <code>PharmacoSet</code> are enclosed in boxes. The first box indicates the type and name of each object. The second box indicates the structure of an object or class. The third box shows accessor methods from <code>PharmacoGx</code> for that specific object. ‘=&gt;’ represents return and specifies what is returned from that item or method.
 </p>
 </div>
 <div id="downloading-pharmacoset-objects" class="section level3">
@@ -392,8 +392,8 @@
 <a href="#radiogx" class="anchor"></a>RadioGx</h2>
 <p>The RadioSet has a structure similar to the <code>PharmacoSet</code> and also inherits from the CoreSet<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> class . The radiation slot is implemented in <em><a href="https://bioconductor.org/packages/3.12/RadioGx">RadioGx</a></em> to hold relevant metadata about the type(s) of radiation used in the dose-response experiment, and is analogous to the drug slot in a <code>PharmacoSet</code>. The remainder of the slots mirror the <code>PharmacoSet</code>.</p>
 <div class="figure">
-<img src="RadioGxClassDiagram.png" alt="**RadioSet class diagram**. Objects comprising a `RadioSet` are enclosed in boxes. First box indicates type and name of each object. Second box indicates the structure of an object or class. Third box shows accessor methods from `RadioGx` for that specific object. '=&gt;' represents return and specifies what is returned from that item or method." width="1894"><p class="caption">
-<strong>RadioSet class diagram</strong>. Objects comprising a <code>RadioSet</code> are enclosed in boxes. First box indicates type and name of each object. Second box indicates the structure of an object or class. Third box shows accessor methods from <code>RadioGx</code> for that specific object. ‘=&gt;’ represents return and specifies what is returned from that item or method.
+<img src="RadioGxClassDiagram.png" alt="**RadioSet class diagram**. Objects comprising a `RadioSet` are enclosed in boxes. The first cell indicates the type and name of each object. Second cell indicates the structure of an object or class. Third cell shows accessor methods from `RadioGx` for that specific object. `=&gt;` represents return and specifies what is returned from that item or method." width="1894"><p class="caption">
+<strong>RadioSet class diagram</strong>. Objects comprising a <code>RadioSet</code> are enclosed in boxes. The first cell indicates the type and name of each object. Second cell indicates the structure of an object or class. Third cell shows accessor methods from <code>RadioGx</code> for that specific object. <code>=&gt;</code> represents return and specifies what is returned from that item or method.
 </p>
 </div>
 <div id="downloading-an-rset" class="section level3">
@@ -506,8 +506,8 @@ A PDX experiment. The text under each of the PDX/mouse (ie. m1, m2, p1, etc.) de
 <div id="coregx-accessors" class="section level2">
 <h2 class="hasAnchor">
 <a href="#coregx-accessors" class="anchor"></a>CoreGx accessors</h2>
-<p>PharmacoGx and RadioGx share a lot of similarities in their object structure. This also means that a lot of the functions used to access the data provided in these objects can be accessed using the same interface.</p>
-<p>In general, the PSet and RSet store three major categories of data: metadata/annotations, molecular data and radiation response data. These are demarcated in <strong>Fig.</strong> @ref(fig:pharmacoset) and <strong>Fig.</strong> @ref(fig:radioset) using green, blue and red, respectively. Accessor methods are available to retrieve all three kinds of data from a CoreSet; the accessor methods for each component are listed in the bottom most cell of each object in the class diagrams. We will discuss a subset of these methods now.</p>
+<p>PharmacoGx and RadioGx share a lot of similarities in their object structure. As such, a shared interface is available to access much of the data in these objects.</p>
+<p>In general, the PSet and RSet store three major categories of data: metadata/annotations, molecular data and treatment response data. These are demarcated in <strong>Fig.</strong> @ref(fig:pharmacoset) and <strong>Fig.</strong> @ref(fig:radioset) using green, blue and red, respectively. Accessor methods are available to retrieve all three kinds of data from a CoreSet; the accessor methods for each component are listed in the bottom most cell of each object in the class diagrams. We will discuss a subset of these methods now.</p>
 <div id="accessing-metadata" class="section level3">
 <h3 class="hasAnchor">
 <a href="#accessing-metadata" class="anchor"></a>Accessing metadata</h3>
@@ -595,7 +595,7 @@ A PDX experiment. The text under each of the PDX/mouse (ie. m1, m2, p1, etc.) de
 Tissue of origin of cell lines in CCLE study
 </p>
 </div>
-<p>The other important metadata slot will vary across the two packages, being called <code>drug</code> in PharmacoGx, and <code>radiation</code> in RadioGx. They are discussed just below.</p>
+<p>The other important metadata slot will vary across the two packages, being called <code>drug</code> in PharmacoGx, and <code>radiation</code> in RadioGx. They are discussed below.</p>
 <p>The <code>CoreSet</code> also includes <code>annotations</code>, which keep track of metadata about the creation of the <code>CoreSet</code> object itself, and <code>curation</code>, which keeps track of the remapping of identifiers from those used in the original study to those in the object.</p>
 </div>
 <div id="accessing-molecular-data" class="section level3">
@@ -875,7 +875,7 @@ Tissue of origin of cell lines in CCLE study
 <div id="subsetting-pharmacosets" class="section level2">
 <h2 class="hasAnchor">
 <a href="#subsetting-pharmacosets" class="anchor"></a>Subsetting PharmacoSets</h2>
-<p>PSets can be subsetted by refering directly to the drugs and cell lines you want to keep in the dataset. For example, we can subset the GDSC PSet in the following ways:</p>
+<p>PSets can be subsetted by referring directly to the drugs and cell lines you want to keep in the dataset. For example, we can subset the GDSC PSet in the following ways:</p>
 <div class="sourceCode" id="cb46"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">GDSC</span>)</pre></body></html></div>
 <pre><code>## Name:  GDSC_v1 
 ## Date Created:  Fri Jun  5 20:29:32 2020 
@@ -911,7 +911,7 @@ Tissue of origin of cell lines in CCLE study
 ## Drug sensitivity: 
 ##  Number of Experiments:  1 
 ##  Please look at sensNumber(cSet) to determine number of experiments for each drug-cell combination.</code></pre>
-<p>As an exercise, lets manually compute the number of overlaping cell lines between CCLE and GDSC. Try it yourself!</p>
+<p>As an exercise, lets manually compute the number of overlapping cell lines between CCLE and GDSC. Try it yourself!</p>
 <p>If you noticed as you completed the previous exercise, cell line and drug names are standardized between PSets downloaded using the <em>downloadPSet</em> function. This is the major benefit in working with the pre-curated objects: entities follow a standardized naming scheme, which was chosen to be human readable whenever possible.</p>
 <p>PharmacoGx also implements a convenience function to intersect PSets:</p>
 <div class="sourceCode" id="cb54"><html><body><pre class="r"><span class="no">common</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/intersectPSet.html">intersectPSet</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="no">CCLE</span>, <span class="no">GDSC</span>), <span class="kw">intersectOn</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cell.lines"</span>))
@@ -920,7 +920,7 @@ Tissue of origin of cell lines in CCLE study
 <div id="xeva-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#xeva-1" class="anchor"></a>Xeva</h2>
-<p>The structure of Xeva is different from the CoreGx structure. As such, many of the accessor functions are also different.</p>
+<p>The structure of Xeva is different from the CoreSet structure. As such, many of the accessor functions are also different.</p>
 <p>As mentioned earlier, Xeva stores metadata for each individual PDX model. We can retrieve the meta-information about each PDX, such as number of models and tissue type, using:</p>
 <div class="sourceCode" id="cb55"><html><body><pre class="r"><span class="no">brca.mod</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Xeva/man/modelInfo.html">modelInfo</a></span>(<span class="no">brca</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">brca.mod</span>)</pre></body></html></div>
@@ -964,7 +964,7 @@ Tissue of origin of cell lines in CCLE study
 <div id="plotting-drug-dose-response-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#plotting-drug-dose-response-data" class="anchor"></a>Plotting Drug Dose Response Data</h3>
-<p>Drug-Dose response data included in the PharmacoSet objects can be conviniently plotted using the <code>drugDoseResponseCurve</code> function. Given a list of PharmacoSets, a drug name and a cell name, it will plot the drug dose response curves for the given cell-drug combination in each dataset, allowing direct comparisons of data between datasets.</p>
+<p>Drug-Dose response data included in the PharmacoSet objects can be conveniently plotted using the <code>drugDoseResponseCurve</code> function. Given a list of PharmacoSets, a drug name and a cell name, it will plot the drug dose response curves for the given cell-drug combination in each dataset, allowing direct comparisons of data between datasets.</p>
 <div class="sourceCode" id="cb65"><html><body><pre class="r"><span class="no">cells</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"SK-MEL-2"</span>,<span class="st">"697"</span>,<span class="st">"NCI-H1666"</span>)
 <span class="co"># par(mfrow=c(1, 3), pty = "s")</span>
 <span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/drugDoseResponseCurve.html">drugDoseResponseCurve</a></span>(<span class="kw">drug</span><span class="kw">=</span><span class="st">"Lapatinib"</span>, <span class="kw">cellline</span><span class="kw">=</span><span class="no">cells</span>[<span class="fl">1</span>],
@@ -993,7 +993,7 @@ Tissue of origin of cell lines in CCLE study
 <h3 class="hasAnchor">
 <a href="#fitting-drug-dose-response-curves" class="anchor"></a>Fitting Drug Dose Response Curves</h3>
 <p>One of the core tasks implemented in PharmacoGx is the fitting of Hill Curve Models to dose-response data. In PharmacoGx, we use the 3 Parameter Hill Curve function as our model of drug response in cancer cell lines:</p>
-<p><span class="math display">\[y = E_\infty + \frac{1-E_\infty}{1 + (\frac{x}{EC50})^{HS}}\]</span> This is a log-logistic model, meaning that it takes the form of a logistic curve when x is on the log scale. The three parameters are: <span class="math inline">\(E_\infty\)</span>, which is the maximal inhibition predicted at infinite concetration of the drug (the right asymptote); <span class="math inline">\(EC50\)</span>, which is the inflection point of the logit, where the inhibition reaches 50% of the maximum; <span class="math inline">\(HS\)</span>, the Hill Slope, which is a measure of the cooperativity of binding. This parameter controls the steepness of the logit, and is interpreted based on its relation to 1. Values larger than 1 imply positive cooperativity in inhibition/binding of the target for the small molcule ligands, which values less than 1 imply negative cooperativity/antagonism.</p>
+<p><span class="math display">\[y = E_\infty + \frac{1-E_\infty}{1 + (\frac{x}{EC50})^{HS}}\]</span> This is a log-logistic model, meaning that it takes the form of a logistic curve when x is on the log scale. The three parameters are: <span class="math inline">\(E_\infty\)</span>, which is the maximal inhibition predicted at infinite concentration of the drug (the right asymptote); <span class="math inline">\(EC50\)</span>, which is the inflection point of the logit, where the inhibition reaches 50% of the maximum; <span class="math inline">\(HS\)</span>, the Hill Slope, which is a measure of the cooperativity of binding. This parameter controls the steepness of the logit, and is interpreted based on its relation to 1. Values larger than 1 imply positive cooperativity in inhibition/binding of the target for the small molecule ligands, which values less than 1 imply negative cooperativity/antagonism.</p>
 <div class="figure">
 <img src="hill_slope.png" alt="Diagram of a logLogistic Hill Slope" width="931"><p class="caption">
 Diagram of a logLogistic Hill Slope
@@ -1076,7 +1076,7 @@ Some commonly used summary metrics for a dose-response curve
 <pre><code>## [1] 23.68416</code></pre>
 <div class="sourceCode" id="cb77"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw pkg">PharmacoGx</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/PharmacoGx/man/computeICn.html">computeIC50</a></span>(<span class="kw">concentration</span> <span class="kw">=</span> <span class="no">concentrations</span>, <span class="kw">viability</span> <span class="kw">=</span> <span class="no">viabilities</span>))</pre></body></html></div>
 <pre><code>## [1] 0.2813364</code></pre>
-<p>In PharmacoGx, we call these measures sensitivity measures. PSets come with these measures precomputed, and accessible using the <code>sensitivityProfiles</code> function:</p>
+<p>In PharmacoGx, we call these measures ‘sensitivity measures’. PSets come with these measures precomputed, and accessible using the <code>sensitivityProfiles</code> function:</p>
 <div class="sourceCode" id="cb79"><html><body><pre class="r"><span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu">sensitivityProfiles</span>(<span class="no">CCLE</span>)[,<span class="fl">1</span>:<span class="fl">5</span>]))</pre></body></html></div>
 <table class="table">
 <thead><tr class="header">
@@ -1164,7 +1164,7 @@ Some commonly used summary metrics for a dose-response curve
 <div class="sourceCode" id="cb85"><html><body><pre class="r"><span class="no">cancerCellLine</span> <span class="kw">&lt;-</span> <span class="fu">sensitivityInfo</span>(<span class="no">Cleveland</span>)$<span class="no">cellid</span>[<span class="fl">1</span>]
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">cancerCellLine</span>)</pre></body></html></div>
 <pre><code>## [1] "SK-N-FI"</code></pre>
-<div class="sourceCode" id="cb87"><html><body><pre class="r"><span class="co"># Get the radiation doses and associated survival data from clevelandSmall</span>
+<div class="sourceCode" id="cb87"><html><body><pre class="r"><span class="co"># Get the radiation doses and associated survival data from the Cleveland RSet</span>
 <span class="no">radiationDoses</span> <span class="kw">&lt;-</span> <span class="no">sensRaw</span>[<span class="fl">1</span>, , <span class="st">'Dose'</span>]
 <span class="no">survivalFractions</span> <span class="kw">&lt;-</span> <span class="no">sensRaw</span>[<span class="fl">1</span>, , <span class="st">'Viability'</span>]</pre></body></html></div>
 <div class="sourceCode" id="cb88"><html><body><pre class="r"><span class="no">LQmodel</span> <span class="kw">&lt;-</span> <span class="fu">linearQuadraticModel</span>(<span class="kw">D</span><span class="kw">=</span><span class="no">radiationDoses</span>,
@@ -1174,7 +1174,7 @@ Some commonly used summary metrics for a dose-response curve
 ## 0.15219719 0.01783452 
 ## attr(,"Rsquare")
 ## [1] 0.9882769</code></pre>
-<p>Above we see that LQmodel contains the alpha and beta coefficients for the dose response curve fit to the dose and viability data for the IMR-32 cancer cell-line. Based on the <span class="math inline">\(R^2\)</span> attribute we can see that the model fit for this data is good, with 98.8% of observed variance explained by the model.</p>
+<p>Above we see that LQmodel contains the alpha and beta coefficients for the dose response curve fit to the dose and viability data for the SK-N-FI cancer cell-line. Based on the <span class="math inline">\(R^2\)</span> attribute we can see that the model fit for this data is good, with 98.8% of observed variance explained by the model.</p>
 </div>
 <div id="calculating-dose-response-metrics" class="section level3">
 <h3 class="hasAnchor">
@@ -1193,7 +1193,7 @@ Some commonly used summary metrics for a dose-response curve
                                      <span class="kw">upper</span><span class="kw">=</span><span class="fl">1</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">areaUnderDoseRespCurve</span>)</pre></body></html></div>
 <pre><code>## [1] 2.872288</code></pre>
-<p>In the above code block we compute the AUC for a dose-response curve between a dose of 0 to 1 Gy. This area can be interpreted as the total proportion of cells killed during the administration of 1 Gy of radiation.</p>
+<p>In the above code block we compute the AUC for a dose-response curve between a dose of 0 to 1 Gy.</p>
 </div>
 <div id="dose-response-curves" class="section level3">
 <h3 class="hasAnchor">
@@ -1216,7 +1216,7 @@ Some commonly used summary metrics for a dose-response curve
 <div id="xeva-2" class="section level2">
 <h2 class="hasAnchor">
 <a href="#xeva-2" class="anchor"></a>Xeva</h2>
-<p>Drug response in PDX models is usually not assessed in the same way as <em>in vitro</em>. Rather than looking at viability vs dose curves, one looks at tumour growth vs time curves, to see if the treatement with a drug can inhibit tumour growth or initiate tumour shrinkage and clearance. Given the increased complexity of a tumour growing within a living mouse, there is no canonical model that is fit to this data. Rather, there are several options for assessing response in these models, each with its pros and cons.</p>
+<p>Drug response in PDX models is usually not assessed in the same way as <em>in vitro</em>. Rather than looking at viability vs dose curves, one looks at tumour growth vs time curves, to see if the treatment with a drug can inhibit tumour growth or initiate tumour shrinkage and clearance. Given the increased complexity of a tumour growing within a living mouse, there is no canonical model that is fit to this data. Rather, there are several options for assessing response in these models, each with its pros and cons.</p>
 <div id="visualizing-tumour-growth-curves" class="section level3">
 <h3 class="hasAnchor">
 <a href="#visualizing-tumour-growth-curves" class="anchor"></a>Visualizing Tumour Growth Curves</h3>
@@ -1229,7 +1229,7 @@ Some commonly used summary metrics for a dose-response curve
 <div class="sourceCode" id="cb100"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/Xeva/man/plotPDX.html">plotPDX</a></span>(<span class="kw">object</span><span class="kw">=</span><span class="no">brca</span>,<span class="kw">patient.id</span><span class="kw">=</span><span class="st">"X-1004"</span>,<span class="kw">drug</span><span class="kw">=</span><span class="st">"BGJ398"</span>,<span class="kw">control.name</span><span class="kw">=</span><span class="st">"untreated"</span>,
         <span class="kw">vol.normal</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
 <p><img src="GxWorkshop_files/figure-html/1X4-1.png" width="700"></p>
-<p>When replicates are avaliable Xeva can be used the visualize each model.</p>
+<p>When replicates are available Xeva can be used the visualize each model.</p>
 <div class="sourceCode" id="cb101"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"repdx"</span>)
 <span class="fu"><a href="https://rdrr.io/pkg/Xeva/man/plotPDX.html">plotPDX</a></span>(<span class="kw">object</span><span class="kw">=</span><span class="no">repdx</span>,<span class="kw">patient.id</span><span class="kw">=</span><span class="st">"P1"</span>,<span class="kw">drug</span><span class="kw">=</span><span class="st">"treatment"</span>,<span class="kw">control.name</span><span class="kw">=</span><span class="st">"Control"</span>,
         <span class="kw">vol.normal</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
@@ -1331,7 +1331,7 @@ Cells response to drugs in CCLE
 ## rowData names(7): Probe EnsemblGeneId ... BEST rownames
 ## colnames(292): SK-N-FI SK-N-AS ... VM-CUB-1 T.T
 ## colData names(25): samplename filename ... rownames tissueid</code></pre>
-<p>Due to a lack of replicates in the Cleveland <code>RSet</code>, the returned <code>SummarizedExperiment</code> object contains the same information as the original. For other experiments with replicates, however, the result should contain one column per unique cell-line id. For ease of interoperability with the response data contained in an <code>RSet</code>, if <code>fill.missing</code> is FALSE empty columns for the cell-lines in the sensitivity experiment, but not in the molecular profile will be added to the <code>SummarizedExperiment</code> such that the dimensions are equal.</p>
+<p>Due to a lack of replicates in the Cleveland <code>RSet</code>, the returned <code>SummarizedExperiment</code> object contains the same information as the original. For other experiments with replicates, however, the result should contain one column per unique cell-line id. For ease of interoperability with the response data contained in an <code>RSet</code>, if <code>fill.missing</code> is TRUE empty columns for the cell-lines in the sensitivity experiment, but not in the molecular profile will be added to the <code>SummarizedExperiment</code> such that the dimensions are equal.</p>
 </div>
 </div>
 <div id="xeva-3" class="section level2">
@@ -1342,8 +1342,8 @@ Cells response to drugs in CCLE
 <a href="#summarizing-molecular-data-1" class="anchor"></a>Summarizing Molecular Data</h3>
 <p>As already seen above, Xeva provides a method to extract drug response data from XevaSets. Like PharmacoGx and RadioGx, the package also provides a method to extract the molecular data associated with a particular set of mice. For example, we can extract the RNAseq data for all the PDXs treated with trastuzumab, as below:</p>
 <div class="sourceCode" id="cb121"><html><body><pre class="r"><span class="no">brca_trastuz</span> <span class="kw">&lt;-</span> <span class="kw pkg">Xeva</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/Xeva/man/summarizeMolecularProfiles.html">summarizeMolecularProfiles</a></span>(<span class="no">brca</span>, <span class="kw">mDataType</span><span class="kw">=</span><span class="st">"RNASeq"</span>, <span class="kw">drug</span> <span class="kw">=</span> <span class="st">"trastuzumab"</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">brca_trastuz</span>)</pre></body></html></div>
-<p>ExpressionSet (storageMode: lockedEnvironment) assayData: 6 features, 37 samples element names: exprs protocolData: none phenoData sampleNames: X.1004.trab X.1008.trab … X.6047.trab (37 total) varLabels: biobase.id patient.id … AUC (24 total) varMetadata: labelDescription featureData featureNames: A1BG A1BG-AS1 … A2ML1 (6 total) fvarLabels: geneName ensembl.id fvarMetadata: labelDescription experimentData: use ‘experimentData(object)’ Annotation:</p>
+<span class="no">brca_trastuz</span></pre></body></html></div>
+<p>ExpressionSet (storageMode: lockedEnvironment) assayData: 19711 features, 37 samples element names: exprs protocolData: none phenoData sampleNames: X.1004.trab X.1008.trab … X.6047.trab (37 total) varLabels: biobase.id patient.id … AUC (24 total) varMetadata: labelDescription featureData featureNames: A1BG A1BG-AS1 … ZZZ3 (19711 total) fvarLabels: geneName ensembl.id fvarMetadata: labelDescription experimentData: use ‘experimentData(object)’ Annotation:</p>
 </div>
 </div>
 </div>
@@ -1354,7 +1354,7 @@ Cells response to drugs in CCLE
 <h2 class="hasAnchor">
 <a href="#drug-sensitivity-signatures" class="anchor"></a>Drug Sensitivity Signatures</h2>
 <p>Finally, we will talk about some functions built into PharmacoGx to generate signatures of molecular features which correlate with response to particular compounds. In PharmacoGx, the main function to generate signatures of response across drugs is <code>drugSensitivitySig</code>. It takes as input a PSet, and the molecular data type you wish to use to generate the signatures, and computes the linear association between each feature and each drug response vector independently. The default of using all features, drugs and cell lines in the dataset can be modified with parameters detailed below.</p>
-<p>At its core, drugSensitivitySig fits a nested linear model to the drug response data, using the molecular feature, as well as cell tissue of origin and batch effect as possible predictors. The function then uses ANOVA to judge whether including the molecular feature in the model leads to a statistically significant improvement in prediction accuracy (R^2). For more details on the implementation, we encourage readers to reference the PharmacoGx manuscript, or the vignettes included in the package.</p>
+<p>At its core, drugSensitivitySig fits a nested linear model to the drug response data, using the molecular feature, as well as cell tissue of origin and batch effect as possible predictors. The function then uses ANOVA to judge whether including the molecular feature in the model leads to a statistically significant improvement in prediction accuracy (<span class="math inline">\(R^2\)</span>). For more details on the implementation, we encourage readers to reference the PharmacoGx manuscript, or the vignettes included in the package.</p>
 <p>Here, as an example, we will run <code>drugSensitivitySig</code> to generate a signature of response to Lapatinib and Erlotinib, two targetted therapies, from the GDSC data. We will do this with a random 10 genes measured in the expression matrix, as the full computation can take some time to complete.</p>
 <div class="sourceCode" id="cb122"><html><body><pre class="r"><span class="co">## Extracting the first 100 gene names. featureInfo brings up the rowData of the "rna" SummarizedExperiment</span>
 <span class="no">chosen.genes</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span>(<span class="fu">featureInfo</span>(<span class="no">GDSC</span>, <span class="st">"rna"</span>)), <span class="fl">10</span>)
@@ -1387,70 +1387,70 @@ Cells response to drugs in CCLE
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">ENSG00000066557</td>
-<td align="right">-0.0556135</td>
-<td align="right">0.0574861</td>
+<td align="left">ENSG00000028839</td>
+<td align="right">-0.0549931</td>
+<td align="right">0.0556874</td>
 <td align="right">288</td>
-<td align="right">-0.9674246</td>
-<td align="right">0.9359103</td>
-<td align="right">0.3342240</td>
+<td align="right">-0.9875318</td>
+<td align="right">0.9752191</td>
+<td align="right">0.3242931</td>
 <td align="right">262</td>
-<td align="right">0.4774628</td>
+<td align="right">0.5994759</td>
 </tr>
 <tr class="even">
-<td align="left">ENSG00000150594</td>
-<td align="right">0.0539507</td>
-<td align="right">0.0534657</td>
+<td align="left">ENSG00000170779</td>
+<td align="right">-0.1294128</td>
+<td align="right">0.0548940</td>
 <td align="right">288</td>
-<td align="right">1.0090699</td>
-<td align="right">1.0182220</td>
-<td align="right">0.3138721</td>
+<td align="right">-2.3575036</td>
+<td align="right">5.5578233</td>
+<td align="right">0.0191340</td>
 <td align="right">262</td>
-<td align="right">0.4774628</td>
+<td align="right">0.1913400</td>
 </tr>
 <tr class="odd">
-<td align="left">ENSG00000172216</td>
-<td align="right">0.0562351</td>
-<td align="right">0.0576087</td>
+<td align="left">ENSG00000141664</td>
+<td align="right">-0.0111305</td>
+<td align="right">0.0556726</td>
 <td align="right">288</td>
-<td align="right">0.9761563</td>
-<td align="right">0.9528811</td>
-<td align="right">0.3298875</td>
+<td align="right">-0.1999278</td>
+<td align="right">0.0399711</td>
+<td align="right">0.8416922</td>
 <td align="right">262</td>
-<td align="right">0.4774628</td>
+<td align="right">0.8902592</td>
 </tr>
 <tr class="even">
-<td align="left">ENSG00000189143</td>
-<td align="right">0.0150455</td>
-<td align="right">0.0863764</td>
+<td align="left">ENSG00000116774</td>
+<td align="right">0.0090460</td>
+<td align="right">0.0654981</td>
 <td align="right">288</td>
-<td align="right">0.1741852</td>
-<td align="right">0.0303405</td>
-<td align="right">0.8618545</td>
+<td align="right">0.1381105</td>
+<td align="right">0.0190745</td>
+<td align="right">0.8902592</td>
 <td align="right">262</td>
-<td align="right">0.8618545</td>
+<td align="right">0.8902592</td>
 </tr>
 <tr class="odd">
-<td align="left">ENSG00000198040</td>
-<td align="right">-0.0403211</td>
-<td align="right">0.0568209</td>
+<td align="left">ENSG00000144712</td>
+<td align="right">-0.0309811</td>
+<td align="right">0.0623686</td>
 <td align="right">288</td>
-<td align="right">-0.7096175</td>
-<td align="right">0.5035571</td>
-<td align="right">0.4785724</td>
+<td align="right">-0.4967420</td>
+<td align="right">0.2467527</td>
+<td align="right">0.6197875</td>
 <td align="right">262</td>
-<td align="right">0.5753593</td>
+<td align="right">0.7747344</td>
 </tr>
 <tr class="even">
-<td align="left">ENSG00000198276</td>
-<td align="right">-0.0615755</td>
-<td align="right">0.0565418</td>
+<td align="left">ENSG00000143494</td>
+<td align="right">-0.0505386</td>
+<td align="right">0.0603887</td>
 <td align="right">288</td>
-<td align="right">-1.0890258</td>
-<td align="right">1.1859771</td>
-<td align="right">0.2771432</td>
+<td align="right">-0.8368893</td>
+<td align="right">0.7003837</td>
+<td align="right">0.4034175</td>
 <td align="right">262</td>
-<td align="right">0.4774628</td>
+<td align="right">0.5994759</td>
 </tr>
 </tbody>
 </table>
@@ -1480,70 +1480,70 @@ Cells response to drugs in CCLE
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">ENSG00000066557</td>
-<td align="right">-0.0173351</td>
-<td align="right">0.0581400</td>
+<td align="left">ENSG00000028839</td>
+<td align="right">-0.0534736</td>
+<td align="right">0.0565441</td>
 <td align="right">297</td>
-<td align="right">-0.2981619</td>
-<td align="right">0.0889005</td>
-<td align="right">0.7658081</td>
+<td align="right">-0.9456976</td>
+<td align="right">0.8943440</td>
+<td align="right">0.3451453</td>
 <td align="right">271</td>
-<td align="right">0.9196663</td>
+<td align="right">0.5531205</td>
 </tr>
 <tr class="even">
-<td align="left">ENSG00000150594</td>
-<td align="right">0.0054881</td>
-<td align="right">0.0543656</td>
+<td align="left">ENSG00000170779</td>
+<td align="right">-0.0157297</td>
+<td align="right">0.0556516</td>
 <td align="right">297</td>
-<td align="right">0.1009482</td>
-<td align="right">0.0101905</td>
-<td align="right">0.9196663</td>
+<td align="right">-0.2826465</td>
+<td align="right">0.0798891</td>
+<td align="right">0.7776636</td>
 <td align="right">271</td>
-<td align="right">0.9196663</td>
+<td align="right">0.8640706</td>
 </tr>
 <tr class="odd">
-<td align="left">ENSG00000172216</td>
-<td align="right">-0.0359851</td>
-<td align="right">0.0587298</td>
+<td align="left">ENSG00000141664</td>
+<td align="right">-0.0071032</td>
+<td align="right">0.0563557</td>
 <td align="right">297</td>
-<td align="right">-0.6127240</td>
-<td align="right">0.3754307</td>
-<td align="right">0.5405727</td>
+<td align="right">-0.1260423</td>
+<td align="right">0.0158867</td>
+<td align="right">0.8997919</td>
 <td align="right">271</td>
-<td align="right">0.9196663</td>
+<td align="right">0.8997919</td>
 </tr>
 <tr class="even">
-<td align="left">ENSG00000189143</td>
-<td align="right">0.0115425</td>
-<td align="right">0.0856770</td>
+<td align="left">ENSG00000116774</td>
+<td align="right">-0.0544813</td>
+<td align="right">0.0659068</td>
 <td align="right">297</td>
-<td align="right">0.1347215</td>
-<td align="right">0.0181499</td>
-<td align="right">0.8929321</td>
+<td align="right">-0.8266412</td>
+<td align="right">0.6833358</td>
+<td align="right">0.4091677</td>
 <td align="right">271</td>
-<td align="right">0.9196663</td>
+<td align="right">0.5531205</td>
 </tr>
 <tr class="odd">
-<td align="left">ENSG00000198040</td>
-<td align="right">0.0304873</td>
-<td align="right">0.0574773</td>
+<td align="left">ENSG00000144712</td>
+<td align="right">-0.0665963</td>
+<td align="right">0.0631207</td>
 <td align="right">297</td>
-<td align="right">0.5304238</td>
-<td align="right">0.2813494</td>
-<td align="right">0.5962525</td>
+<td align="right">-1.0550614</td>
+<td align="right">1.1131545</td>
+<td align="right">0.2923369</td>
 <td align="right">271</td>
-<td align="right">0.9196663</td>
+<td align="right">0.5531205</td>
 </tr>
 <tr class="even">
-<td align="left">ENSG00000198276</td>
-<td align="right">-0.1000168</td>
-<td align="right">0.0565232</td>
+<td align="left">ENSG00000143494</td>
+<td align="right">-0.1245842</td>
+<td align="right">0.0607390</td>
 <td align="right">297</td>
-<td align="right">-1.7694821</td>
-<td align="right">3.1310669</td>
-<td align="right">0.0779380</td>
+<td align="right">-2.0511387</td>
+<td align="right">4.2071698</td>
+<td align="right">0.0412148</td>
 <td align="right">271</td>
-<td align="right">0.7793803</td>
+<td align="right">0.2060740</td>
 </tr>
 </tbody>
 </table>
@@ -1925,7 +1925,7 @@ Cells response to drugs in CCLE
 ## 
 ## $Paclitaxel
 ##        score            p 
-## -0.008382044  0.200000000 
+## -0.008382044  0.190000000 
 ## 
 ## $Cisplatin
 ##        score            p 
