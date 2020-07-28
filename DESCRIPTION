@@ -11,7 +11,7 @@ Encoding: UTF-8
 LazyData: true
 License: CC BY 4.0 + file LICENSE
 RoxygenNote: 7.1.0
-Suggests: knitr, rmarkdown, BiocStyle
+Suggests: knitr, rmarkdown, BiocStyle, magick
 Imports: PharmacoGx, RadioGx, SummarizedExperiment, ToxicoGx, ggplot2, Xeva, igraph, pkgdown
 URL:  https://bhklab.github.io/bioc2020workshop
 BugReports: https://github.com/bhklab/bioc2020workshop/issues/new/choose
