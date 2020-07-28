@@ -52,8 +52,8 @@ Useful publications:
 
 ### Workshop Participation  {-}
 
-Participants expected to have the following required packages installed on their machines to be able to run the commands along with the instructors.
-PharmacoGx,  Xeva, RadioGx, CoreGx and Biobase from Bioconductor
+Participants are expected to have the following required packages installed on their machines to be able to run the commands along with the instructors:
+PharmacoGx,  Xeva, RadioGx, CoreGx and Biobase from Bioconductor.
 The workshop will be presented as a set of analysis steps to be replicated by the learners, with instructors available to explain the why and how of applying these functions to the given datasets. 
 
 ### _R_ / _Bioconductor_ packages used  {-}
@@ -84,8 +84,8 @@ For a 1-hr workshop:
 
 ### Learning goals  {-}
 
-* Describe pharmacogenomic datasets and radiogenomic datasets and usefulness in cancer research
-* Learn how to extract information from these datasets and to intersect them over their common measured features, experiments, model systems 
+* Describe pharmacogenomic and radiogenomic datasets and their usefulness in cancer research
+* Learn how to extract information from these datasets and to intersect them over their common measured features, experiments and model systems
 * Learn how to visualize experimental results from these datasets 
 * Learn how to model dose-response for both small compound and radiotherapy datasets
 * Learn measures to quantify the response in both cell line and PDX sensitivity screens, for both drug and radiation treatments
@@ -95,7 +95,7 @@ For a 1-hr workshop:
 
 ### Learning objectives {-}
 
-* List available standardized pharmacogenomic and radiogenomic datasets and download them
+* List and download available standardized pharmacogenomic and radiogenomic datasets
 * Access the molecular features, dose-response and metadata contained within the data structures defined in the packages
 * Create drug-dose and radiation-dose response plots for cell line experiments
 * Create tumor growth curve plots for PDX experiments
@@ -120,14 +120,14 @@ library(gxbioc2020workshop)
 
 # Introduction
 This tutorial, titled Biomarker Discovery from High Throughput Screening
-Datasets, focuses on a suite of packages designed to simplify analysis
+Datasets, focuses on a suite of packages designed to simplify analyses
 correlating measures of treatment response measured on model systems with
 molecular profiles of those systems. These packages primarly focus on modeling
 response to cancer treatments in cancer models, but the concepts presented can
-be  applied to other disease types, given availability of data for the area of
+be applied to other disease types, given availability of data for the area of
 interest. 
 
-The first two of the packages, `r BiocStyle::Biocpkg("PharmacoGx")` and `r BiocStyle::Biocpkg("RadioGx")` focus on screens done  using cell lines as a
+The first two packages, `r BiocStyle::Biocpkg("PharmacoGx")` and `r BiocStyle::Biocpkg("RadioGx")` focus on screens done  using cell lines as a
 model system. PharmacoGx focuses on modeling and predicting the response of cell
 lines treated with small  molecule therapies. RadioGx swaps the small molecule
 treatment for irradiation of cell lines. The third package,  `r BiocStyle::Biocpkg("Xeva")`, looks at treatment response for __in vivo__ systems,
@@ -138,14 +138,14 @@ compromised mice.
 ## Data Structure and Common Functions Between Packages
 
 While the experiments analyzed by the three packages are different, the workflow
-that these packages accommodate has many similarities between them. First and
+that these packages accommodate are quite similar. First and
 foremost, all three packages were developed to provide data structures that
 package together screening and molecular data, as well as all related metadata,
 for complete studies. These packages also provide an interface to download
 large, publically available datasets which have standardized naming conventions,
 so that data across different studies is immediately comparable. 
 
-Furthermore, the analysis workflow shares common tasks across the three domains 
+Furthermore, the analysis workflows share common tasks across the three domains
 covered by these packages. This includes understanding and visualizing the data
 that is present in each dataset; modeling the response of the model systems to 
 treatment; summarizing that response into a measure comparable across models;
@@ -199,10 +199,10 @@ a similar experimental setup.
 
 ![](radiogx_design_exp.png)
 
-## _in vivo_ Pharmacogenomics
+## _In vivo_ Pharmacogenomics
 
 
-_in vivo_ models play an important role in cancer drug discovery.
+_In vivo_ models play an important role in cancer drug discovery.
 Patent derived xenografts (PDXs) are commonly used _in vivo_ models in cancer research.
 They have several advantages over cell lines:
 
@@ -213,7 +213,7 @@ They have several advantages over cell lines:
 * Drug response of PDXs closely match the corresponding patient and clinical outcome
 
 To create PDXs, cancerous tissues or cells from patients' tumors are engrafted into immunodeficient mice (either subcutaneous or orthotopic engraftment).
-Once established, tumors from the PDXs can be passed from mouse to mouse, this is called passaging. For drug testing, PDXs were given a set drug dose at a set schedule (for example weekly). Change in tumor size is measured, usually physically using calipers.
+Once established, tumors from the PDXs can be passed from mouse to mouse, this is called passaging. For drug testing, PDXs are given a set drug dose at a set schedule (for example weekly). Change in tumor size is measured, usually physically using calipers.
 ![](PDXfigure500ppi.png)
 
 
@@ -229,7 +229,7 @@ inherits for the `CoreSet` class defined in our package `CoreGx`, which abstract
 the common functionality across our similar packages. 
 The basic structure of a PharmacoSet is as follows:
 
-```{r pharmacoset, echo=FALSE, fig.cap = "**PharmacoSet class diagram**. Objects comprising a `PharmacoSet` are enclosed in boxes. First box indicates type and name of each object. Second box indicates the structure of an object or class. Third box shows accessor methods from `PharmacoGx` for that specific object. '=>' represents return and specifies what is returned from that item or method."}
+```{r pharmacoset, echo=FALSE, fig.wide=TRUE, fig.cap = "**PharmacoSet class diagram**. Objects comprising a `PharmacoSet` are enclosed in boxes. The first box indicates the type and name of each object. The second box indicates the structure of an object or class. The third box shows accessor methods from `PharmacoGx` for that specific object. '=>' represents return and specifies what is returned from that item or method."}
 knitr::include_graphics('./PharmacoGxClassDiagram.png')
 ```
 
@@ -280,7 +280,7 @@ about the type(s) of radiation used in the dose-response experiment,
 and is analogous to the drug slot in a `PharmacoSet`. The remainder of the slots
 mirror the `PharmacoSet`.
 
-```{r radioset, echo=FALSE, fig.wide=TRUE, fig.cap = "**RadioSet class diagram**. Objects comprising a `RadioSet` are enclosed in boxes. First box indicates type and name of each object. Second box indicates the structure of an object or class. Third box shows accessor methods from `RadioGx` for that specific object. '=>' represents return and specifies what is returned from that item or method."}
+```{r radioset, echo=FALSE, fig.wide=TRUE, fig.cap = "**RadioSet class diagram**. Objects comprising a `RadioSet` are enclosed in boxes. The first cell indicates the type and name of each object. Second cell indicates the structure of an object or class. Third cell shows accessor methods from `RadioGx` for that specific object. `=>` represents return and specifies what is returned from that item or method."}
 knitr::include_graphics('./RadioGxClassDiagram.png')
 ```
 
@@ -376,12 +376,11 @@ accessors for each package.
 ## CoreGx accessors
 
 PharmacoGx and RadioGx share a lot of similarities in their object structure. 
-This also means that a lot of the functions used to access the data provided in these 
-objects can be accessed using the same interface. 
+As such, a shared interface is available to access much of the data in these objects.
 
 
 In general, the PSet and RSet store three major categories of data: 
-metadata/annotations, molecular data and radiation response data.
+metadata/annotations, molecular data and treatment response data.
 These are demarcated in **Fig.** \@ref(fig:pharmacoset) and **Fig.** \@ref(fig:radioset) using green, blue and red, respectively. Accessor methods are available
 to retrieve all three kinds of data from a CoreSet; the accessor methods for each component are listed
 in the bottom most cell of each object in the class diagrams. We will discuss a subset of these methods
@@ -428,7 +427,7 @@ pie(table(cellInfo(CCLE)[,"tissueid"]),
 ```
 
 The other important metadata slot will vary across the two packages, being called 
-`drug` in PharmacoGx, and `radiation` in RadioGx. They are discussed just below. 
+`drug` in PharmacoGx, and `radiation` in RadioGx. They are discussed below.
 
 The `CoreSet` also includes `annotations`, which keep track of metadata about
 the creation of the `CoreSet` object itself, and `curation`, which keeps track of the 
@@ -574,7 +573,7 @@ radTypes
 ## Subsetting PharmacoSets
 
 
-PSets can be subsetted by refering directly to the drugs and cell lines you want
+PSets can be subsetted by referring directly to the drugs and cell lines you want
 to keep in the dataset. For example, we can subset the GDSC PSet in the following 
 ways:
 
@@ -586,7 +585,7 @@ print(GDSC["YT","Paclitaxel"])
 
 ```
 
-As an exercise, lets manually compute the number of overlaping cell lines between CCLE and GDSC. Try it yourself! 
+As an exercise, lets manually compute the number of overlapping cell lines between CCLE and GDSC. Try it yourself!
 
 If you noticed as you completed the previous exercise, cell line and drug names 
 are standardized between PSets downloaded using the *downloadPSet* function. 
@@ -605,7 +604,7 @@ print(common)
 ## Xeva
 
 
-The structure of Xeva is different from the CoreGx structure. As such, many of the accessor functions
+The structure of Xeva is different from the CoreSet structure. As such, many of the accessor functions
 are also different.
 
 As mentioned earlier, Xeva stores metadata for each individual PDX model.
@@ -644,7 +643,7 @@ Here, for the batch named `X-1004.binimetinib`, we can see that the control samp
 
 ### Plotting Drug Dose Response Data
 
-Drug-Dose response data included in the PharmacoSet objects can be conviniently
+Drug-Dose response data included in the PharmacoSet objects can be conveniently
 plotted using the `drugDoseResponseCurve` function. Given a list of
 PharmacoSets, a drug name and a cell name, it will plot the drug dose response
 curves for the given cell-drug combination in each dataset, allowing direct
@@ -683,11 +682,11 @@ function as our model of drug response in cancer cell lines:
 $$y = E_\infty + \frac{1-E_\infty}{1 + (\frac{x}{EC50})^{HS}}$$
 This is a log-logistic model, meaning that it takes the form of a logistic curve when x is on the log scale. 
 The three parameters are:
-$E_\infty$, which is the maximal inhibition predicted at infinite concetration of the drug (the right asymptote);
+$E_\infty$, which is the maximal inhibition predicted at infinite concentration of the drug (the right asymptote);
 $EC50$, which is the inflection point of the logit, where the inhibition reaches 50% of the maximum;
 $HS$, the Hill Slope, which is a measure of the cooperativity of binding. This parameter controls the steepness 
 of the logit, and is interpreted based on its relation to 1. Values larger than 1 imply positive cooperativity in 
-inhibition/binding of the target for the small molcule ligands, which values less than 1 imply negative cooperativity/antagonism. 
+inhibition/binding of the target for the small molecule ligands, which values less than 1 imply negative cooperativity/antagonism.
 
 ```{r hillSlopeFig, fig.cap="Diagram of a logLogistic Hill Slope", echo=FALSE}
 knitr::include_graphics("./hill_slope.png")
@@ -738,7 +737,7 @@ print(PharmacoGx::computeAUC(concentration = concentrations, viability = viabili
 print(PharmacoGx::computeIC50(concentration = concentrations, viability = viabilities))
 ```
 
-In PharmacoGx, we call these measures sensitivity measures. PSets come with
+In PharmacoGx, we call these measures 'sensitivity measures'. PSets come with
 these measures precomputed, and accessible using the `sensitivityProfiles`
 function:
 
@@ -793,7 +792,7 @@ print(cancerCellLine)
 ```
 
 ```{r extracting_dose_response_data}
-# Get the radiation doses and associated survival data from clevelandSmall
+# Get the radiation doses and associated survival data from the Cleveland RSet
 radiationDoses <- sensRaw[1, , 'Dose']
 survivalFractions <- sensRaw[1, , 'Viability']
 ```
@@ -805,7 +804,7 @@ LQmodel
 ```
 
 Above we see that LQmodel contains the alpha and beta coefficients for the dose
-response curve fit to the dose and viability data for the IMR-32 cancer cell-line.
+response curve fit to the dose and viability data for the `r sensitivityInfo(Cleveland)$cellid[1]` cancer cell-line.
 Based on the $R^2$ attribute we can see that the model fit for this data is
 good, with `r round(attributes(LQmodel)$Rsquare,3 ) * 100`% of observed variance
 explained by the model.
@@ -842,8 +841,7 @@ print(areaUnderDoseRespCurve)
 ```
 
 In the above code block we compute the AUC for a dose-response curve between a
-dose of 0 to 1 Gy. This area can be interpreted as the total proportion of cells
-killed during the administration of 1 Gy of radiation.
+dose of 0 to 1 Gy.
 
 ### Dose-Response Curves
 
@@ -879,7 +877,7 @@ doseResponseCurve(
 
 Drug response in PDX models is usually not assessed in the same way as _in vitro_. 
 Rather than looking at viability vs dose curves, one looks at tumour growth vs
-time curves, to see if the treatement with a drug can inhibit tumour growth or
+time curves, to see if the treatment with a drug can inhibit tumour growth or
 initiate tumour shrinkage and clearance. Given the increased complexity of a tumour
 growing within a living mouse, there is no canonical model that is fit to this data.
 Rather, there are several options for assessing response in these models, each with 
@@ -899,7 +897,7 @@ plotPDX(object=brca,patient.id="X-1004",drug="BGJ398",control.name="untreated",
         vol.normal = TRUE)
 ```
 
-When replicates are avaliable Xeva can be used the visualize each model.
+When replicates are available Xeva can be used the visualize each model.
 ```{r 1X5, eval=TRUE}
 data("repdx")
 plotPDX(object=repdx,patient.id="P1",drug="treatment",control.name="Control",
@@ -995,7 +993,7 @@ mprofSummary
 ```
 Due to a lack of replicates in the Cleveland `RSet`, the returned `SummarizedExperiment` object contains the same information as
 the original. For other experiments with replicates, however, the result should contain one column per unique cell-line id. For
-ease of interoperability with the response data contained in an `RSet`, if `fill.missing` is `r FALSE` empty columns for the
+ease of interoperability with the response data contained in an `RSet`, if `fill.missing` is `r TRUE` empty columns for the
 cell-lines in the sensitivity experiment, but not in the molecular profile will be added to the `SummarizedExperiment` such
 that the dimensions are equal.
 
@@ -1008,11 +1006,12 @@ we can extract the RNAseq data for all the PDXs treated with trastuzumab, as bel
 
 ```{r xeva_summarize_mol, results="asis"}
 brca_trastuz <- Xeva::summarizeMolecularProfiles(brca, mDataType="RNASeq", drug = "trastuzumab")
-head(brca_trastuz)
+brca_trastuz
 ```
 
 
 # Signature Generation and Biomarker Discovery
+
 ## Drug Sensitivity Signatures
 Finally, we will talk about some functions built into PharmacoGx to generate signatures of molecular features which 
 correlate with response to particular compounds. In PharmacoGx, the main function to generate signatures of response 
@@ -1022,7 +1021,7 @@ The default of using all features, drugs and cell lines in the dataset can be mo
 
 At its core, drugSensitivitySig fits a nested linear model to the drug response data, using the molecular feature, as well as
 cell tissue of origin and batch effect as possible predictors. The function then uses ANOVA to judge whether including the 
-molecular feature in the model leads to a statistically significant improvement in prediction accuracy (R^2). For more
+molecular feature in the model leads to a statistically significant improvement in prediction accuracy ($R^2$). For more
 details on the implementation, we encourage readers to reference the PharmacoGx manuscript, or the vignettes included in the 
 package. 
 
