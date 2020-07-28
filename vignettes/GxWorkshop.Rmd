@@ -59,6 +59,7 @@ The workshop will be presented as a set of analysis steps to be replicated by th
 ### _R_ / _Bioconductor_ packages used  {-}
 
 Bioconductor:
+
 * https://bioconductor.org/packages/release/bioc/html/PharmacoGx.html
 * http://bioconductor.org/packages/release/bioc/html/Xeva.html 
 * https://bioconductor.org/packages/3.12/bioc/html/RadioGx.html
@@ -688,7 +689,7 @@ $HS$, the Hill Slope, which is a measure of the cooperativity of binding. This p
 of the logit, and is interpreted based on its relation to 1. Values larger than 1 imply positive cooperativity in 
 inhibition/binding of the target for the small molcule ligands, which values less than 1 imply negative cooperativity/antagonism. 
 
-```{r hillSlopeFig, fig.cap="Diagram of a logLogistic Hill Slope"}
+```{r hillSlopeFig, fig.cap="Diagram of a logLogistic Hill Slope", echo=FALSE}
 knitr::include_graphics("./hill_slope.png")
 ```
 
@@ -719,7 +720,7 @@ Often with _in vitro_ Pharmacogenomics data, we want to compare the drug sensiti
 to some omic feature. For this, we want to summarize the drug dose response curve into a single 
 number representing the sensitivity of the cell line. 
 
-```{r hillSlopeSumFig, fig.cap="Some commonly used summary metrics for a dose-response curve"}
+```{r hillSlopeSumFig, fig.cap="Some commonly used summary metrics for a dose-response curve", echo=FALSE}
 knitr::include_graphics("./hillSlopeSummary.png")
 ```
 
@@ -1102,7 +1103,7 @@ pData(dr.mol)[1:5, c("model.id", "best.average.response")]
 ```
 The output can be used for further inquiry  such as correlation analysis.
 
-```{r X10, eval=TRUE}
+```{r X10, eval=TRUE, warning=FALSE}
 
 genes <- rownames(exprs(dr.mol))
 
@@ -1241,6 +1242,7 @@ Then we will run the `drugSensitivitySig` functions in both PharmacoGx and Xeva.
 ft.info <- featureInfo(GRAY, "Kallisto_0.46.1.rnaseq")
 ft.gray <- rownames(ft.info)[ft.info$gene_type == "protein_coding"]
 
+gray.exprs <- molecularProfiles(GRAY, "Kallisto_0.46.1.rnaseq")[ft.gray]
 
 Trastuzumab.sig <- PharmacoGx::drugSensitivitySig(GRAY, mDataType="Kallisto_0.46.1.rnaseq", drug="Trastuzumab", sensitivity.measure="aac_recomputed", feature=ft.gray)
 ```
