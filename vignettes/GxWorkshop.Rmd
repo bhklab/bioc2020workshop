@@ -1059,9 +1059,17 @@ note however that this is an active area of research, and the examples provided 
 research in this field, care must be taken in choosing the right model systems, measures of sensitivity, and 
 incorporating prior knowledge to differentiate promising hits from experimental artifacts.
 
-```{r compute_molecular_signature, cache=TRUE}
+```{r compute_molecular_signature, cache=TRUE, eval=FALSE}
 protein_coding <- which(featInfo$GeneBioType %in% "protein_coding")
-radSensSig <- radSensitivitySig(Cleveland, mDataType='rna', nthread=16, features=fNames(Cleveland, 'rna')[protein_coding])
+radSensSig <- radSensitivitySig(Cleveland, mDataType='rna', nthread=1, features=fNames(Cleveland, 'rna')[protein_coding])
+```
+
+Because computing these signatures takes a significant amount of time, we use a precomputed version included with the 
+workshop packages. 
+
+```{r compute_molecular_signature_preload, cache=TRUE}
+protein_coding <- which(featInfo$GeneBioType %in% "protein_coding")
+data("radSensSig")
 ```
 
 ```{r ordering_molecular_signature_results}
